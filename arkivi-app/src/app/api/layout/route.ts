@@ -1,0 +1,22 @@
+import { NextResponse } from 'next/server';
+import { getCmsState, saveCmsState } from '@/src/lib/payloadClient';
+import type { CmsState, PageSectionConfig } from '@/src/types/cms';
+
+export async function PUT(req: Request) {
+  try {
+    const current = await getCmsState();
+    const body = (await req.json()) as {
+      sections?: PageSectionConfig[];
+      quoteBand?: CmsState['quoteBand'];
+    };
+    const updated = await saveCmsState({
+      ...current,
+      sections: Array.isArray(body.sections) ? body.sections : current.sections,
+      quoteBand: body.quoteBand ? body.quoteBand : current.quoteBand,
+    });
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error('Gabim gjate ruajtjes se renditjes:', error);
+    return NextResponse.json({ error: 'Nuk u ruajt renditja e faqes.' }, { status: 500 });
+  }
+}

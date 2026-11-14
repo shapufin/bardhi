@@ -1,0 +1,28 @@
+:root {
+  --background: #F7F4EC;
+  --foreground: #171614;
+  --card: #FCFBF7;
+  --card-foreground: #171614;
+  --popover: #FCFBF7;
+  --popover-foreground: #171614;
+  --primary: #1B3B2B;
+  --primary-foreground: #F7F4EC;
+  --secondary: #EDE8DC;
+  --secondary-foreground: #171614;
+  --muted: #E5DFD1;
+  --muted-foreground: #635D55;
+  --accent: #EDE8DC;
+  --accent-foreground: #171614;
+  --destructive: #991B1B;
+  --destructive-foreground: #F7F4EC;
+  --border: #DCD6C8;
+  --input: #DCD6C8;
+  --ring: #1B3B2B;
+  --radius: 0.125rem;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}

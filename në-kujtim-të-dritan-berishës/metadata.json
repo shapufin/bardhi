@@ -1,0 +1,6 @@
+{
+  "name": "Në Kujtim të Dritan Berishës",
+  "description": "Arkiv përkujtimor me rrëfime, galeri fotografish, libër 3D me faqe të lëvizshme dhe studio të thjeshtuar për autorin.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

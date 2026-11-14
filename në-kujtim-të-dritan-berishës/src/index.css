@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --background: #f7f4ec;
+  --foreground: #171614;
+  --card: #fcfbf7;
+  --card-foreground: #171614;
+  --popover: #fcfbf7;
+  --popover-foreground: #171614;
+  --primary: #1b3b2b;
+  --primary-foreground: #f7f4ec;
+  --secondary: #ede8dc;
+  --secondary-foreground: #262320;
+  --muted: #ebe6da;
+  --muted-foreground: #635d55;
+  --accent: #e4ded0;
+  --accent-foreground: #171614;
+  --destructive: #8c1d18;
+  --destructive-foreground: #fcfbf7;
+  --border: #dcd6c8;
+  --input: #cfc8b8;
+  --ring: #1b3b2b;
+  --radius: 0.25rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+}
+
+/* Archival editorial drop-cap */
+.archival-drop-cap::first-letter {
+  font-family: var(--font-serif);
+  font-size: 4.1rem;
+  line-height: 0.82;
+  font-weight: 500;
+  float: left;
+  margin-right: 0.7rem;
+  margin-top: 0.2rem;
+  color: var(--primary);
+}

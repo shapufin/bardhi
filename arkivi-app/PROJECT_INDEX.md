@@ -1,0 +1,81 @@
+# Project Index — Arkivi Përkujtimor Dritan Berisha
+
+Ky dokument shërben si harta e shpejtë e navigimit të të gjithë skedarëve të projektit.
+
+---
+
+## 1. Skedarët Konfigurues në Rrënjë
+
+| Skedari | Roli |
+|---|---|
+| [package.json](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/package.json) | Varësitë Next.js 15, PayloadCMS 3.93, Tailwind v4, React 19, Motion, Spring |
+| [next.config.mjs](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/next.config.mjs) | Konfigurimi i Next.js i mbështjellë me `withPayload` |
+| [tsconfig.json](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/tsconfig.json) | Konfigurimi Typescript dhe shtigjet `@/*` dhe `@payload-config` |
+| [.env](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/.env) | Sekretet e Payload (`PAYLOAD_SECRET`) dhe URI i bazës SQLite (`DATABASE_URI`) |
+| [context.md](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/context.md) | Udhërrëfyesi qendror dhe task router për agjentët AI |
+| [AGENTS.md](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/AGENTS.md) | Protokollet e bashkëpunimit dhe mirëmbajtjes |
+
+---
+
+## 2. PayloadCMS v3 (`src/`)
+
+| Skedari / Dosja | Përshkrimi |
+|---|---|
+| [src/payload.config.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/payload.config.ts) | Konfigurimi kryesor i Payload: SQLite, koleksionet, globalet, lokalizimi `sq` |
+| [src/collections/Users.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/Users.ts) | Përdoruesit me rolet `author` dhe `superuser` |
+| [src/collections/Stories.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/Stories.ts) | Koleksioni i rrëfimeve (titulli, periudha, paragrafët, drop-cap, statusi) |
+| [src/collections/BookSpreads.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/BookSpreads.ts) | Fletët dyshe të librit dhe blloqet (`prose`, `photo`, `quote`, `handwritten-note`) |
+| [src/collections/Media.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/Media.ts) | Menaxhimi i ngarkimit të fotografive familjare me madhësi e raporte pamjeje |
+| [src/collections/TimelineEntries.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/TimelineEntries.ts) | Kronologjia e jetës dhe shërbimit |
+| [src/globals/MemorialProfile.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/MemorialProfile.ts) | Titulli i faqes, të dhënat e të nderuarit dhe nyjet e menysë kryesore |
+| [src/globals/HeroSettings.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/HeroSettings.ts) | Titujt e ballinës, rrëfimi kryesor dhe animacioni |
+| [src/globals/HomeLayout.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/HomeLayout.ts) | Renditja e seksioneve dinamike të ballinës dhe thënia |
+
+---
+
+## 3. Ndërfaqja Administrative ("Studio e Autorit" — `src/components/admin/`)
+
+| Komponenti | Përgjegjësia |
+|---|---|
+| [AdminStudio.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/AdminStudio.tsx) | Korniza kryesore e studios me panelin anësor të madh dhe preview |
+| [AdminStudioWrapper.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/AdminStudioWrapper.tsx) | Mbështjellësi i kontekstit CMS për Payload Admin View dhe `/studio` |
+| [HomeHeroEditor.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/HomeHeroEditor.tsx) | Redaktimi i ballinës, menysë lart dhe renditja e seksioneve me tërheqje (`@dnd-kit`) |
+| [StoryManager.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/StoryManager.tsx) | Shkrimi dhe menaxhimi i rrëfimeve (draft, publikuar, kapak, citim) |
+| [BookBuilder.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/BookBuilder.tsx) | Ndërtuesi vizual i librit me fletë dyshe dhe blloqe të renditshme |
+| [MediaLibrary.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/MediaLibrary.tsx) | Ngarkimi i fotografive nga kompjuteri dhe përcaktimi i diçiturave |
+
+---
+
+## 4. Frontend Publik & Libri 3D (`src/components/frontend/`)
+
+| Komponenti | Përgjegjësia |
+|---|---|
+| [PublicSite.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/PublicSite.tsx) | Orkestruesi i faqes kryesore sipas renditjes dinamike të seksioneve |
+| [PublicHeader.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/PublicHeader.tsx) | Shiriti i sipërm 3-zonash me nyjet dinamike dhe butonin "Studio e Autorit" |
+| [HeroSection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/HeroSection.tsx) | Ballina kryesore me portretin dhe animacionin e butë natyror |
+| [PhysicalBookReader.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/PhysicalBookReader.tsx) | Libri 3D me rrotullim fletësh, fizikë `@react-spring/web` dhe mbështetje celulari |
+| [BookInlineEditor.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/BookInlineEditor.tsx) | Redaktimi i menjëhershëm i librit direkt nga faqet e hapura |
+| [BookPageContent.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/BookPageContent.tsx) | Paraqitja tipografike e faqeve të majta/djathta me drop-cap |
+| [StoriesFeedSection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/StoriesFeedSection.tsx) | Lista e rrëfimeve me 3 pamje: Kolona (Grid), Indeks (Listë), Mozaik |
+| [StoryReaderView.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/StoryReaderView.tsx) | Modaliteti i thelluar i leximit të një rrëfimi të vetëm |
+| [MasonryGallerySection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/MasonryGallerySection.tsx) | Galeria arkivore e fotografive familjare me zmadhim |
+| [TimelineSection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/TimelineSection.tsx) | Kronologjia e pikave kyçe të jetës |
+| [QuoteBandSection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/QuoteBandSection.tsx) | Rripi qendror i thënies përkujtimore |
+
+---
+
+## 5. Rrugët Next.js App Router (`src/app/`)
+
+| Rruga | Qëllimi |
+|---|---|
+| `src/app/(frontend)/page.tsx` | Faqja kryesore publike (`http://localhost:3001/`) |
+| `src/app/(frontend)/studio/page.tsx` | Studio e Autorit pa fjalëkalim (`http://localhost:3001/studio`) |
+| `src/app/(payload)/admin/[[...segments]]/page.tsx` | Paneli Payload Super Admin (`http://localhost:3001/admin`) |
+| `src/app/api/cms/route.ts` | Kthen gjendjen e plotë arkivore në gjuhën shqipe |
+| `src/app/api/site/route.ts` | Përditëson titullin e faqes dhe menynë |
+| `src/app/api/hero/route.ts` | Përditëson ballinën kryesore dhe animacionin |
+| `src/app/api/layout/route.ts` | Përditëson renditjen e seksioneve dhe thënien |
+| `src/app/api/stories/route.ts` | Krijon, përditëson ose ruan rrëfime |
+| `src/app/api/book/spreads/route.ts` | Ruan fletët dyshe të librit |
+| `src/app/api/media/route.ts` | Ngarkon fotografi të reja në disk |
+| `src/app/api/timeline/route.ts` | Përditëson kronologjinë |

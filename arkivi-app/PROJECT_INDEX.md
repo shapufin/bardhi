@@ -43,6 +43,7 @@ Ky dokument shërben si harta e shpejtë e navigimit të të gjithë skedarëve 
 | [StoryManager.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/StoryManager.tsx) | Shkrimi dhe menaxhimi i rrëfimeve (draft, publikuar, kapak, citim) |
 | [BookBuilder.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/BookBuilder.tsx) | Ndërtuesi vizual i librit me fletë dyshe dhe blloqe të renditshme |
 | [MediaLibrary.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/MediaLibrary.tsx) | Ngarkimi i fotografive nga kompjuteri dhe përcaktimi i diçiturave |
+| [UserManager.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/UserManager.tsx) | Menaxhimi i përdoruesve autor & superadmin direkt nga Studioja |
 
 ---
 

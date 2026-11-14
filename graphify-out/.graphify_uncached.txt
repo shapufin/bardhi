@@ -1,0 +1,16 @@
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\AGENTS.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\PROJECT_INDEX.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\context.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\audits\full-audit-2026-11-14\round-1.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\00-INDEX.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\01-architecture-and-stack.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\02-studio-e-autorit.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\03-3d-book-physics.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\04-design-system-and-tokens.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\05-database-and-collections.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\arkivi-app\docs\context\06-auth-and-permissions.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\context.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\në-kujtim-të-dritan-berishës\.aistudio\artifacts\brain\5cde7eb6-8891-4eed-8ecd-645520ab153a\implementation_plan.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\në-kujtim-të-dritan-berishës\DESIGN.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\në-kujtim-të-dritan-berishës\README.md
+C:\Users\EDEMNUSHIW\Desktop\BARDHI\në-kujtim-të-dritan-berishës\index.html

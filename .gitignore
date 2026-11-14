@@ -3,3 +3,7 @@ node_modules
 dist
 .playwright-mcp
 *.log
+*.db
+*.db-journal
+*.db-wal
+*.db-shm

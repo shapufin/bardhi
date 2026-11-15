@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, UPLOADS_DIR } from '@/src/lib/payloadClient';
+import { verifyAdminAuth } from '@/src/lib/adminAuth';
 import type { MediaAsset } from '@/src/types/cms';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -19,6 +20,14 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const auth = verifyAdminAuth(req);
+  if (!auth.authorized) {
+    return NextResponse.json(
+      { error: 'I paautorizuar: Ngarkimi i fotografive kërkon autorizim administratori.' },
+      { status: auth.status }
+    );
+  }
+
   try {
     const raw = await req.json();
     if (!raw || typeof raw !== 'object') {
@@ -119,13 +128,14 @@ export async function POST(req: Request) {
       ? aspectRatio
       : autoAspectRatio;
 
+    const clip = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
     const newAsset: MediaAsset = {
       id,
-      title: title?.trim() || 'Fotografi Familjare',
+      title: clip(title, 300) || 'Fotografi Familjare',
       url: `/uploads/${filename}`,
-      alt: alt?.trim() || title?.trim() || 'Fotografi arkivore familjare',
-      caption: caption?.trim() || '',
-      year: year?.trim() || String(new Date().getFullYear()),
+      alt: clip(alt, 500) || clip(title, 300) || 'Fotografi arkivore familjare',
+      caption: clip(caption, 2000),
+      year: clip(year, 50) || String(new Date().getFullYear()),
       aspectRatio: finalAspectRatio,
       isUpload: true,
     };

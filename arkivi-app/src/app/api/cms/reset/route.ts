@@ -1,29 +1,18 @@
 import { NextResponse } from 'next/server';
 import { saveCmsState } from '@/src/lib/payloadClient';
 import { DEFAULT_CMS_STATE } from '@/src/lib/defaultData';
+import { extractBearerToken, getAdminTokens } from '@/src/lib/adminAuth';
 
 function verifyResetAuth(req: Request): { authorized: boolean; status: number } {
-  const adminSecret = process.env.ADMIN_SECRET?.trim();
-  const payloadSecret = (process.env.PAYLOAD_SECRET || 'sekret-arkivi-dritan-berisha-2026-autorit').trim();
-  const validSecrets = [adminSecret, payloadSecret].filter((s): s is string => Boolean(s && s.length > 0));
+  const validSecrets = getAdminTokens();
 
   if (validSecrets.length === 0) {
     return { authorized: false, status: 403 };
   }
 
-  const authHeader = req.headers.get('authorization');
+  const token = extractBearerToken(req);
   const adminToken = req.headers.get('x-admin-token');
   const confirmHeader = req.headers.get('x-confirm-reset');
-
-  let token: string | undefined = adminToken?.trim();
-  if (!token && authHeader) {
-    const trimmedAuth = authHeader.trim();
-    if (trimmedAuth.toLowerCase().startsWith('bearer')) {
-      token = trimmedAuth.slice(6).trim();
-    } else {
-      token = trimmedAuth;
-    }
-  }
 
   if (!token || token.trim().length === 0) {
     return { authorized: false, status: 401 };

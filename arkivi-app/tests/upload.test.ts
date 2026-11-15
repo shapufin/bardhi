@@ -5,6 +5,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { getCmsState, saveCmsState, APP_ROOT, UPLOADS_DIR } from '../src/lib/payloadClient';
 import type { CmsState } from '../src/types/cms';
+import './with-auth';
 
 // Disable sharp libvips file cache so files are not held locked on Windows
 sharp.cache(false);

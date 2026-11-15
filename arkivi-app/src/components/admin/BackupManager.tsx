@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { Download, Upload, RotateCcw, Shield, AlertTriangle, CheckCircle2, Loader2, HardDrive } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
+import { useCms } from '@/src/context/CmsContext';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -15,6 +16,7 @@ interface RestoreResult {
 }
 
 export function BackupManager() {
+  const { studioToken } = useCms();
   const [backupStatus, setBackupStatus] = useState<Status>('idle');
   const [restoreStatus, setRestoreStatus] = useState<Status>('idle');
   const [restoreResult, setRestoreResult] = useState<RestoreResult | null>(null);
@@ -26,7 +28,10 @@ export function BackupManager() {
   async function handleBackup() {
     setBackupStatus('loading');
     try {
-      const res = await fetch('/api/backup', { method: 'GET' });
+      const res = await fetch('/api/backup', {
+        method: 'GET',
+        headers: studioToken ? { 'x-admin-token': studioToken } : undefined,
+      });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error || `HTTP ${res.status}`);
@@ -72,7 +77,11 @@ export function BackupManager() {
       const formData = new FormData();
       formData.append('archive', selectedFile, selectedFile.name);
 
-      const res = await fetch('/api/restore', { method: 'POST', body: formData });
+      const res = await fetch('/api/restore', {
+        method: 'POST',
+        body: formData,
+        headers: studioToken ? { 'x-admin-token': studioToken } : undefined,
+      });
       const json: RestoreResult = await res.json().catch(() => ({ success: false, error: 'Përgjigje e pavlefshme nga serveri.' }));
 
       if (!res.ok || !json.success) {

@@ -6,6 +6,7 @@ import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { toast } from 'sonner';
+import { useCms } from '@/src/context/CmsContext';
 
 interface SystemUser {
   id: string | number;
@@ -16,6 +17,8 @@ interface SystemUser {
 }
 
 export function UserManager() {
+  const { studioToken } = useCms();
+  const authHeaders = (): Record<string, string> => (studioToken ? { 'x-admin-token': studioToken } : {});
   const [users, setUsers] = useState<SystemUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -28,7 +31,7 @@ export function UserManager() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/users');
+      const res = await fetch('/api/users', { headers: authHeaders() });
       if (!res.ok) throw new Error('Nuk u morën përdoruesit.');
       const data = await res.json();
       setUsers(data.users || []);
@@ -68,7 +71,7 @@ export function UserManager() {
       setSubmitting(true);
       const res = await fetch('/api/users', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify({
           name: newName,
           email: newEmail,

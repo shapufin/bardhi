@@ -1,34 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Toaster } from 'sonner';
 import { CmsProvider, useCms } from '@/src/context/CmsContext';
 import { PublicSite } from '@/src/components/frontend/PublicSite';
-import { AdminStudio } from '@/src/components/admin/AdminStudio';
 import { Button } from '@/src/components/ui/button';
 
 function MemorialWorkspace() {
   const { cms, loading, error, refreshCms } = useCms();
-  const [mode, setMode] = useState<'public' | 'admin'>('public');
 
   useEffect(() => {
-    const checkHash = () => {
-      setMode(window.location.hash === '#admin' ? 'admin' : 'public');
-    };
-    checkHash();
-    window.addEventListener('hashchange', checkHash);
-    return () => window.removeEventListener('hashchange', checkHash);
-  }, []);
-
-  const switchMode = (next: 'public' | 'admin') => {
-    if (next === 'admin') {
-      window.location.href = '/studio';
-      return;
+    // Legacy #admin hash: the studio lives at /studio (which injects the admin token)
+    if (window.location.hash === '#admin') {
+      window.location.replace('/studio');
     }
-    setMode('public');
-    window.location.hash = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -57,11 +43,7 @@ function MemorialWorkspace() {
     );
   }
 
-  return mode === 'admin' ? (
-    <AdminStudio onExitStudio={() => switchMode('public')} />
-  ) : (
-    <PublicSite cms={cms} onOpenAdmin={() => switchMode('admin')} />
-  );
+  return <PublicSite cms={cms} onOpenAdmin={() => { window.location.href = '/studio'; }} />;
 }
 
 export default function Page() {

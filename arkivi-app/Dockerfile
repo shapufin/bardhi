@@ -69,7 +69,7 @@ EXPOSE 3001
 
 # Kontrolli automatik i shëndetit të kontejnerit (Healthcheck)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:3001/api/site || exit 1
+    CMD curl -f http://localhost:3001/api/cms || exit 1
 
 # Vëllimet e ruajtjes së përhershme (Data persistence)
 VOLUME ["/app/data", "/app/public/uploads", "/app/backups"]

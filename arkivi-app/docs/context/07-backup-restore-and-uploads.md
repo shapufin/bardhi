@@ -83,11 +83,13 @@ npx tsx scripts/restore.ts backups\backup-2026-11-14T15-12-06.zip
 ### 1.5 Ndërfaqja HTTP API
 
 - **`GET /api/backup`**:
+  * Kërkon autorizim administrativ (`x-admin-token` ose `Bearer`) — arkivi përmban hash-et e fjalëkalimeve dhe nuk është publik.
   * Prodhon një arkiv të ri ZIP në mënyrë dinamike dhe e kthen si stream me header-in:
     `Content-Disposition: attachment; filename="backup-YYYY-MM-DDTHH-MM-SS.zip"`
   * `Content-Type: application/zip`
 - **`POST /api/restore`**:
-  * Pranon `multipart/form-data` me fushën `archive` që përmban skedarin `.zip`.
+  * Kërkon autorizim administrativ (`x-admin-token` ose `Bearer`).
+  * Pranon `multipart/form-data` me fushën `archive` që përmban skedarin `.zip` (kufi madhësie 200MB → HTTP 413).
   * Verifikon magic bytes (`PK\x03\x04`), nxjerr të dhënat në dosje të përkohshme staging, dhe llogarit hashes SHA-256.
   * Nëse hashes përputhen 100%, ruan një snapshot rollback të gjendjes ekzistuese dhe kryen restaurimin.
   * Në rast gabimi të papritur gjatë kopjimit, rikthen automatikisht snapshot-in e mëparshëm me garanci zero korruptimi.
@@ -107,7 +109,7 @@ Skeda e 6-të **"Rezervim & Rivendosje"** në Studio e Autorit (`/studio`):
 1. **Verifikim SHA-256 bit-për-bit**: Hashes llogariten mbi skedarët fizikë dhe krahasohen me manifestin para se të preket ndonjë skedar në prodhim.
 2. **Rollback Atomik**: Snapshot i plotë i gjendjes prodhuese mbahet në kujtesë të përkohshme; në rast dështimi, gjendja kthehet menjëherë prapa.
 3. **Mbrojtje nga Versionet**: Pranohen vetëm arkiva të përputhshëm me versionin e mbështetur (`SUPPORTED_VERSIONS = ['1.0.0']`).
-4. **Pavarësi Platforme**: Krijimi dhe leximi i ZIP-it mbështetet në motorin nativ `.NET System.IO.Compression` në Windows pa varësi të jashtme binare.
+4. **Pavarësi Platforme**: Krijimi dhe leximi i ZIP-it mbështetet në motorin e përbashkët `src/lib/backupArchive.ts` (jszip) — funksionon identikisht në Windows dhe në kontejnerët Linux të prodhimit (pa varësi nga PowerShell).
 
 ---
 
@@ -177,10 +179,11 @@ Sistemi llogarit automatikisht raportin e përshtatshëm nga dimensionet e nxjer
 
 ## 3. Suita e Testeve Automatikë (R4)
 
-Suita përfshin **51 teste** të shpërndara në 5 skedarë me arkitekturë me 4 nivele (Tier 1–4):
+Suita përfshin **67 teste** të shpërndara në 6 skedarë me arkitekturë me 4 nivele (Tier 1–4):
 
 | Skedari i Testit | Teste | Nivelet (Tiers) | Fushat e Mbuluara |
 |---|---|---|---|
+| `tests/admin-auth.test.ts` | 16 | Boundary | AUDIT-2026-11-15: 401/403 pa token në të gjitha endpoint-et e shkrimit + backup/restore, 200 me token, GET-et publike mbeten të hapura |
 | `tests/backup-restore.test.ts` | 16 | Tier 1–4 | Backup CLI, Restore CLI, API download/restore, manifest SHA-256, korruptime, version locking, atomic rollback, disaster recovery 100% |
 | `tests/upload.test.ts` | 15 | Tier 1–4 | Kufiri ekzakt 5,242,880B (HTTP 200), refuzimi 5,242,881B (HTTP 413), refuzimi i skedarëve të dëmtuar (HTTP 400), kompresimi Sharp WebP q82 me reduktim ≥60%, ruajtja në disk |
 | `tests/security.test.ts` | 13 | Tier 1–4 | SEC-01 guard te `/api/cms/reset` (401 pa token, 403 me token të gabuar, konfirmim prodhimi), SEC-02 guard te `/api/users`, validimi i fjalëkalimit/emailit, mbrojtja nga ndryshimet e paautorizuara |
@@ -204,11 +207,11 @@ npm test
 | ✅ **SYS-01 Absolute Paths** (`getAppRoot`) | Implementuar & Testuar | Eliminon paqartësitë e `process.cwd()` |
 | ✅ **Backup CLI** (`npm run backup`) | Implementuar & Testuar | Krijon ZIP portabël me manifest SHA-256 |
 | ✅ **Restore CLI** (`npm run restore`) | Implementuar & Testuar | Rivendosje atomike me kontroll SHA-256 dhe rollback |
-| ✅ **API GET `/api/backup`** | Implementuar & Testuar | Shkarkim i transmetuar ZIP me headers përkatëse |
-| ✅ **API POST `/api/restore`** | Implementuar & Testuar | Pranim multipart dhe restaurim i plotë |
+| ✅ **API GET `/api/backup`** | Implementuar & Testuar | Kërkon token; shkarkim i transmetuar ZIP me headers përkatëse |
+| ✅ **API POST `/api/restore`** | Implementuar & Testuar | Kërkon token; pranim multipart dhe restaurim i plotë me kufi 200MB |
 | ✅ **Admin Web UI Panel** | Implementuar & Testuar | Skeda 6 në Studio e Autorit me `BackupManager.tsx` |
 | ✅ **Kufiri Server-Side ≤ 5MB** | Implementuar & Testuar | HTTP 413 në `api/media` dhe `beforeValidate` në Payload |
 | ✅ **Kompresimi Sharp WebP** | Implementuar & Testuar | Cilësi 82, max 2560px, reduktim ~85-90% i madhësisë |
 | ✅ **Client Pre-Flight Check** | Implementuar & Testuar | Bllokim në `MediaLibrary.tsx` me Sonner toast në shqip |
-| ✅ **Suita e Testeve Automatikë** | Implementuar & Testuar | 51 teste, 5 suita, 100% kaluese |
+| ✅ **Suita e Testeve Automatikë** | Implementuar & Testuar | 67 teste, 6 suita, 100% kaluese |
 | ✅ **TypeScript Linting** | Verifikuar | `tsc --noEmit` me 0 gabime |

@@ -7,6 +7,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const fs = { ...fsPromises, statSync };
+import './with-auth';
 import {
   APP_ROOT,
   DATA_DIR,

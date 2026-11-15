@@ -37,13 +37,13 @@ function StudioContent({ onExit }: { onExit: () => void }) {
   return <AdminStudio onExitStudio={onExit} />;
 }
 
-export function AdminStudioWrapper() {
+export function AdminStudioWrapper({ studioToken = '' }: { studioToken?: string }) {
   const handleExit = () => {
     window.location.href = '/';
   };
 
   return (
-    <CmsProvider>
+    <CmsProvider studioToken={studioToken}>
       <Toaster position="bottom-right" richColors />
       <StudioContent onExit={handleExit} />
     </CmsProvider>

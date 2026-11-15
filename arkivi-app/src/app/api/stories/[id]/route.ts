@@ -1,10 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState } from '@/src/lib/payloadClient';
+import { verifyAdminAuth } from '@/src/lib/adminAuth';
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = verifyAdminAuth(req);
+  if (!auth.authorized) {
+    return NextResponse.json(
+      { error: 'I paautorizuar: Fshirja e rrëfimeve kërkon autorizim administratori.' },
+      { status: auth.status }
+    );
+  }
+
   try {
     const { id } = await params;
     const current = await getCmsState();

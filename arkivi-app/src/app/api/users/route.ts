@@ -1,28 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getPayloadClient } from '@/src/lib/payloadClient';
+import { extractBearerToken, verifyAdminAuth } from '@/src/lib/adminAuth';
 
 async function verifyUsersAuth(req: Request): Promise<{ authorized: boolean; status: number }> {
-  const adminSecret = process.env.ADMIN_SECRET?.trim();
-  const payloadSecret = (process.env.PAYLOAD_SECRET || 'sekret-arkivi-dritan-berisha-2026-autorit').trim();
-  const validSecrets = [adminSecret, payloadSecret].filter((s): s is string => Boolean(s && s.length > 0));
-
-  const authHeader = req.headers.get('authorization');
-  const adminToken = req.headers.get('x-admin-token');
-
-  let token: string | undefined = adminToken?.trim();
-  if (!token && authHeader) {
-    const trimmedAuth = authHeader.trim();
-    if (trimmedAuth.toLowerCase().startsWith('bearer')) {
-      token = trimmedAuth.slice(6).trim();
-    } else {
-      token = trimmedAuth;
-    }
-  }
-
   // 1. Direct Secret / Bearer Token Check
-  if (token && token.trim().length > 0 && validSecrets.includes(token)) {
-    return { authorized: true, status: 200 };
+  const direct = verifyAdminAuth(req);
+  if (direct.authorized) {
+    return direct;
   }
+
+  const token = extractBearerToken(req);
 
   // 2. Authenticated Payload Session Check (via payload.auth if available)
   try {
@@ -102,7 +89,14 @@ export async function POST(req: Request) {
       role?: 'author' | 'superuser';
     };
 
-    if (!email || !email.includes('@')) {
+    if (role !== undefined && role !== 'author' && role !== 'superuser') {
+      return NextResponse.json(
+        { error: 'Roli i vendosur nuk është i vlefshëm.' },
+        { status: 400 }
+      );
+    }
+
+    if (!email || !email.includes('@') || email.length > 320) {
       return NextResponse.json(
         { error: 'Ju lutemi vendosni një email të vlefshëm.' },
         { status: 400 }
@@ -121,7 +115,7 @@ export async function POST(req: Request) {
       data: {
         email: email.trim().toLowerCase(),
         password,
-        name: name?.trim() || 'Përdorues i Ri',
+        name: (name?.trim() || 'Përdorues i Ri').slice(0, 200),
         role: role || 'author',
       },
       overrideAccess: true,

@@ -3,6 +3,7 @@ import { getPayload } from 'payload';
 import { DEFAULT_CMS_STATE } from '../lib/defaultData';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const DATA_FILE = path.join(DATA_DIR, 'cms-data.json');
@@ -31,7 +32,18 @@ export async function runSeed() {
 
   if (existingUsers.totalDocs === 0) {
     const adminEmail = (process.env.INITIAL_ADMIN_EMAIL || 'admin@arkivi.local').trim();
-    const adminPassword = process.env.INITIAL_ADMIN_PASSWORD || 'Arkivi2026!';
+    const isProduction = process.env.NODE_ENV === 'production';
+    let adminPassword = process.env.INITIAL_ADMIN_PASSWORD?.trim() || '';
+    if (!adminPassword) {
+      // In production never fall back to a known password — generate a random one and log it once.
+      adminPassword = isProduction
+        ? crypto.randomBytes(12).toString('hex')
+        : 'Arkivi2026!';
+      if (isProduction) {
+        console.log(`[SEED] INITIAL_ADMIN_PASSWORD nuk u caktua në .env — u gjenerua fjalëkalim i rastësishëm për ${adminEmail}: ${adminPassword}`);
+        console.log('[SEED] Ruajeni këtë fjalëkalim dhe fshini logun e nisjes.');
+      }
+    }
     const adminName = (process.env.INITIAL_ADMIN_NAME || 'Administrator Teknik').trim();
 
     console.log(`[SEED] Po krijohet administratori teknik fillestar (${adminEmail})...`);

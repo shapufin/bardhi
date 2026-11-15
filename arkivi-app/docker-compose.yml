@@ -17,7 +17,7 @@ services:
       - ADMIN_SECRET=${ADMIN_SECRET}
       - DATABASE_URI=${DATABASE_URI:-file:./data/arkivi.db}
       - INITIAL_ADMIN_EMAIL=${INITIAL_ADMIN_EMAIL:-admin@arkivi.local}
-      - INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:-Arkivi2026!}
+      - INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:-}
       - INITIAL_ADMIN_NAME=${INITIAL_ADMIN_NAME:-Administrator Teknik}
     volumes:
       # Persistenca e plotë e bazës së të dhënave, fotove dhe kopjeve rezervë
@@ -25,7 +25,7 @@ services:
       - ./public/uploads:/app/public/uploads
       - ./backups:/app/backups
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/site"]
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/cms"]
       interval: 30s
       timeout: 10s
       retries: 3

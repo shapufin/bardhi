@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { getCmsState, saveCmsState } from '../src/lib/payloadClient';
 import './test-env';
 
-const VALID_SECRET = process.env.PAYLOAD_SECRET || 'sekret-arkivi-dritan-berisha-2026-autorit';
+const VALID_SECRET = process.env.PAYLOAD_SECRET || '';
 
 describe('Security & Auth Guardrails (SEC-01 & SEC-02)', () => {
   after(async () => {

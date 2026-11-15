@@ -51,7 +51,7 @@ export default buildConfig({
   collections: [Users, Stories, BookSpreads, Media, TimelineEntries],
   globals: [MemorialProfile, HeroSettings, HomeLayout],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || 'sekret-arkivi-dritan-berisha-2026-autorit',
+  secret: process.env.PAYLOAD_SECRET as string,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

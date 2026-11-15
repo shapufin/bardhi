@@ -2,7 +2,7 @@
 set -e
 
 echo "=========================================================="
-echo "🚀 Arkivi Përkujtimor Dritan Berisha — Docker Boot"
+echo "🚀 Arkivi Përkujtimor — Docker Boot"
 echo "=========================================================="
 
 # 1. Siguro dosjet e persistencës

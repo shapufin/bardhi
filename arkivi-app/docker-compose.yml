@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: arkivi-dritan-berisha
+    container_name: arkivi-app
     restart: unless-stopped
     ports:
       - "${PORT:-3001}:3001"

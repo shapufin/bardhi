@@ -7,3 +7,19 @@ dist
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Secrets — never commit real env files
+.env
+.env.local
+.env.*.local
+
+# Tooling / agent caches
+.trace-mcp/
+graphify-out/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Runtime backup archives (produced by npm run backup / /api/backup)
+arkivi-app/backups/
+backups/

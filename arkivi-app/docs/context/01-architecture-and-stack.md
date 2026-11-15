@@ -41,7 +41,7 @@
 # Verifikimi i tipizimit Typescript (0 gabime)
 npm run lint
 
-# Verifikimi i të gjithë testeve të arkitekturës dhe sigurisë (51 teste)
+# Verifikimi i të gjithë testeve të arkitekturës dhe sigurisë (67 teste)
 npm test
 
 # Verifikimi i kompilimit Next.js + Payload prodhues

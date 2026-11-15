@@ -32,6 +32,8 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 |---|---|
 | [src/payload.config.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/payload.config.ts) | Konfigurimi kryesor i Payload: SQLite, koleksionet, globalet, lokalizimi `sq` |
 | [src/lib/payloadClient.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/lib/payloadClient.ts) | Zgjidhja e rrugëve absolute `getAppRoot()` (SYS-01), transaksionet atomike JSON `atomicWriteFile`, `getCmsState`, `saveCmsState` |
+| [src/lib/adminAuth.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/lib/adminAuth.ts) | Verifikimi i përbashkët i token-it administrativ (`STUDIO_TOKEN`/`ADMIN_SECRET`/`PAYLOAD_SECRET`) për të gjitha endpoint-et e shkrimit |
+| [src/lib/backupArchive.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/lib/backupArchive.ts) | Motori i përbashkët ZIP (jszip) për backup/restore — pa varësi nga PowerShell, funksionon në Windows e Linux |
 | [src/collections/Users.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/Users.ts) | Përdoruesit me rolet `author` dhe `superuser` |
 | [src/collections/Stories.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/Stories.ts) | Koleksioni i rrëfimeve (titulli, periudha, paragrafët, drop-cap, statusi) |
 | [src/collections/BookSpreads.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/BookSpreads.ts) | Fletët dyshe të librit dhe blloqet (`prose`, `photo`, `quote`, `handwritten-note`) |
@@ -102,6 +104,7 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 
 | Skedari | Sasia | Çfarë Teston |
 |---|---|---|
+| [tests/admin-auth.test.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/tests/admin-auth.test.ts) | 16 teste | AUDIT-2026-11-15: 401/403 pa token në të gjitha endpoint-et e shkrimit + backup/restore, 200 me token |
 | [tests/backup-restore.test.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/tests/backup-restore.test.ts) | 16 teste | R2: Backup CLI, Restore CLI, API roundtrip, manifest SHA-256, korruptime, atomic rollback, disaster recovery 100% |
 | [tests/upload.test.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/tests/upload.test.ts) | 15 teste | R3: Kufiri 5MB (pranim 5MB të saktë, refuzim 5MB+1 bajt me 413), kompresimi Sharp WebP q82, refuzim skedarësh të korruptuar |
 | [tests/security.test.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/tests/security.test.ts) | 13 teste | R1: SEC-01 guard te /api/cms/reset, SEC-02 guard te /api/users, validimi i fjalëkalimit/emailit, mbrojtja nga ndryshimet e paautorizuara |

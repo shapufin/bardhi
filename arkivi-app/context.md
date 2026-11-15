@@ -49,7 +49,7 @@ Kur merrni një detyrë, gjeni fjalën kyçe këtu dhe lexoni **vetëm skedarin 
 4. **Fizika e Librit 3D**: Mbani të paprekur strukturën e shtresave `translateZ` dhe koordinimin atomik të gjendjes (`ReaderNavState`) në mënyrë që fletët 3D të mos priten dhe të mos kenë dridhje gjatë kthimit.
 5. **Kufiri i Rreptë Server-Side ≤ 5MB dhe Kompresimi Sharp**: Çdo imazh që tejkalon 5MB (5,242,880 bajt) refuzohet në mënyrë të prerë me status HTTP 413. Të gjitha imazhet e pranuara konvertohen në formatin WebP (quality 82, auto-orientation, max 2560px) duke zvogëluar ndjeshëm hapësirën në disk.
 6. **Integriteti Zero-Humbje i Rezervimit/Rivendosjes**: Çdo arkiv backup përmban manifestin me checksums SHA-256 bit-për-bit për `data/arkivi.db` dhe `data/cms-data.json`. Para çdo ndryshimi gjatë restore-it, checksums verifikohen plotësisht dhe ruhet një snapshot automatik rollback në rast dështimi.
-7. **Siguria e Endpoint-eve Administrative**: `/api/cms/reset` kërkon autorizim të detyrueshëm Bearer ose `x-admin-token` dhe konfirmim në prodhim (SEC-01). `/api/users` kërkon autorizim dhe parandalon regjistrimin e paautorizuar ose zbulimin e llogarive (SEC-02).
+7. **Siguria e Endpoint-eve Administrative**: Të gjitha endpoint-et e shkrimit (`/api/stories`, `/api/media`, `/api/timeline`, `/api/hero`, `/api/site`, `/api/layout`, `/api/book/spreads`, `/api/backup`, `/api/restore`) kërkojnë `x-admin-token`/Bearer që përputhet me `STUDIO_TOKEN`/`ADMIN_SECRET`/`PAYLOAD_SECRET` përmes `src/lib/adminAuth.ts`. `/api/cms/reset` kërkon autorizim + konfirmim në prodhim (SEC-01). `/api/users` kërkon autorizim dhe parandalon regjistrimin e paautorizuar ose zbulimin e llogarive (SEC-02). Studioja injekton token-in automatikisht — autori nuk shkruan asgjë.
 8. **Stabiliteti i Rrugëve**: Përdorni gjithmonë funksionin `getAppRoot()` nga `src/lib/payloadClient.ts` për të zgjidhur shtigjet e skedarëve, duke shmangur paqartësinë e `process.cwd()` (SYS-01).
 
 ---
@@ -57,7 +57,7 @@ Kur merrni një detyrë, gjeni fjalën kyçe këtu dhe lexoni **vetëm skedarin 
 ## 4. Komandat Kryesore
 
 ```powershell
-# Suita e testeve automatike (51 teste me ekzekutim sekuencial të sigurt)
+# Suita e testeve automatike (67 teste me ekzekutim sekuencial të sigurt)
 npm test
 
 # Krijimi i kopjes rezervë CLI (ZIP në backups/ me manifest SHA-256)

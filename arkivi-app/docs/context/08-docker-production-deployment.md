@@ -25,8 +25,9 @@ cp .env.example .env
 Hapni `.env` me editor (`nano .env`) dhe ndryshoni:
 - `NEXT_PUBLIC_SERVER_URL` me domenin tuaj (p.sh. `https://arkivi.al`).
 - `PAYLOAD_SECRET` me një çelës të gjatë e të sigurt (`openssl rand -hex 32`).
-- `ADMIN_SECRET` me një çelës sekret për mbrojtjen e API-ve.
-- Kredencialet e superadminit nëse dëshironi t'i ndryshoni nga ato të paracaktuarat (`admin@arkivi.local` / `Arkivi2026!`).
+- `ADMIN_SECRET` me një çelës sekret për mbrojtjen e API-ve (studio token + endpoints administrative). Opsionalisht `STUDIO_TOKEN` i dedikuar.
+- `INITIAL_ADMIN_PASSWORD` me një fjalëkalim të sigurt për superadminin — nëse mungon, sistemi gjeneron një të rastësishëm dhe e printon në loget e nisjes.
+- Healthcheck-u i kontejnerit kontrollon `GET /api/cms` (200 OK).
 
 ### Hapi 2: Ndërtoni dhe nisni kontejnerin
 ```bash
@@ -46,7 +47,7 @@ docker compose logs -f arkivi-app
 - **Studio e Autorit (e thjeshtë, pa fjalëkalim):** `http://IP_OSE_DOMENI:3001/studio`
 - **Paneli Teknik Administrativ (Payload):** `http://IP_OSE_DOMENI:3001/admin`
   - *Email:* `admin@arkivi.local` (ose ai që keni caktuar te `.env`)
-  - *Fjalëkalimi:* `Arkivi2026!` (ose ai që keni caktuar te `.env`)
+  - *Fjalëkalimi:* ai që keni caktuar te `INITIAL_ADMIN_PASSWORD` në `.env` (nëse mungon, shihni logun e nisjes për fjalëkalimin e gjeneruar automatikisht)
 
 ---
 

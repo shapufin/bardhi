@@ -107,7 +107,7 @@ export function StoryReaderView({
               <ArchivalImage src={cover.url} alt={cover.alt} title={cover.title} className="h-full w-full" />
             </div>
             <figcaption className="mt-2.5 font-serif text-sm italic text-muted-foreground">
-              Fig. 1 — {cover.caption || cover.title} ({cover.year})
+              Fig. 1 : {cover.caption || cover.title} ({cover.year})
             </figcaption>
           </figure>
         )}
@@ -145,7 +145,7 @@ export function StoryReaderView({
                       <ArchivalImage src={asset.url} alt={asset.alt} title={asset.title} className="h-full w-full" />
                     </div>
                     <figcaption className="mt-2 font-serif text-sm italic text-muted-foreground">
-                      Fig. {i + 2} — {asset.caption || asset.title} ({asset.year})
+                      Fig. {i + 2} : {asset.caption || asset.title} ({asset.year})
                     </figcaption>
                   </figure>
                 );

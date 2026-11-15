@@ -114,7 +114,7 @@ export function HomeHeroEditor() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="years-label" className="text-base">Vitet (Lindja — Rënia)</Label>
+            <Label htmlFor="years-label" className="text-base">Vitet (Lindja · Rënia)</Label>
             <Input
               id="years-label"
               value={siteDraft.yearsLabel}
@@ -247,6 +247,7 @@ export function HomeHeroEditor() {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label className="text-base">Rrëfimi i Lidhur Kryesor</Label>
+                {/* ds-allow-native-select */}
                 <Select
                   value={heroDraft.featuredStoryId}
                   onValueChange={(val) => setHeroDraft({ ...heroDraft, featuredStoryId: val })}
@@ -307,6 +308,7 @@ export function HomeHeroEditor() {
               {heroDraft.animationEnabled && (
                 <div className="mt-4 max-w-xs space-y-2 border-t border-border pt-4">
                   <Label className="text-sm">Lloji i Animacionit</Label>
+                  {/* ds-allow-native-select */}
                   <Select
                     value={heroDraft.animationStyle}
                     onValueChange={(val) =>
@@ -533,6 +535,7 @@ function SortableSectionRow({
           {section.type === 'stories-feed' && (
             <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground">Pamja e Rrëfimeve</Label>
+              {/* ds-allow-native-select */}
               <Select
                 value={section.storiesVariant || 'editorial-grid'}
                 onValueChange={(val) => onChange({ storiesVariant: val as StoriesLayoutVariant })}

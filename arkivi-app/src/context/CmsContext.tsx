@@ -74,7 +74,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
   // Keep browser document.title synced with Site Title edited in Admin GUI
   useEffect(() => {
     if (cms?.site.siteTitle) {
-      document.title = `${cms.site.siteTitle} — Arkivi & Libri Përkujtimor`;
+      document.title = `${cms.site.siteTitle} · Arkivi & Libri Përkujtimor`;
     }
   }, [cms?.site.siteTitle]);
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Arkivi i Dritan Berishës — Arkivi & Libri Përkujtimor',
+  title: 'Arkivi i Dritan Berishës · Arkivi & Libri Përkujtimor',
   description: 'Një dëshmi e qetë për birin që na mësoi të shohim dritën në gjërat e thjeshta.',
   icons: {
     icon: '/favicon.ico',

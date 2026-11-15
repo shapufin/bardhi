@@ -29,8 +29,8 @@ export function HeroSection({
   const isGentleDrift = shouldAnimate && hero.animationStyle === 'gentle-drift';
 
   return (
-    <section className="border-b border-border bg-background">
-      <div className="mx-auto max-w-6xl px-6 pb-14 pt-10 lg:pb-20 lg:pt-16">
+    <section className="border-b border-border bg-background overflow-hidden">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pb-14 pt-10 lg:pb-20 lg:pt-16">
         {/* Shiriti i sipërm i botimit arkivor */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-foreground/15 pb-4">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">

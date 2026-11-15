@@ -1,10 +1,21 @@
-import type { CollectionConfig } from 'payload';
+import { ValidationError, type CollectionConfig } from 'payload';
+
+const MAX_PAYLOAD_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export const Media: CollectionConfig = {
   slug: 'media',
   upload: {
     staticDir: 'media',
     mimeTypes: ['image/*'],
+    formatOptions: {
+      format: 'webp',
+      options: { quality: 82 },
+    },
+    resizeOptions: {
+      width: 2560,
+      fit: 'inside',
+      withoutEnlargement: true,
+    },
     imageSizes: [
       {
         name: 'thumbnail',
@@ -24,6 +35,25 @@ export const Media: CollectionConfig = {
       },
     ],
     adminThumbnail: 'thumbnail',
+  },
+  hooks: {
+    beforeValidate: [
+      async ({ req, data }) => {
+        const file = req.file || (req as unknown as { files?: { file?: { size?: number } } })?.files?.file;
+        const fileSize = file?.size;
+        if (typeof fileSize === 'number' && fileSize > MAX_PAYLOAD_IMAGE_SIZE) {
+          throw new ValidationError({
+            errors: [
+              {
+                message: 'Madhësia e fotografisë tejkalon kufirin maksimal të lejuar prej 5MB.',
+                path: 'file',
+              },
+            ],
+          });
+        }
+        return data;
+      },
+    ],
   },
   access: {
     read: () => true,

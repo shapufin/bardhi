@@ -70,7 +70,7 @@ export function BookSpotlightSection({
                     {sp.spreadTitle}
                   </span>
                   <span className="font-mono text-xs tabular-nums text-muted-foreground shrink-0">
-                    f. {sp.leftPageNumber}–{sp.rightPageNumber}
+                    f. {sp.leftPageNumber} - {sp.rightPageNumber}
                   </span>
                 </div>
               ))}

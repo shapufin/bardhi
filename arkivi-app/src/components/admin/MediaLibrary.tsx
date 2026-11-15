@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { ImagePlus, Trash2, Check } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/src/components/ui/button';
 import { Input, Textarea } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
@@ -13,6 +14,9 @@ import {
 import { ArchivalImage } from '@/src/components/ArchivalImage';
 import { useCms } from '@/src/context/CmsContext';
 import type { MediaAsset } from '@/src/types/cms';
+
+const MAX_UPLOAD_SIZE = 5 * 1024 * 1024; // 5MB limit
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -41,6 +45,19 @@ export function MediaPickerDialog({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      toast.error('Ju lutemi ngarkoni një fotografi të vlefshme (PNG, JPG, WebP).');
+      if (fileRef.current) fileRef.current.value = '';
+      return;
+    }
+
+    if (file.size > MAX_UPLOAD_SIZE) {
+      toast.error('Fotografia është më e madhe se 5MB. Ju lutemi zgjidhni një fotografi më të vogël.');
+      if (fileRef.current) fileRef.current.value = '';
+      return;
+    }
+
     setUploading(true);
     try {
       const dataUrl = await readFileAsDataUrl(file);
@@ -143,6 +160,19 @@ export function MediaLibrary() {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      toast.error('Ju lutemi ngarkoni një fotografi të vlefshme (PNG, JPG, WebP).');
+      if (fileRef.current) fileRef.current.value = '';
+      return;
+    }
+
+    if (file.size > MAX_UPLOAD_SIZE) {
+      toast.error('Fotografia është më e madhe se 5MB. Ju lutemi zgjidhni një fotografi më të vogël.');
+      if (fileRef.current) fileRef.current.value = '';
+      return;
+    }
+
     setUploading(true);
     try {
       const dataUrl = await readFileAsDataUrl(file);

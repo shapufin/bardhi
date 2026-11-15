@@ -85,7 +85,7 @@ export function BookPageContent({
                   {block.content}
                   {block.caption && (
                     <footer className="mt-2 font-sans text-[11px] not-italic uppercase tracking-[0.16em] text-[#635d55]">
-                      — {block.caption}
+                      · {block.caption}
                     </footer>
                   )}
                 </blockquote>

@@ -30,17 +30,21 @@ export async function runSeed() {
   });
 
   if (existingUsers.totalDocs === 0) {
-    console.log('[SEED] Po krijohet administratori teknik fillestar...');
+    const adminEmail = (process.env.INITIAL_ADMIN_EMAIL || 'admin@arkivi.local').trim();
+    const adminPassword = process.env.INITIAL_ADMIN_PASSWORD || 'Arkivi2026!';
+    const adminName = (process.env.INITIAL_ADMIN_NAME || 'Administrator Teknik').trim();
+
+    console.log(`[SEED] Po krijohet administratori teknik fillestar (${adminEmail})...`);
     await payload.create({
       collection: 'users',
       data: {
-        email: 'admin@arkivi.local',
-        password: 'Arkivi2026!',
-        name: 'Administrator Teknik',
+        email: adminEmail,
+        password: adminPassword,
+        name: adminName,
         role: 'superuser',
       },
     });
-    console.log('[SEED] Administratori u krijua: admin@arkivi.local / Arkivi2026!');
+    console.log(`[SEED] Administratori u krijua me sukses: ${adminEmail} (superuser)`);
   } else {
     console.log(`[SEED] Ekzistojnë ${existingUsers.totalDocs} përdorues në Payload.`);
   }

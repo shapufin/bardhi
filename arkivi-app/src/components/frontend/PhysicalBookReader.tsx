@@ -528,7 +528,7 @@ export function PhysicalBookReader({
                             {block.content}
                             {block.caption && (
                               <footer className="mt-2 font-sans text-xs uppercase tracking-widest text-muted-foreground">
-                                — {block.caption}
+                                · {block.caption}
                               </footer>
                             )}
                           </blockquote>
@@ -632,12 +632,12 @@ export function PhysicalBookReader({
               ? 'Kopertina e Librit'
               : isMobile && !editMode
                 ? `${mobCurrent.spread.chapterLabel} · Faqja ${mobCurrent.pageNumber}`
-                : `${currentSpread.chapterLabel} · Faqet ${currentSpread.leftPageNumber}–${currentSpread.rightPageNumber}`}
+                : `${currentSpread.chapterLabel} · Faqet ${currentSpread.leftPageNumber} - ${currentSpread.rightPageNumber}`}
           </p>
           <h1 className="font-serif text-lg font-medium text-foreground sm:text-xl">
             {coverClosed && !isMobile && !editMode
-              ? `${activeTitle} — ${authorName}`
-              : `${activeTitle} — ${isMobile && !editMode ? mobCurrent.spread.spreadTitle : currentSpread.spreadTitle}`}
+              ? `${activeTitle} : ${authorName}`
+              : `${activeTitle} : ${isMobile && !editMode ? mobCurrent.spread.spreadTitle : currentSpread.spreadTitle}`}
           </h1>
         </div>
 
@@ -1088,7 +1088,7 @@ export function PhysicalBookReader({
                     </p>
                   </div>
                   <span className="font-mono text-xs tabular-nums shrink-0">
-                    {sp.leftPageNumber}–{sp.rightPageNumber}
+                    {sp.leftPageNumber} - {sp.rightPageNumber}
                   </span>
                 </button>
               ))}

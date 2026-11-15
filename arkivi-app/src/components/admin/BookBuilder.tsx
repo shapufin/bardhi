@@ -428,7 +428,7 @@ function SortableSpreadTile({
 
       <button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left cursor-pointer">
         <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-          {spread.chapterLabel} · f. {spread.leftPageNumber}–{spread.rightPageNumber}
+          {spread.chapterLabel} · f. {spread.leftPageNumber} - {spread.rightPageNumber}
         </p>
         <p className="truncate font-serif text-lg font-medium text-foreground">
           {spread.spreadTitle}

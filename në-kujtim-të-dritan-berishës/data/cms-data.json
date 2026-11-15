@@ -409,6 +409,86 @@
   },
   "media": [
     {
+      "id": "media-1794670470616",
+      "title": "Probe Widescreen Aspect Ratio",
+      "url": "/uploads/media-1794670470616.jpg",
+      "alt": "Probe Widescreen Aspect Ratio",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670470570",
+      "title": "Probe Small Image No Enlargement",
+      "url": "/uploads/media-1794670470570.jpg",
+      "alt": "Probe Small Image No Enlargement",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670470530",
+      "title": "Probe High-Res Camera 4.8MB JPEG",
+      "url": "/uploads/media-1794670470530.jpg",
+      "alt": "Probe High-Res Camera 4.8MB JPEG",
+      "caption": "Fotografi testimi me densitet të lartë",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670470146",
+      "title": "Probe Truncated PNG",
+      "url": "/uploads/media-1794670470146.png",
+      "alt": "Probe Truncated PNG",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670470132",
+      "title": "Probe Corrupted Bytes",
+      "url": "/uploads/media-1794670470132.jpg",
+      "alt": "Probe Corrupted Bytes",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670470079",
+      "title": "Probe 10MB Excessive Payload",
+      "url": "/uploads/media-1794670470079.jpg",
+      "alt": "Probe 10MB Excessive Payload",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670469781",
+      "title": "Probe 5MB + 1 byte Boundary HTTP",
+      "url": "/uploads/media-1794670469781.jpg",
+      "alt": "Probe 5MB + 1 byte Boundary HTTP",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
+      "id": "media-1794670469617",
+      "title": "Probe Exact 5MB Boundary HTTP",
+      "url": "/uploads/media-1794670469617.jpg",
+      "alt": "Probe Exact 5MB Boundary HTTP",
+      "caption": "",
+      "year": "2026",
+      "aspectRatio": "4:3",
+      "isUpload": true
+    },
+    {
       "id": "media-portrait",
       "title": "Dritani pranë Dritares Perëndimore",
       "url": "/src/assets/images/hero_memorial_portrait_1794650424499.jpg",
@@ -463,5 +543,5 @@
       "aspectRatio": "3:4"
     }
   ],
-  "updatedAt": "2026-11-14T10:17:35.287Z"
+  "updatedAt": "2026-11-14T15:34:30.619Z"
 }

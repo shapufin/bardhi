@@ -116,7 +116,7 @@ export function MasonryGallerySection({
                 <DialogTitle>{activePhoto.title}</DialogTitle>
                 <DialogDescription>
                   {activePhoto.year}
-                  {activePhoto.caption ? ` — ${activePhoto.caption}` : ''}
+                  {activePhoto.caption ? ` · ${activePhoto.caption}` : ''}
                 </DialogDescription>
               </DialogHeader>
 

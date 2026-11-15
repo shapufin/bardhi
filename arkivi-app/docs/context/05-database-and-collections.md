@@ -1,32 +1,43 @@
 # 05 — Baza e të Dhënave & Skemat e PayloadCMS v3
 
 ## Çfarë Duhet të Jetë e Vërtetë (Invariants)
-1. Baza lokale është SQLite (`data/arkivi.db`) përmes `@payloadcms/db-sqlite`.
-2. Të gjitha koleksionet dhe globalet janë të përkthyera në gjuhën shqipe (`locale: 'sq'`).
-3. Të dhënat janë të ndara në:
-   - **Koleksione**:
-     - `users`: Përdoruesit me rolet `author` dhe `superuser`.
-     - `stories`: Rrëfimet dhe letrat me periudha, minuta leximi, kapak, dhe paragrafë.
-     - `book-spreads`: Fletët dyshe të librit të renditura me `sortOrder` dhe blloqe të shumëllojshme.
-     - `media`: Skedarët fotografikë me raport pamjeje dhe diçitura.
-     - `timeline-entries`: Pikat e renditura të kronologjisë së jetës.
-   - **Globale**:
-     - `memorial-profile`: Titulli i faqes, të dhënat e kushtimit dhe lidhjet e menysë.
-     - `hero-settings`: Ballina kryesore, animacioni dhe rrëfimi i veçuar.
-     - `home-layout`: Renditja e seksioneve dinamike dhe thënia arkivore.
+1. **Arkitektura e Dyfishtë e të Dhënave (Dual-Persistence)**:
+   - Baza lokale kryesore është SQLite (`data/arkivi.db`) përmes `@payloadcms/db-sqlite`. Në prodhim lidhet lehtësisht me PostgreSQL përmes `DATABASE_URI`.
+   - Gjendja aktive e përmbajtjes së CMS-it ruhet në mënyrë atomike te `data/cms-data.json` me transaksione të mbrojtura me retry (`atomicWriteFile`).
+2. **Lokalizimi i Plotë Shqip**: Të gjitha koleksionet, fushat dhe globalet janë të konfiguruara dhe të përkthyera në gjuhën shqipe (`locale: 'sq'`).
+3. **Koleksionet Kryesore**:
+   - `users`: Përdoruesit me rolet `author` dhe `superuser`, fjalëkalime të hash-uara dhe menaxhim sesioni.
+   - `stories`: Kujtimet dhe letrat memoriale me periudha kohore, minuta leximi, kapak, citat dhe trup paragrafësh.
+   - `book-spreads`: Fletët dyshe të librit 3D të renditura me `sortOrder` dhe blloqe të pasura (`prose`, `photo`, `quote`, `handwritten-note`).
+   - `media`: Menaxhimi i skedarëve fotografikë. Përmban:
+     * Hook-un e sigurisë `beforeValidate` që refuzon çdo skedar mbi 5MB (5,242,880 bajt) me mesazhin: *"Madhësia e fotografisë tejkalon kufirin maksimal të lejuar prej 5MB."*
+     * Konfigurimin `formatOptions`: format WebP me cilësi 82 (`options: { quality: 82 }`).
+     * Konfigurimin `resizeOptions`: gjerësi maksimale 2560px me ruajtje proporcioni (`fit: 'inside', withoutEnlargement: true`).
+     * Madhësi imazhesh automatike: `thumbnail` (400x300), `card` (768x1024), dhe `feature` (1920px).
+   - `timeline-entries`: Pikat e renditura kronologjike të jetës dhe shërbimit.
+4. **Globalet Kryesore**:
+   - `memorial-profile`: Titulli i faqes, të dhënat biografike të të nderuarit dhe lidhjet e menysë kryesore.
+   - `hero-settings`: Ballina kryesore, animacioni i butë natyror dhe rrëfimi i veçuar.
+   - `home-layout`: Renditja dinamike e seksioneve të ballinës dhe thënia përkujtimore.
 
 ## Ku Ndodhet Kodi
 - Konfigurimi Kryesor: `src/payload.config.ts`
-- Koleksionet: `src/collections/`
-- Globalet: `src/globals/`
-- Lidhësi i të Dhënave: `src/lib/payloadClient.ts` dhe `data/cms-data.json`
+- Koleksionet: `src/collections/` (`Users.ts`, `Stories.ts`, `BookSpreads.ts`, `Media.ts`, `TimelineEntries.ts`)
+- Globalet: `src/globals/` (`MemorialProfile.ts`, `HeroSettings.ts`, `HomeLayout.ts`)
+- Lidhësi i të Dhënave & Zgjidhja e Shtigjeve: `src/lib/payloadClient.ts`
+- Skedari i Gjendjes CMS: `data/cms-data.json`
+- Skedari i Bazës SQLite: `data/arkivi.db`
 
 ## Çfarë Nuk Duhet të Bëhet
+- Mos hiqni hook-un `beforeValidate` nga `src/collections/Media.ts`, pasi ai garanton se asnjë ngarkim mbi 5MB nuk mund të depërtojë në bazën e të dhënave të Payload.
 - Mos fshini fusha nga skemat e Payload pa azhurnuar tipet në `src/types/cms.ts` dhe frontend-in përkatës.
 - Mos ruani imazhe pa përcaktuar `aspectRatio` përkatës, pasi ai ndihmon në renditjen harmonike të galerisë mozaik.
 
 ## Verifikimi
 ```powershell
-bun run lint
-bun run payload generate:types
+# Verifikimi i tipizimit Typescript
+npm run lint
+
+# Ekzekutimi i testeve të kufijve të Media dhe integritetit të bazës
+npm test
 ```

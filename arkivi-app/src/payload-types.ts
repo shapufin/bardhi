@@ -97,11 +97,13 @@ export interface Config {
     'memorial-profile': MemorialProfile;
     'hero-settings': HeroSetting;
     'home-layout': HomeLayout;
+    'studio-settings': StudioSetting;
   };
   globalsSelect: {
     'memorial-profile': MemorialProfileSelect<false> | MemorialProfileSelect<true>;
     'hero-settings': HeroSettingsSelect<false> | HeroSettingsSelect<true>;
     'home-layout': HomeLayoutSelect<false> | HomeLayoutSelect<true>;
+    'studio-settings': StudioSettingsSelect<false> | StudioSettingsSelect<true>;
   };
   locale: 'sq';
   widgets: {
@@ -733,6 +735,19 @@ export interface HomeLayout {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "studio-settings".
+ */
+export interface StudioSetting {
+  id: number;
+  /**
+   * Shkruani fjalëkalimin e ri dhe ruani — ruhet i enkriptuar (hash). Për ndryshim, shkruani fjalëkalimin e ri mbi vlerën ekzistuese.
+   */
+  password?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "memorial-profile_select".
  */
 export interface MemorialProfileSelect<T extends boolean = true> {
@@ -802,6 +817,16 @@ export interface HomeLayoutSelect<T extends boolean = true> {
         bookSubtitle?: T;
         coverImage?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "studio-settings_select".
+ */
+export interface StudioSettingsSelect<T extends boolean = true> {
+  password?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

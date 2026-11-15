@@ -14,6 +14,7 @@ import { TimelineEntries } from './collections/TimelineEntries';
 import { MemorialProfile } from './globals/MemorialProfile';
 import { HeroSettings } from './globals/HeroSettings';
 import { HomeLayout } from './globals/HomeLayout';
+import { StudioSettings } from './globals/StudioSettings';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -49,7 +50,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Stories, BookSpreads, Media, TimelineEntries],
-  globals: [MemorialProfile, HeroSettings, HomeLayout],
+  globals: [MemorialProfile, HeroSettings, HomeLayout, StudioSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET as string,
   typescript: {

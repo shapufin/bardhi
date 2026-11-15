@@ -1,9 +1,12 @@
+import { isStudioRequestAuthorized } from './studioAuth';
+
 /**
  * Shared admin-token verification for mutation/admin API routes.
  *
  * Accepted credentials (checked in order, all from environment — never hardcoded):
  *   - `x-admin-token` header or `Authorization: Bearer <token>`
  *   - STUDIO_TOKEN, ADMIN_SECRET, or PAYLOAD_SECRET env values
+ *   - `studio_session` cookie issued by /api/studio/login (Studio author login)
  *
  * If no secrets are configured, every request is denied.
  */
@@ -12,16 +15,6 @@ export function getAdminTokens(): string[] {
   return [process.env.STUDIO_TOKEN, process.env.ADMIN_SECRET, process.env.PAYLOAD_SECRET]
     .map((s) => s?.trim())
     .filter((s): s is string => Boolean(s && s.length > 0));
-}
-
-/** Token the studio UI should send. Picks the first configured secret deterministically. */
-export function getStudioToken(): string {
-  return (
-    process.env.STUDIO_TOKEN?.trim() ||
-    process.env.ADMIN_SECRET?.trim() ||
-    process.env.PAYLOAD_SECRET?.trim() ||
-    ''
-  );
 }
 
 export function extractBearerToken(req: Request): string | undefined {
@@ -38,16 +31,19 @@ export function extractBearerToken(req: Request): string | undefined {
 
 export function verifyAdminAuth(req: Request): { authorized: boolean; status: number } {
   const validSecrets = getAdminTokens();
-  if (validSecrets.length === 0) {
-    return { authorized: false, status: 403 };
+  const token = extractBearerToken(req);
+
+  if (token) {
+    if (validSecrets.length === 0 || !validSecrets.includes(token)) {
+      return { authorized: false, status: 403 };
+    }
+    return { authorized: true, status: 200 };
   }
 
-  const token = extractBearerToken(req);
-  if (!token) {
-    return { authorized: false, status: 401 };
+  // Studio author session cookie (issued by /api/studio/login)
+  if (isStudioRequestAuthorized(req)) {
+    return { authorized: true, status: 200 };
   }
-  if (!validSecrets.includes(token)) {
-    return { authorized: false, status: 403 };
-  }
-  return { authorized: true, status: 200 };
+
+  return { authorized: false, status: validSecrets.length === 0 ? 403 : 401 };
 }

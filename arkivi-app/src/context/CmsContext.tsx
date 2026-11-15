@@ -122,7 +122,7 @@ export function CmsProvider({ children, studioToken = '' }: { children: React.Re
   );
 
   const updateHero = useCallback(
-    (patch: Partial<HeroSettings>) => mutate('/api/hero', 'PUT', patch, 'Ballina kryesore u përditësua'),
+    (patch: Partial<HeroSettings>) => mutate('/api/hero', 'PUT', patch, 'Kryefaqja kryesore u përditësua'),
     [mutate]
   );
 

@@ -11,7 +11,7 @@ export const DEFAULT_CMS_STATE: CmsState = {
     dedicationLine: 'Për çdo mëngjes pranë dritares dhe për çdo letër të dërguar në shtëpi.',
     footerNote: 'Ruajtur me dashuri nga familja Berisha. Çdo rrëfim dhe fotografi mbetet dëshmi e gjallë e jetës së tij.',
     navMenu: [
-      { id: 'nav-home', target: 'home', label: 'Ballina', enabled: true },
+      { id: 'nav-home', target: 'home', label: 'Kryefaqja', enabled: true },
       { id: 'nav-stories', target: 'stories', label: 'Rrëfimet', enabled: true },
       { id: 'nav-book', target: 'book', label: 'Libri i Tij', enabled: true },
       { id: 'nav-gallery', target: 'gallery', label: 'Galeria', enabled: true },

@@ -45,7 +45,7 @@ export async function PUT(req: Request) {
     const updated = await saveCmsState({ ...current, hero });
     return NextResponse.json(updated);
   } catch (error) {
-    console.error('Gabim gjatë ruajtjes së ballinës:', error);
+    console.error('Gabim gjatë ruajtjes së kryefaqes:', error);
     return NextResponse.json({ error: 'Nuk u ruajt seksioni kryesor.' }, { status: 500 });
   }
 }

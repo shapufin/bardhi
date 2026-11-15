@@ -2,7 +2,7 @@ import type { GlobalConfig } from 'payload';
 
 export const HeroSettings: GlobalConfig = {
   slug: 'hero-settings',
-  label: 'Ballina Kryesore & Rrëfimi i Veçuar',
+  label: 'Kryefaqja & Rrëfimi i Veçuar',
   access: {
     read: () => true,
   },
@@ -16,27 +16,27 @@ export const HeroSettings: GlobalConfig = {
     {
       name: 'headline',
       type: 'text',
-      label: 'Titulli Kryesor i Ballinës',
+      label: 'Titulli Kryesor i Kryefaqes',
       defaultValue: 'Një dëshmi e qetë për birin që na mësoi të shohim dritën në gjërat e thjeshta',
       required: true,
     },
     {
       name: 'subheadline',
       type: 'textarea',
-      label: 'Përshkrimi i Ballinës',
+      label: 'Përshkrimi i Kryefaqes',
       defaultValue: 'Rrëfime, letra nga shërbimi, fotografi të ruajtura në sirtar dhe kapitujt e një libri të shkruar me dorë — mbledhur këtu që kushdo që e deshi Dritanin ta gjejë gjithmonë pranë.',
     },
     {
       name: 'heroImage',
       type: 'upload',
       relationTo: 'media',
-      label: 'Portreti Kryesor i Ballinës',
+      label: 'Portreti Kryesor i Kryefaqes',
     },
     {
       name: 'featuredStory',
       type: 'relationship',
       relationTo: 'stories',
-      label: 'Rrëfimi i Veçuar në Ballinë',
+      label: 'Rrëfimi i Veçuar në Kryefaqe',
     },
     {
       name: 'primaryCtaLabel',
@@ -53,7 +53,7 @@ export const HeroSettings: GlobalConfig = {
     {
       name: 'animationEnabled',
       type: 'checkbox',
-      label: 'Aktivizo Lëvizjen e Butë të Ballinës',
+      label: 'Aktivizo Lëvizjen e Butë të Kryefaqes',
       defaultValue: true,
     },
     {

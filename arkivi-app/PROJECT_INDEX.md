@@ -40,8 +40,8 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 | [src/collections/Media.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/Media.ts) | Hook-u `beforeValidate` për refuzimin e ngarkimeve > 5MB, resize 2560px, dhe kompresim WebP q82 |
 | [src/collections/TimelineEntries.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/collections/TimelineEntries.ts) | Kronologjia e jetës dhe shërbimit |
 | [src/globals/MemorialProfile.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/MemorialProfile.ts) | Titulli i faqes, të dhënat e të nderuarit dhe nyjet e menysë kryesore |
-| [src/globals/HeroSettings.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/HeroSettings.ts) | Titujt e ballinës, rrëfimi kryesor dhe animacioni |
-| [src/globals/HomeLayout.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/HomeLayout.ts) | Renditja e seksioneve dinamike të ballinës dhe thënia |
+| [src/globals/HeroSettings.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/HeroSettings.ts) | Titujt e kryefaqes, rrëfimi kryesor dhe animacioni |
+| [src/globals/HomeLayout.ts](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/globals/HomeLayout.ts) | Renditja e seksioneve dinamike të kryefaqes dhe thënia |
 
 ---
 
@@ -52,7 +52,7 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 | [AdminStudio.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/AdminStudio.tsx) | Korniza kryesore e studios me 6 skeda navigimi (përfshirë "Rezervim & Rivendosje") |
 | [BackupManager.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/BackupManager.tsx) | Paneli i rezervimit dhe rivendosjes (shkarkim ZIP, ngarkim arkivi me konfirmim, njoftime statusi) |
 | [AdminStudioWrapper.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/AdminStudioWrapper.tsx) | Mbështjellësi i kontekstit CMS për Payload Admin View dhe `/studio` |
-| [HomeHeroEditor.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/HomeHeroEditor.tsx) | Redaktimi i ballinës, menysë lart dhe renditja e seksioneve me tërheqje (`@dnd-kit`) |
+| [HomeHeroEditor.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/HomeHeroEditor.tsx) | Redaktimi i kryefaqes, menysë lart dhe renditja e seksioneve me tërheqje (`@dnd-kit`) |
 | [StoryManager.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/StoryManager.tsx) | Shkrimi dhe menaxhimi i rrëfimeve (draft, publikuar, kapak, citim) |
 | [BookBuilder.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/BookBuilder.tsx) | Ndërtuesi vizual i librit me fletë dyshe dhe blloqe të renditshme |
 | [MediaLibrary.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/admin/MediaLibrary.tsx) | Ngarkimi i fotografive me pre-flight check client-side (≤ 5MB) dhe njoftime Sonner toast në shqip |
@@ -66,7 +66,7 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 |---|---|
 | [PublicSite.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/PublicSite.tsx) | Orkestruesi i faqes kryesore sipas renditjes dinamike të seksioneve |
 | [PublicHeader.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/PublicHeader.tsx) | Shiriti i sipërm 3-zonash me nyjet dinamike dhe butonin "Studio e Autorit" |
-| [HeroSection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/HeroSection.tsx) | Ballina kryesore me portretin dhe animacionin e butë natyror |
+| [HeroSection.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/HeroSection.tsx) | Kryefaqja kryesore me portretin dhe animacionin e butë natyror |
 | [PhysicalBookReader.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/PhysicalBookReader.tsx) | Libri 3D me rrotullim fletësh, fizikë `@react-spring/web` dhe mbështetje celulari |
 | [BookInlineEditor.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/BookInlineEditor.tsx) | Redaktimi i menjëhershëm i librit direkt nga faqet e hapura |
 | [BookPageContent.tsx](file:///c:/Users/EDEMNUSHIW/Desktop/BARDHI/arkivi-app/src/components/frontend/BookPageContent.tsx) | Paraqitja tipografike e faqeve të majta/djathta me drop-cap |
@@ -92,7 +92,7 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 | `src/app/api/users/route.ts` | GET/POST: Menaxhon përdoruesit (SEC-02: kërkon kredenciale administrative) |
 | `src/app/api/cms/route.ts` | Kthen gjendjen e plotë arkivore në gjuhën shqipe |
 | `src/app/api/site/route.ts` | Përditëson titullin e faqes dhe menynë |
-| `src/app/api/hero/route.ts` | Përditëson ballinën kryesore dhe animacionin |
+| `src/app/api/hero/route.ts` | Përditëson kryefaqen kryesore dhe animacionin |
 | `src/app/api/layout/route.ts` | Përditëson renditjen e seksioneve dhe thënien |
 | `src/app/api/stories/route.ts` | Krijon, përditëson ose ruan rrëfime |
 | `src/app/api/book/spreads/route.ts` | Ruan fletët dyshe të librit |

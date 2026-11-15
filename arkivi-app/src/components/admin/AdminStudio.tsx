@@ -28,7 +28,7 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
   const navItems: { id: StudioSection; label: string; hint: string; icon: React.ReactNode }[] = [
     {
       id: 'home',
-      label: 'Ballina & Menyja',
+      label: 'Kryefaqja & Menyja',
       hint: 'Titulli, menyja dhe renditja',
       icon: <Home className="h-5 w-5" />,
     },

@@ -13,7 +13,7 @@ Aplikacioni mbështetet në një arkitekturë me **tri shtresa persistence** që
 | Shtresa | Vendndodhja | Përmbajtja |
 |---|---|---|
 | **SQLite database** | `data/arkivi.db` | Koleksionet PayloadCMS (përdoruesit, llogaritë, sesionet e siguruara) |
-| **CMS state JSON** | `data/cms-data.json` | Rrëfimet, fletët e librit 3D, kronologjia, media metadata, konfigurimi i ballinës dhe profili |
+| **CMS state JSON** | `data/cms-data.json` | Rrëfimet, fletët e librit 3D, kronologjia, media metadata, konfigurimi i kryefaqes dhe profili |
 | **Imazhet e ngarkuara** | `public/uploads/` & `media/` | Skedarët `.webp` të kompresuar dhe asetet e ngarkuara |
 
 ### 1.2 Formati i Arkivit ZIP dhe Manifesti SHA-256

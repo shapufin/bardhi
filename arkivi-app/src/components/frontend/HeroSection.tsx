@@ -41,7 +41,7 @@ export function HeroSection({
           </p>
         </div>
 
-        {/* Përbërja asimetrike e Ballinës (Monografi pa kuti SaaS) */}
+        {/* Përbërja asimetrike e Kryefaqes (Monografi pa kuti SaaS) */}
         <div className="mt-10 grid grid-cols-1 items-stretch gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-16">
           <motion.div
             initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
@@ -109,7 +109,7 @@ export function HeroSection({
           </motion.div>
         </div>
 
-        {/* Rreshti Arkivor Poshtë Ballinës */}
+        {/* Rreshti Arkivor Poshtë Kryefaqes */}
         <div className="mt-14 grid grid-cols-1 gap-6 border-t border-foreground/15 pt-7 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">

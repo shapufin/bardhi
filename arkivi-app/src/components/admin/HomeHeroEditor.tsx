@@ -204,14 +204,14 @@ export function HomeHeroEditor() {
         <div className="flex flex-col gap-3 border-b border-foreground/15 pb-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-serif text-3xl font-medium text-foreground">
-              Ballina Kryesore &amp; Rrëfimi i Veçuar
+              Kryefaqja &amp; Rrëfimi i Veçuar
             </h2>
             <p className="mt-1 text-base text-muted-foreground">
               Pamja e parë që shohin vizitorët kur hapin faqen përkujtimore.
             </p>
           </div>
           <Button size="lg" onClick={() => void updateHero(heroDraft)}>
-            Ruaj Ballinën
+            Ruaj Kryefaqen
           </Button>
         </div>
 
@@ -227,7 +227,7 @@ export function HomeHeroEditor() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="hero-headline" className="text-base">Titulli Kryesor i Ballinës</Label>
+              <Label htmlFor="hero-headline" className="text-base">Titulli Kryesor i Kryefaqes</Label>
               <Input
                 id="hero-headline"
                 value={heroDraft.headline}
@@ -275,14 +275,14 @@ export function HomeHeroEditor() {
               </div>
             </div>
 
-            {/* Kontrolli i Animacionit te Ballines */}
+            {/* Kontrolli i Animacionit në Kryefaqe */}
             <div className="border border-border bg-card p-5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-primary" />
                     <Label htmlFor="hero-motion-switch" className="text-base font-medium">
-                      Animacion i Qetë në Ballinë
+                      Animacion i Qetë në Kryefaqe
                     </Label>
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -331,11 +331,11 @@ export function HomeHeroEditor() {
 
           {/* Fotoja e Portretit */}
           <div className="space-y-4 lg:col-span-5">
-            <Label className="text-base">Fotografia e Portretit në Ballinë</Label>
+            <Label className="text-base">Fotografia e Portretit në Kryefaqe</Label>
             <div className="aspect-[3/4] max-h-[390px] w-full overflow-hidden border border-border bg-card">
               <ArchivalImage
                 src={heroMedia?.url}
-                alt={heroMedia?.alt || 'Portreti i ballinës'}
+                alt={heroMedia?.alt || 'Portreti i kryefaqes'}
                 title={heroMedia?.title}
                 className="h-full w-full"
               />
@@ -348,7 +348,7 @@ export function HomeHeroEditor() {
               className="w-full gap-2"
             >
               <ImageIcon className="h-4 w-4" />
-              <span>Ndrysho Fotografinë e Ballinës</span>
+              <span>Ndrysho Fotografinë e Kryefaqes</span>
             </Button>
           </div>
         </div>

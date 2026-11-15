@@ -421,7 +421,7 @@ export function PhysicalBookReader({
           Shtoni fleta dhe shënime te Ndërtuesi i Librit në Studion e Autorit.
         </p>
         <Button onClick={onExitBook} className="mt-6">
-          Kthehu në Ballinë
+          Kthehu në Kryefaqe
         </Button>
       </div>
     );
@@ -436,7 +436,7 @@ export function PhysicalBookReader({
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm" onClick={onExitBook} className="gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                <span>Ballina</span>
+                <span>Kryefaqja</span>
               </Button>
               <div>
                 <h1 className="font-serif text-2xl font-medium text-foreground">{activeTitle}</h1>
@@ -664,7 +664,7 @@ export function PhysicalBookReader({
           )}
           <Button variant="outline" size="sm" onClick={onExitBook} className="gap-1.5 bg-[#faf8f3]">
             <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Ballina</span>
+            <span className="hidden sm:inline">Kryefaqja</span>
           </Button>
         </div>
       </div>

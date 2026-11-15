@@ -61,7 +61,7 @@ export const MemorialProfile: GlobalConfig = {
           type: 'select',
           label: 'Seksioni i Synuar',
           options: [
-            { label: 'Ballina', value: 'home' },
+            { label: 'Kryefaqja', value: 'home' },
             { label: 'Rrëfimet', value: 'stories' },
             { label: 'Libri i Tij', value: 'book' },
             { label: 'Galeria', value: 'gallery' },

@@ -17,8 +17,8 @@
    - `timeline-entries`: Pikat e renditura kronologjike të jetës dhe shërbimit.
 4. **Globalet Kryesore**:
    - `memorial-profile`: Titulli i faqes, të dhënat biografike të të nderuarit dhe lidhjet e menysë kryesore.
-   - `hero-settings`: Ballina kryesore, animacioni i butë natyror dhe rrëfimi i veçuar.
-   - `home-layout`: Renditja dinamike e seksioneve të ballinës dhe thënia përkujtimore.
+   - `hero-settings`: Kryefaqja kryesore, animacioni i butë natyror dhe rrëfimi i veçuar.
+   - `home-layout`: Renditja dinamike e seksioneve të kryefaqes dhe thënia përkujtimore.
 
 ## Ku Ndodhet Kodi
 - Konfigurimi Kryesor: `src/payload.config.ts`

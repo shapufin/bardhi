@@ -4,7 +4,7 @@
 1. **Dizajn i Përshtatur për Autorin e Moshuar**: Ndërfaqja është projektuar posaçërisht për një prind të moshuar (një baba që shkruan për djalin e tij të rënë). Nuk kërkon fjalëkalim për hyrje te `/studio` dhe shmang çdo zhargon teknik.
 2. **Tipografi dhe Ndërveprim i Qartë**: Madhësia e tekstit për etiketat dhe butonat është gjithmonë e rehatshme (`16px+`), me kontrast të lartë dhe ikona të mëdha `lucide-react`.
 3. **Struktura me 6 Hapësira Kryesore**:
-   - **Ballina & Menyja** (`home`): Titulli i faqes, kushtimi, aktivizimi/çaktivizimi i nyjeve të menysë, dhe renditja e seksioneve të ballinës me Drag & Drop (`@dnd-kit`).
+   - **Kryefaqja & Menyja** (`home`): Titulli i faqes, kushtimi, aktivizimi/çaktivizimi i nyjeve të menysë, dhe renditja e seksioneve të kryefaqes me Drag & Drop (`@dnd-kit`).
    - **Rrëfimet** (`stories`): Menaxhimi i kujtimeve me kapak, drop-cap, periudhë kohore dhe status (publikuar/draft).
    - **Ndërtuesi i Librit** (`book`): Ndërtimi i fletëve dyshe me tërheqje të blloqeve majtas/djathtas.
    - **Albumi i Fotove** (`media`): Ngarkimi i fotografive nga kompjuteri me përcaktim të raportit të pamjes (`3:4`, `4:3`, `16:9`, `1:1`). Përfshin kontroll paraprak client-side (≤ 5MB) me njoftime Sonner toast në shqip nëse skedari tejkalon kufirin.
@@ -15,7 +15,7 @@
 ## Ku Ndodhet Kodi
 - Komponenti Kryesor i Studios: `src/components/admin/AdminStudio.tsx`
 - Mbështjellësi i Studio-s: `src/components/admin/AdminStudioWrapper.tsx`
-- Redaktori i Ballinës & Renditjes: `src/components/admin/HomeHeroEditor.tsx`
+- Redaktori i Kryefaqes & Renditjes: `src/components/admin/HomeHeroEditor.tsx`
 - Menaxhuesi i Rrëfimeve: `src/components/admin/StoryManager.tsx`
 - Ndërtuesi i Librit: `src/components/admin/BookBuilder.tsx`
 - Galeria e Ngarkimit & Kufijtë e Fotografive: `src/components/admin/MediaLibrary.tsx`

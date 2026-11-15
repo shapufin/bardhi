@@ -177,7 +177,7 @@ export function StoryManager() {
               <div className="flex items-center justify-between border-t border-border pt-4">
                 <div>
                   <Label htmlFor="story-featured" className="text-sm font-medium">
-                    Veço në Ballinë
+                    Veço në Kryefaqe
                   </Label>
                   <p className="text-xs text-muted-foreground">Shfaqe si kujtim kryesor</p>
                 </div>

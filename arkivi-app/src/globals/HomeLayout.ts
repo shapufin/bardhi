@@ -17,7 +17,7 @@ export const HomeLayout: GlobalConfig = {
           type: 'select',
           label: 'Lloji i Seksionit',
           options: [
-            { label: 'Ballina (Hero)', value: 'hero' },
+            { label: 'Kryefaqja (Hero)', value: 'hero' },
             { label: 'Rrëfimi i Veçuar', value: 'featured-story' },
             { label: 'Lista e Rrëfimeve', value: 'stories-feed' },
             { label: 'Libri Fizik 3D', value: 'book-spotlight' },
@@ -84,7 +84,7 @@ export const HomeLayout: GlobalConfig = {
     {
       name: 'bookInfo',
       type: 'group',
-      label: 'Të Dhënat e Librit në Ballinë',
+      label: 'Të Dhënat e Librit në Kryefaqe',
       fields: [
         {
           name: 'bookTitle',

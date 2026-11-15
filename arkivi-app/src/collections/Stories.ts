@@ -87,7 +87,7 @@ export const Stories: CollectionConfig = {
     {
       name: 'featured',
       type: 'checkbox',
-      label: 'Rrëfim i Veçuar në Ballinë',
+      label: 'Rrëfim i Veçuar në Kryefaqe',
       defaultValue: false,
     },
   ],

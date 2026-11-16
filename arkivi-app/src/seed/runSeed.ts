@@ -1,9 +1,11 @@
 import configPromise from '@payload-config';
 import { getPayload } from 'payload';
+import { pushDevSchema } from '@payloadcms/drizzle';
 import { DEFAULT_CMS_STATE } from '../lib/defaultData';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 const DATA_FILE = path.join(DATA_DIR, 'cms-data.json');
@@ -21,8 +23,16 @@ export async function runSeed() {
     console.log('[SEED] cms-data.json u krijua me të dhënat fillestare.');
   }
 
-  // 2. Inicializo Payload Client
+  // 2. Inicializo Payload Client dhe siguro skemën e tabelave në SQLite
   const payload = await getPayload({ config: configPromise });
+  try {
+    if (payload.db) {
+      await pushDevSchema(payload.db as any);
+      console.log('[SEED] Skema e tabelave në SQLite u verifikua/aplikua.');
+    }
+  } catch (err) {
+    console.warn('[SEED] Paralajmërim gjatë pushDevSchema:', err);
+  }
 
   // 3. Kontrollo dhe krijo Super Administratorin Teknik
   const existingUsers = await payload.find({
@@ -96,11 +106,17 @@ export async function runSeed() {
 }
 
 // Ekzekuto direkt nëse thirret nga CLI
-if (import.meta.url === `file:///${process.argv[1]?.replace(/\\/g, '/')}`) {
+const isDirectRun =
+  !process.argv[1] ||
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url) ||
+  process.argv[1].endsWith('runSeed.ts') ||
+  process.argv[1].endsWith('runSeed.js');
+
+if (isDirectRun) {
   runSeed()
     .then(() => process.exit(0))
     .catch((err) => {
-      console.error('[SEED] Gabim:', err);
+      console.error('[SEED] Gabim gjatë ekzekutimit të seed-it:', err);
       process.exit(1);
     });
 }

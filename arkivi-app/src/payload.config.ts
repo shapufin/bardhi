@@ -44,7 +44,7 @@ export default buildConfig({
       },
     },
     livePreview: {
-      url: () => `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001'}/?preview=true`,
+      url: `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001'}/?preview=true`,
       collections: ['stories', 'book-spreads'],
       globals: ['memorial-profile', 'hero-settings', 'home-layout'],
     },
@@ -61,14 +61,4 @@ export default buildConfig({
       url: process.env.DATABASE_URI || 'file:./data/arkivi.db',
     },
   }),
-  localization: {
-    locales: [
-      {
-        code: 'sq',
-        label: 'Shqip',
-      },
-    ],
-    defaultLocale: 'sq',
-    fallback: true,
-  },
 });

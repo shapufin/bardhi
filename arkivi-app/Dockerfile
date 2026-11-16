@@ -17,16 +17,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Kopjo skedarët e varësive
 COPY package.json package-lock.json* bun.lock* ./
 
-# Instalo të gjitha varësitë për ndërtim
-RUN npm install --legacy-peer-deps
+# Instalo të gjitha varësitë për ndërtim me cache të npm
+RUN --mount=type=cache,target=/root/.npm \
+    npm install --legacy-peer-deps
 
 # Kopjo kodin burimor
 COPY . .
 
-# Përpilo Next.js dhe Payload CMS për prodhim
+# Përpilo Next.js dhe Payload CMS për prodhim me cache të .next/cache
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache \
+    npm run build
 
 # ==============================================================================
 # Faza 2: Production Runner
@@ -57,6 +59,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
+COPY --from=builder /app/postcss.config.mjs ./postcss.config.mjs
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/data ./data
 

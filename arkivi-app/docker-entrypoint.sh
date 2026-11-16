@@ -10,7 +10,7 @@ mkdir -p /app/data /app/public/uploads /app/backups
 
 # 2. Ekzekuto seeding-un automatik (krijon cms-data.json, bazën arkivi.db dhe superuserin nëse nuk ekzistojnë)
 echo "🔍 Duke inicializuar të dhënat fillestare dhe llogarinë superadmin..."
-npx tsx src/seed/runSeed.ts || echo "⚠️ Paralajmërim gjatë inicializimit të seed-it (vazhdon nisja normale)."
+node --import tsx src/seed/runSeed.ts || npx tsx src/seed/runSeed.ts || echo "⚠️ Paralajmërim gjatë inicializimit të seed-it (vazhdon nisja normale)."
 
 echo "✅ Inicializimi përfundoi. Shërbyesi po fillon..."
 echo "=========================================================="

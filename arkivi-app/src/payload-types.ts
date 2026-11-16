@@ -92,7 +92,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | 'sq' | 'sq'[];
+  fallbackLocale: null;
   globals: {
     'memorial-profile': MemorialProfile;
     'hero-settings': HeroSetting;
@@ -105,7 +105,7 @@ export interface Config {
     'home-layout': HomeLayoutSelect<false> | HomeLayoutSelect<true>;
     'studio-settings': StudioSettingsSelect<false> | StudioSettingsSelect<true>;
   };
-  locale: 'sq';
+  locale: null;
   widgets: {
     collections: CollectionsWidget;
   };

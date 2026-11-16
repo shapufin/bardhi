@@ -7,7 +7,7 @@
    - **Kryefaqja & Menyja** (`home`): Titulli i faqes, kushtimi, aktivizimi/çaktivizimi i nyjeve të menysë, dhe renditja e seksioneve të kryefaqes me Drag & Drop (`@dnd-kit`).
    - **Rrëfimet** (`stories`): Menaxhimi i kujtimeve me kapak, drop-cap, periudhë kohore dhe status (publikuar/draft).
    - **Ndërtuesi i Librit** (`book`): Ndërtimi i fletëve dyshe me tërheqje të blloqeve majtas/djathtas.
-   - **Albumi i Fotove** (`media`): Ngarkimi i fotografive nga kompjuteri me përcaktim të raportit të pamjes (`3:4`, `4:3`, `16:9`, `1:1`). Përfshin kontroll paraprak client-side (≤ 5MB) me njoftime Sonner toast në shqip nëse skedari tejkalon kufirin.
+   - **Albumi i Fotove** (`media`): Ngarkimi dhe menaxhimi i fotografive me përcaktim të raportit të pamjes (`3:4`, `4:3`, `16:9`, `1:1`), kontroll paraprak (≤ 5MB), dhe fshirje e plotë me dialog konfirmimi në shqip dhe shkëputje automatike të referencave që asnjë foto të mos mbetet e bllokuar.
    - **Përdoruesit & Siguria** (`users`): Pasqyra e llogarisë së autorit dhe administratorit teknik, krijimi i përdoruesve të rinj dhe lidhja direkte me panelin teknik PayloadCMS.
    - **Rezervim & Rivendosje** (`backup`): Paneli administrativ me `BackupManager.tsx` (ikona `HardDrive`) që lejon shkarkimin e menjëhershëm të kopjes rezervë ZIP dhe ngarkimin/ekzekutimin e rivendosjes me konfirmim të qartë dhe njoftime progresi.
 4. **Pamje e Drejtpërdrejtë**: Butoni "Pamje e Drejtpërdrejtë" hap dialogun e testimit në ekran të plotë për pamjen desktop dhe celular pa dalë nga studioja.

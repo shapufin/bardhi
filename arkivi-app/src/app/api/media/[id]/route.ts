@@ -13,27 +13,6 @@ function clip(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
-/** Collect every media id referenced anywhere in CMS state. */
-function collectMediaReferences(state: CmsState): Set<string> {
-  const refs = new Set<string>();
-  const add = (id?: string) => {
-    if (typeof id === 'string' && id) refs.add(id);
-  };
-
-  add(state.hero?.heroImageId);
-  add(state.bookCoverImageId);
-  for (const story of state.stories ?? []) {
-    add(story.coverImageId);
-    for (const id of story.galleryImageIds ?? []) add(id);
-  }
-  for (const spread of state.bookSpreads ?? []) {
-    for (const block of [...(spread.leftBlocks ?? []), ...(spread.rightBlocks ?? [])]) {
-      add(block.imageId);
-    }
-  }
-  return refs;
-}
-
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -98,21 +77,43 @@ export async function DELETE(
       return NextResponse.json({ error: 'Fotografia nuk u gjet.' }, { status: 404 });
     }
 
-    if (collectMediaReferences(current).has(id)) {
-      return NextResponse.json(
-        { error: 'Kjo fotografi përdoret diku në arkiv (rrëfim, hero, libër ose faqe libri). Hiqeni referencën para se ta fshini.' },
-        { status: 409 }
-      );
-    }
+    // Shkëput automatikisht të gjitha referencat që kjo foto të mos mbetet e bllokuar (zero-lockout cascade)
+    const cleanedStories = (current.stories ?? []).map((story) => ({
+      ...story,
+      coverImageId: story.coverImageId === id ? '' : story.coverImageId,
+      galleryImageIds: (story.galleryImageIds ?? []).filter((gid) => gid !== id),
+    }));
 
-    if (target.isUpload && target.url.startsWith('/uploads/')) {
+    const cleanedSpreads = (current.bookSpreads ?? []).map((spread) => ({
+      ...spread,
+      leftBlocks: (spread.leftBlocks ?? []).map((b) => (b.imageId === id ? { ...b, imageId: undefined } : b)),
+      rightBlocks: (spread.rightBlocks ?? []).map((b) => (b.imageId === id ? { ...b, imageId: undefined } : b)),
+    }));
+
+    const cleanedHero = current.hero
+      ? {
+          ...current.hero,
+          heroImageId: current.hero.heroImageId === id ? '' : current.hero.heroImageId,
+        }
+      : current.hero;
+
+    const cleanedBookCover = current.bookCoverImageId === id ? '' : current.bookCoverImageId;
+
+    // Fshi skedarin fizik nga disku nëse ndodhet në /uploads/
+    if (target.url && target.url.startsWith('/uploads/')) {
       const filePath = path.join(UPLOADS_DIR, path.basename(target.url));
       await fs.unlink(filePath).catch(() => undefined);
     }
+
     const updated = await saveCmsState({
       ...current,
+      hero: cleanedHero,
+      bookCoverImageId: cleanedBookCover,
+      stories: cleanedStories,
+      bookSpreads: cleanedSpreads,
       media: current.media.filter((m) => m.id !== id),
     });
+
     return NextResponse.json(updated);
   } catch (error) {
     console.error('Gabim gjate fshirjes se fotografise:', error);

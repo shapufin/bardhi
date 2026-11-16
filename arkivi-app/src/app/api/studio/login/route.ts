@@ -83,6 +83,7 @@ export async function POST(req: Request) {
   }
 
   // 2) Fjalëkalimi i menaxhuar nga admini teknik në /admin (global "studio-settings")
+  let storedHash: string | null = null;
   if (!ok) {
     try {
       const global = (await payload.findGlobal({
@@ -90,7 +91,7 @@ export async function POST(req: Request) {
         overrideAccess: true,
         depth: 0,
       })) as unknown as { password?: string | null };
-      const storedHash = global?.password?.startsWith('scrypt$') ? global.password : null;
+      storedHash = global?.password?.startsWith('scrypt$') ? global.password : null;
       if (storedHash && verifyStudioPasswordHash(password, storedHash)) {
         ok = true;
       }
@@ -99,15 +100,7 @@ export async function POST(req: Request) {
     }
   }
 
-  // 3) Radhëzimi (bootstrap): STUDIO_PASSWORD nga .env
-  if (!ok) {
-    const envPassword = process.env.STUDIO_PASSWORD?.trim();
-    if (envPassword && password === envPassword) {
-      ok = true;
-    }
-  }
-
-  // 4) Kontroll i të gjithë përdoruesve në koleksionin 'users' (autorët dhe administratorët)
+  // 3) Kontroll i përdoruesve në koleksionin 'users' (nëse nuk u dha email/identifikues)
   if (!ok) {
     try {
       const usersRes = await payload.find({
@@ -124,6 +117,15 @@ export async function POST(req: Request) {
       }
     } catch {
       // injoro
+    }
+  }
+
+  // 4) Radhëzimi (bootstrap): STUDIO_PASSWORD nga .env, VETËM nëse nuk është caktuar
+  // fjalëkalim në studio-settings te Payload Admin UI (global password takes precedence).
+  if (!ok && !storedHash) {
+    const envPassword = process.env.STUDIO_PASSWORD?.trim();
+    if (envPassword && password === envPassword) {
+      ok = true;
     }
   }
 

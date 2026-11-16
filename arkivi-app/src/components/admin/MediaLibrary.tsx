@@ -156,6 +156,8 @@ export function MediaLibrary() {
   const [year, setYear] = useState('2023');
   const [uploading, setUploading] = useState(false);
   const [editing, setEditing] = useState<MediaAsset | null>(null);
+  const [deletingMedia, setDeletingMedia] = useState<MediaAsset | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -276,17 +278,16 @@ export function MediaLibrary() {
                   <Button variant="outline" size="sm" onClick={() => setEditing(item)}>
                     Ndrysho Shënimin
                   </Button>
-                  {item.isUpload && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      aria-label={`Fshij ${item.title}`}
-                      onClick={() => void deleteMedia(item.id)}
-                      className="ml-auto text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label={`Fshij ${item.title}`}
+                    onClick={() => setDeletingMedia(item)}
+                    className="ml-auto text-destructive hover:text-destructive hover:bg-destructive/10"
+                    title="Fshij nga albumi"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>
@@ -344,6 +345,44 @@ export function MediaLibrary() {
                     Ruaj Shënimet
                   </Button>
                 </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dritarja per konfirmimin e fshirjes se fotografise */}
+      <Dialog open={deletingMedia !== null} onOpenChange={(o) => !o && !isDeleting && setDeletingMedia(null)}>
+        <DialogContent className="max-w-md bg-card p-6">
+          {deletingMedia && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Fshij Fotografinë nga Albumi</DialogTitle>
+                <DialogDescription>
+                  A jeni i sigurt që dëshironi ta fshini fotografinë &ldquo;{deletingMedia.title}&rdquo; nga albumi? Nëse kjo fotografi përdoret në faqe, kopertinë apo libër, referenca do të hiqet automatikisht.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-6 flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setDeletingMedia(null)} disabled={isDeleting}>
+                  Anulo
+                </Button>
+                <Button
+                  variant="destructive"
+                  disabled={isDeleting}
+                  onClick={async () => {
+                    try {
+                      setIsDeleting(true);
+                      await deleteMedia(deletingMedia.id);
+                      setDeletingMedia(null);
+                    } finally {
+                      setIsDeleting(false);
+                    }
+                  }}
+                  className="gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>{isDeleting ? 'Duke fshirë...' : 'Po, Fshij Fotografinë'}</span>
+                </Button>
               </div>
             </>
           )}

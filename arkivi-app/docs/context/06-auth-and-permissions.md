@@ -28,7 +28,7 @@
    - Të mbrojtura: `POST/DELETE /api/stories`, `POST /api/media`, `PUT/DELETE /api/media/[id]`, `PUT /api/timeline`, `PUT /api/hero`, `PUT /api/site`, `PUT /api/layout`, `PUT /api/book/spreads`, `GET /api/backup`, `POST /api/restore`.
    - Të hapura për publikun (vetëm lexim): `GET /api/cms`, `GET /api/media`.
    - Kërkesat pa kredenciale kthejnë **HTTP 401**; kredenciale të pasakta **HTTP 403**.
-   - Kufizime përmbajtjeje: `PUT /api/media/[id]` pranon vetëm fushat e lejuara (whitelist); `DELETE /api/media/[id]` kthen **HTTP 409** nëse fotoje referencë nga rrëfim/hero/libër; të gjitha payload-et JSON kanë kufinj madhësie dhe gjatësie fushash.
+   - Kufizime përmbajtjeje: `PUT /api/media/[id]` pranon vetëm fushat e lejuara (whitelist); `DELETE /api/media/[id]` shkëput automatikisht referencat (zero-lockout cascade) nga rrëfim/hero/libër dhe heq skedarin nga disku; të gjitha payload-et JSON kanë kufinj madhësie dhe gjatësie fushash.
 
 ## Ku Ndodhet Kodi
 - Rruga e Autorit (me fjalëkalim Studio): `src/app/(frontend)/studio/page.tsx` + `src/components/admin/StudioLogin.tsx`

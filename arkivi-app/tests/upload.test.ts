@@ -603,4 +603,71 @@ describe('Image Upload 5MB Limit & Sharp Compression (R3)', () => {
       `Image width must be scaled down to max 2560px: actual width ${meta.width}px`
     );
   });
+
+  it('Tier 4: DELETE /api/media/:id cleanly removes asset and detaches all references across hero, stories and book', async () => {
+    const mediaRoute = await import('../src/app/api/media/route');
+    const mediaIdRoute = await import('../src/app/api/media/[id]/route');
+    const { dataUrl } = await createSolidImage('jpeg', 300, 200);
+
+    // 1. Upload a new image
+    const postReq = new Request('http://localhost:3001/api/media', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: 'Foto per Test Fshirje',
+        caption: 'Test deletion',
+        year: '2026',
+        dataUrl,
+      }),
+    });
+    const postRes = await mediaRoute.POST(postReq);
+    assert.strictEqual(postRes.status, 200);
+    const postJson = await postRes.json();
+    const testAssetId = postJson.asset.id;
+
+    // 2. Attach this image to hero, story cover, gallery, and book block
+    const cur = await getCmsState();
+    await saveCmsState({
+      ...cur,
+      hero: { ...cur.hero, heroImageId: testAssetId },
+      bookCoverImageId: testAssetId,
+      stories: cur.stories.map((s, idx) =>
+        idx === 0
+          ? { ...s, coverImageId: testAssetId, galleryImageIds: [testAssetId, ...(s.galleryImageIds || [])] }
+          : s
+      ),
+      bookSpreads: cur.bookSpreads.map((sp, idx) =>
+        idx === 0
+          ? {
+              ...sp,
+              leftBlocks: [{ id: 'test-blk', type: 'photo', content: '', imageId: testAssetId }, ...(sp.leftBlocks || [])],
+            }
+          : sp
+      ),
+    });
+
+    // 3. Delete the photo via DELETE /api/media/:id
+    const delReq = new Request(`http://localhost:3001/api/media/${testAssetId}`, {
+      method: 'DELETE',
+    });
+    const delRes = await mediaIdRoute.DELETE(delReq, { params: Promise.resolve({ id: testAssetId }) });
+    assert.strictEqual(delRes.status, 200);
+
+    // 4. Verify asset is completely removed from media array
+    const finalState = await getCmsState();
+    assert.ok(!finalState.media.some((m) => m.id === testAssetId));
+
+    // 5. Verify all references are cleanly detached
+    assert.notStrictEqual(finalState.hero.heroImageId, testAssetId);
+    assert.notStrictEqual(finalState.bookCoverImageId, testAssetId);
+    for (const story of finalState.stories) {
+      assert.notStrictEqual(story.coverImageId, testAssetId);
+      assert.ok(!story.galleryImageIds?.includes(testAssetId));
+    }
+    for (const spread of finalState.bookSpreads) {
+      for (const block of [...(spread.leftBlocks || []), ...(spread.rightBlocks || [])]) {
+        assert.notStrictEqual(block.imageId, testAssetId);
+      }
+    }
+  });
 });

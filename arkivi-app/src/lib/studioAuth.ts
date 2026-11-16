@@ -1,15 +1,56 @@
-import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { createHmac, pbkdf2Sync, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 
 /**
- * Studio session auth — password checked against the Payload
- * `studio-settings` global (scrypt hash, editable in /admin) with
- * STUDIO_PASSWORD env as bootstrap fallback. Sessions are signed
+ * Studio session auth — password checked against author users in
+ * the `users` collection, the Payload `studio-settings` global (scrypt hash),
+ * with STUDIO_PASSWORD env as bootstrap fallback. Sessions are signed
  * HttpOnly cookies; no secret ever reaches the client bundle.
  */
 
 export const STUDIO_COOKIE = 'studio_session';
 export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 ditë
 const SCRYPT_PREFIX = 'scrypt$';
+
+const PASSWORD_HASH_PREFIXES: Record<number, string> = {
+  100000: 'pbkdf2-sha256-100k-v1:',
+  600000: 'pbkdf2-sha256-v1:',
+};
+const DEFAULT_KEY_LENGTH = 32;
+const LEGACY_ITERATIONS = 25000;
+const LEGACY_KEY_LENGTH = 512;
+
+export function getPayloadHashParameters(hash: string): { hash: string; iterations: number; keyLength: number } {
+  for (const [iterations, prefix] of Object.entries(PASSWORD_HASH_PREFIXES)) {
+    if (hash.startsWith(prefix)) {
+      return {
+        hash: hash.slice(prefix.length),
+        iterations: Number(iterations),
+        keyLength: DEFAULT_KEY_LENGTH,
+      };
+    }
+  }
+  return {
+    hash,
+    iterations: LEGACY_ITERATIONS,
+    keyLength: LEGACY_KEY_LENGTH,
+  };
+}
+
+export function verifyUserPasswordHash(
+  password: string,
+  storedHash: string | undefined | null,
+  salt: string | undefined | null
+): boolean {
+  if (!storedHash || !salt) return false;
+  try {
+    const { hash: cleanHash, iterations, keyLength } = getPayloadHashParameters(storedHash);
+    const actual = pbkdf2Sync(password, salt, iterations, keyLength, 'sha256');
+    const expected = Buffer.from(cleanHash, 'hex');
+    return actual.length === expected.length && timingSafeEqual(actual, expected);
+  } catch {
+    return false;
+  }
+}
 
 export function hashStudioPassword(password: string): string {
   const salt = randomBytes(16);

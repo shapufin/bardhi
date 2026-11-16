@@ -19,8 +19,9 @@
    - **SEC-02: Mbrojtja e Endpoint-it të Përdoruesve (`/api/users`)**:
      * Eliminon krijimin e paautorizuar të përdoruesve superuser dhe parandalon zbulimin (enumeration) e llogarive.
      * Qasja në `GET /api/users` dhe `POST /api/users` kërkon autorizim administrativ (Bearer token, `x-admin-token`, ose cookie të vlefshme sesioni nga Payload Super Admin).
+     * Mbështet formatin e dyfishtë të kërkesave: `multipart/form-data` (i përdorur nga paneli Payload Admin UI te `/admin/collections/users/create`) dhe `application/json` (i përdorur nga Studio dhe klientët API). Kthen përgjigje të pasuruar me `{ doc, user, message }` për kompatibilitet të plotë me të dyja ndërfaqet.
      * Kërkesat e paautorizuara kthejnë **HTTP 401/403** pa ekspozuar listën e përdoruesve ekzistues.
-     * Validon gjatësinë minimale të fjalëkalimit (të paktën 8 karaktere) dhe formatin e saktë të emailit, duke kthyer **HTTP 400 Bad Request** në rast shkeljeje.
+     * Validon gjatësinë minimale të fjalëkalimit (të paktën 8 karaktere), përputhjen me `confirmPassword` dhe formatin e saktë të emailit, duke kthyer **HTTP 400 Bad Request** në rast shkeljeje.
 4. **Mbrojtja e Përbashkët e Todos Endpoint-eve të Shkrimit (AUDIT-2026-11-15 + STUDIO-AUTH)**:
    - Të gjitha endpoint-et e mutacionit pranojnë dy kredenciale: `x-admin-token`/`Authorization: Bearer` që përputhet me `STUDIO_TOKEN`, `ADMIN_SECRET` ose `PAYLOAD_SECRET`, OSE cookie e vlefshme `studio_session` e lëshuar nga `/api/studio/login` (helper i përbashkët `src/lib/adminAuth.ts` — `verifyAdminAuth`).
    - Login-i publik: `POST /api/studio/login` (verifikon hash-in e globalit `studio-settings` ose `STUDIO_PASSWORD`; 5 tentime/10 min për IP) dhe `POST /api/studio/logout`.

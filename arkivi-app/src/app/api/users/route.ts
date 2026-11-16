@@ -60,7 +60,11 @@ export async function GET(req: Request) {
       createdAt: u.createdAt,
     }));
 
-    return NextResponse.json({ users: sanitizedUsers });
+    return NextResponse.json({
+      ...result,
+      docs: sanitizedUsers,
+      users: sanitizedUsers,
+    });
   } catch (error) {
     console.error('Gabim gjate marrjes se perdoruesve:', error);
     return NextResponse.json(
@@ -81,13 +85,47 @@ export async function POST(req: Request) {
 
   try {
     const payload = await getPayloadClient();
-    const body = await req.json();
-    const { email, password, name, role } = body as {
-      email?: string;
-      password?: string;
-      name?: string;
-      role?: 'author' | 'superuser';
-    };
+    const contentType = req.headers.get('content-type') || '';
+
+    let email: string | undefined;
+    let password: string | undefined;
+    let confirmPassword: string | undefined;
+    let name: string | undefined;
+    let role: 'author' | 'superuser' | undefined;
+
+    if (contentType.includes('multipart/form-data') || contentType.includes('application/x-www-form-urlencoded')) {
+      const formData = await req.formData();
+      const payloadField = formData.get('_payload');
+      if (typeof payloadField === 'string') {
+        try {
+          const parsed = JSON.parse(payloadField);
+          email = parsed.email;
+          password = parsed.password;
+          confirmPassword = parsed.confirmPassword;
+          name = parsed.name;
+          role = parsed.role;
+        } catch {}
+      }
+      if (!email && formData.get('email')) email = String(formData.get('email'));
+      if (!password && formData.get('password')) password = String(formData.get('password'));
+      if (!confirmPassword && formData.get('confirmPassword')) confirmPassword = String(formData.get('confirmPassword'));
+      if (!name && formData.get('name')) name = String(formData.get('name'));
+      if (!role && formData.get('role')) role = formData.get('role') as any;
+    } else {
+      const body = await req.json();
+      email = body?.email;
+      password = body?.password;
+      confirmPassword = body?.confirmPassword;
+      name = body?.name;
+      role = body?.role;
+    }
+
+    if (confirmPassword && password && password !== confirmPassword) {
+      return NextResponse.json(
+        { error: 'Fjalëkalimet nuk përputhen.' },
+        { status: 400 }
+      );
+    }
 
     if (role !== undefined && role !== 'author' && role !== 'superuser') {
       return NextResponse.json(
@@ -121,19 +159,35 @@ export async function POST(req: Request) {
       overrideAccess: true,
     });
 
+    const sanitized = {
+      id: created.id,
+      name: created.name,
+      email: created.email,
+      role: created.role,
+      createdAt: created.createdAt,
+      updatedAt: created.updatedAt,
+    };
+
     return NextResponse.json({
-      user: {
-        id: created.id,
-        name: created.name,
-        email: created.email,
-        role: created.role,
-      },
+      message: 'Përdoruesi u krijua me sukses.',
+      doc: sanitized,
+      user: sanitized,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gabim gjate krijimit te perdoruesit:', error);
+    const msg = error?.message || '';
+    const isDuplicate =
+      msg.includes('already registered') ||
+      msg.includes('UNIQUE constraint') ||
+      error?.name === 'ValidationError';
+
     return NextResponse.json(
-      { error: 'Nuk u arrit të krijohej përdoruesi. Kontrolloni nëse emaili ekziston tashmë.' },
-      { status: 500 }
+      {
+        error: isDuplicate
+          ? 'Nuk u arrit të krijohej përdoruesi. Kontrolloni nëse emaili ekziston tashmë.'
+          : 'Gabim i brendshëm gjatë krijimit të përdoruesit.',
+      },
+      { status: isDuplicate ? 400 : 500 }
     );
   }
 }

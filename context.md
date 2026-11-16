@@ -15,7 +15,8 @@ Hapësira përmban dy mjedise kryesore:
    - **Frontend Publik & Libri Fizik 3D** (`/`) — përvojë me rrotullim realist fletësh (`@react-spring/web` + Framer Motion) dhe tipografi arkivore anti-slop (60-30-10).
    - **Sistemi i Rezervimit & Rivendosjes (R2)**: Kopje rezervë portabël me zero humbje të dhënash (`npm run backup`, `npm run restore <file>`, `/api/backup`, `/api/restore`).
    - **Optimizimi i Imazheve (R3)**: Kufi i rreptë server-side ≤ 5MB dhe kompresim i lartë Sharp WebP (quality 82, auto-orientation, max 2560px) me reduktim ~85-90% të hapësirës në disk.
-   - **Siguria e Prodhimit (R1)**: Endpoint-e të mbrojtura me sekret administrativ (`/api/cms/reset` me SEC-01, `/api/users` me SEC-02), dhe zgjidhje absolute e rrugëve (`SYS-01` me `getAppRoot()`).
+   - **Siguria e Prodhimit (R1)**: Endpoint-e të mbrojtura me sekret administrativ (`/api/cms/reset` me SEC-01, `/api/users` me SEC-02), dhe zgjidhje absolute e rrugëve (`SYS-01` me `getAppRoot()`). Endpoint-i `/api/users` mbështet formatin e dyfishtë (JSON për Studio/API dhe `multipart/form-data` për Payload Admin UI) dhe kthen `{ doc, user }` për integrim të plotë.
+   - **Optimizimi i Build-it & Styling**: Tailwind CSS v4 përmes `postcss.config.mjs`, Docker BuildKit me cache mounts (`/root/.npm`, `/app/.next/cache`) për ndërtime të shpejta, dhe konfigurim unlocalized në `payload.config.ts` për parandalimin e gabimeve të serializimit në React 19 Server Components.
    - **Suita e Testimit Automatik (R4)**: Testim i plotë me 4 nivele (Tier 1–4) i ekzekutuar përmes `npm test`.
 
 2. **`në-kujtim-të-dritan-berishës/`** (Mockup-i dhe Prototipi Fillestar):

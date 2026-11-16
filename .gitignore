@@ -23,3 +23,12 @@ graphify-out/
 # Runtime backup archives (produced by npm run backup / /api/backup)
 arkivi-app/backups/
 backups/
+
+# CMS active runtime state and uploads (persisted on disk / volumes, never overwrite via git)
+arkivi-app/data/cms-data.json
+data/cms-data.json
+arkivi-app/public/uploads/*
+!arkivi-app/public/uploads/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
+

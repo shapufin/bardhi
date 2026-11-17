@@ -40,6 +40,8 @@
 
 9. **Superadmini nga `/admin`**: rrugët e mutacionit përdorin `verifyAdminAuthAsync` (`src/lib/adminAuth.ts`), që përveç tokenit dhe cookie-t `studio_session` pranon edhe sesion Payload (`payload-token`) të një `superuser`. Autori me vetëm `payload-token` NUK autorizohet (cookie-ja e Studios është ajo që e jep/shfuqizon qasjen). Test: `tests/admin-session.test.ts`.
 
+10. **Çelësi i sesionit**: cookie `studio_session` nënshkruhet me `HMAC(PAYLOAD_SECRET, 'arkivi:studio-session:v1')`, jo me sekretin e papërpunuar (që pranohet edhe si token API). Pas deploy-it të parë me këtë ndryshim, sesionet ekzistuese skadojnë një herë. `next.config.mjs` nuk lejon host-e të largëta për `/_next/image` (`remotePatterns: []`). Test: `tests/hardening.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Rruga e Autorit (me fjalëkalim Studio): `src/app/(frontend)/studio/page.tsx` + `src/components/admin/StudioLogin.tsx`
 - Rruga e Superadminit (me pass): `src/app/(payload)/admin/[[...segments]]/page.tsx`

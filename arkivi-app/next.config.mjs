@@ -17,17 +17,9 @@ const nextConfig = {
   async rewrites() {
     return [{ source: '/uploads/:file', destination: '/api/uploads/:file' }]
   },
+  // The app uses plain <img> tags; no remote hosts are allowed so /_next/image cannot be used as an open proxy.
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
-    ],
+    remotePatterns: [],
   },
 }
 

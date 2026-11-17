@@ -12,7 +12,7 @@
 2. **The site's content does NOT live in Payload.** It lives in one JSON file, `arkivi-app/data/cms-data.json`, read/written by custom routes under `src/app/api/*`. Payload (SQLite `data/arkivi.db`) is only used for **users/login and the Studio password**. The Payload collections `stories`, `book-spreads`, `media`, `timeline-entries` and globals `memorial-profile`, `hero-settings`, `home-layout` are **not read by the site** — editing them in `/admin` changes nothing visible.
 3. **Fixed (commit `fix(uploads)`, merged to `main`):** in production (`next start` / Docker) photos uploaded through the Studio return **404** until the server restarts, because Next only serves `public/` files that existed when the server started. See F-01.
 4. Tests now run in a temp data root (`ARKIVI_DATA_ROOT`) and no longer touch live `data/`. New test files must `import './test-env'` first OR rely on the `npm test` preload; running a file with bare `tsx --test` without the preload and without importing test-env first would hit live data.
-5. Baseline today: `npm test` → **106 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
+5. Baseline today: `npm test` → **108 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
 6. UI copy is **Albanian**, aimed at an elderly, non-technical author. Keep it that way (no technical jargon, large text, clear verbs like "Ruaj", "Fshij", "Rikthe").
 7. Windows dev machine: use PowerShell syntax in docs/commands (`;` not `&&`). Production is Linux Docker.
 
@@ -313,7 +313,7 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 - **F-18 FIXED (ids `media-<ms>-<8 hex>`; DELETE saves state first, unlinks file after; test `tests/media-integrity.test.ts`). Original:** Media delete order — file is unlinked before the state save (`media/[id]/route.ts:103-108`); ids are `media-${Date.now()}` (collision on same-ms uploads).
 - **F-19 Public site is client-rendered** — no SSR/SEO, loading flash, full state (with drafts) shipped to every visitor.
 - **F-20 FIXED (`.dockerignore` now excludes `.env*`, `data/*.db`, `cms-data.json`, uploads, backups; test `tests/dockerignore.test.ts`; not verified with a real `docker build`). Original:** Docker build context leaks local data — `.dockerignore` misses `data/`, `public/uploads/`, `.env`; runner `COPY --from=builder /app/data`.
-- **F-21 Secret reuse / open image proxy** — `PAYLOAD_SECRET` is both session key and API token; `images.remotePatterns` `https://**` lets anyone use the image optimizer as a proxy; container runs as root; `ignoreBuildErrors: true`.
+- **F-21 PARTLY FIXED: session cookie key is now domain-separated from `PAYLOAD_SECRET`, image proxy closed (`remotePatterns: []`); tests `tests/hardening.test.ts`. STILL OPEN: `PAYLOAD_SECRET` is still accepted as an API bearer token (documented SEC-01 behavior, tests rely on it), container still runs as root (untested change), `ignoreBuildErrors: true` kept for the 6GB host (always run `npm run lint`). Original:** Secret reuse / open image proxy — `PAYLOAD_SECRET` is both session key and API token; `images.remotePatterns` `https://**` lets anyone use the image optimizer as a proxy; container runs as root; `ignoreBuildErrors: true`.
 
 ### LOW
 

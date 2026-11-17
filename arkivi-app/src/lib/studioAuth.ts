@@ -91,7 +91,10 @@ export function bumpSessionEpoch(now: number = Date.now()): void {
 }
 
 function sessionSecret(): string {
-  return (process.env.PAYLOAD_SECRET || process.env.ADMIN_SECRET || '').trim();
+  const base = (process.env.PAYLOAD_SECRET || process.env.ADMIN_SECRET || '').trim();
+  if (!base) return '';
+  // Domain-separated key: the raw secret is also usable as an API token, so it must not double as the cookie signing key.
+  return createHmac('sha256', base).update('arkivi:studio-session:v1').digest('hex');
 }
 
 function sign(payload: string): string {

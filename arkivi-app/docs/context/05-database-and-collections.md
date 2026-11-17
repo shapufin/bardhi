@@ -20,6 +20,8 @@
    - `hero-settings`: Kryefaqja kryesore, animacioni i butë natyror dhe rrëfimi i veçuar.
    - `home-layout`: Renditja dinamike e seksioneve të kryefaqes dhe thënia përkujtimore.
 
+5. **Skedar i dëmtuar**: nëse `data/cms-data.json` nuk është JSON i vlefshëm ose i mungon `locale:'sq'`/`site.navMenu`, `getCmsState` hedh `CmsStateCorruptError` (rrugët kthejnë 500), shkruan `cms-data.json.<ts>.corrupt.bak` dhe e lë skedarin të paprekur — nuk zëvendësohet më me përmbajtjen e paracaktuar. Vetëm skedari bosh/mungues inicializohet me default. Rikthimi: kopje rezervë ose fshirja manuale e skedarit. Test: `tests/corrupt-state.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Konfigurimi Kryesor: `src/payload.config.ts`
 - Koleksionet: `src/collections/` (`Users.ts`, `Stories.ts`, `BookSpreads.ts`, `Media.ts`, `TimelineEntries.ts`)

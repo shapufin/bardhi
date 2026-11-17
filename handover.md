@@ -12,7 +12,7 @@
 2. **The site's content does NOT live in Payload.** It lives in one JSON file, `arkivi-app/data/cms-data.json`, read/written by custom routes under `src/app/api/*`. Payload (SQLite `data/arkivi.db`) is only used for **users/login and the Studio password**. The Payload collections `stories`, `book-spreads`, `media`, `timeline-entries` and globals `memorial-profile`, `hero-settings`, `home-layout` are **not read by the site** — editing them in `/admin` changes nothing visible.
 3. **Fixed (commit `fix(uploads)`, merged to `main`):** in production (`next start` / Docker) photos uploaded through the Studio return **404** until the server restarts, because Next only serves `public/` files that existed when the server started. See F-01.
 4. Tests now run in a temp data root (`ARKIVI_DATA_ROOT`) and no longer touch live `data/`. New test files must `import './test-env'` first OR rely on the `npm test` preload; running a file with bare `tsx --test` without the preload and without importing test-env first would hit live data.
-5. Baseline today: `npm test` → **94 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
+5. Baseline today: `npm test` → **96 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
 6. UI copy is **Albanian**, aimed at an elderly, non-technical author. Keep it that way (no technical jargon, large text, clear verbs like "Ruaj", "Fshij", "Rikthe").
 7. Windows dev machine: use PowerShell syntax in docs/commands (`;` not `&&`). Production is Linux Docker.
 
@@ -163,7 +163,7 @@ Seed photos referenced by default content live in `public/assets/images/` (`/ass
 ### 5.3 How the JSON store works (`src/lib/payloadClient.ts`)
 
 - `getAppRoot()` resolves the app folder from the module location (`import.meta.url`), falling back to cwd heuristics. Exports `APP_ROOT`, `DATA_DIR`, `DATA_FILE`, `UPLOADS_DIR`. **Always use these, never `process.cwd()`** (project rule SYS-01).
-- `getCmsState()`: ensures dirs/file exist; reads with small retry on EPERM/EBUSY; **if JSON is invalid, or `locale !== 'sq'`, or `site.navMenu` missing → writes `cms-data.json.<ts>.corrupt.bak` and replaces the live file with `DEFAULT_CMS_STATE`** (F-14).
+- `getCmsState()`: ensures dirs/file exist; reads with small retry on EPERM/EBUSY; if JSON is invalid or `locale !== 'sq'` / `site.navMenu` is missing → writes `.corrupt.bak` and **throws `CmsStateCorruptError`** without touching the file (F-14); only an empty/missing file initialises defaults.
 - `saveCmsState(next)`: serialized by an in-process promise mutex; stamps `locale:'sq'` and `updatedAt`; writes temp file + rename (falls back to copyFile on Windows locks).
 - Every mutation route does `getCmsState()` → modify → `saveCmsState()`. The read is **outside** the mutex, so two concurrent writes can lose one (F-13). Acceptable with one author, but don't add background writers without fixing it.
 
@@ -306,7 +306,7 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 - **F-11 FIXED (logout button in `AdminStudio`; `data/session-epoch` revokes sessions on Studio password change; paths moved to `src/lib/dataPaths.ts`; test `tests/session-revocation.test.ts`). Original:** No logout in the UI — `/api/studio/logout` is never called; sessions last 30 days and can't be revoked (stateless HMAC; password change doesn't invalidate). Add a "Dil" button; add a session version stored in `studio-settings` to invalidate.
 - **F-12 `/admin` dashboard is the Studio, but its saves need the Studio cookie** — `verifyAdminAuth` ignores `payload-token`, so a superadmin logged in only via `/admin` likely gets 401 on every Studio save — PLAUSIBLE.
 - **F-13 Lost updates** — read-modify-write outside the save mutex in every mutation route (§5.3).
-- **F-14 Silent reset to defaults** — `getCmsState` replaces the live file with defaults on any parse error or `locale !== 'sq'` (`payloadClient.ts:164-184`). A `.corrupt.bak` is written but nobody is told. Prefer failing loudly (500 + log) over serving defaults.
+- **F-14 FIXED (`getCmsState` throws `CmsStateCorruptError`, keeps the file, writes a `.corrupt.bak`; empty/missing file still initialises defaults; test `tests/corrupt-state.test.ts`). Operators: if the site shows the init error, restore a backup or delete the bad file. Original:** Silent reset to defaults — `getCmsState` replaces the live file with defaults on any parse error or `locale !== 'sq'` (`payloadClient.ts:164-184`). A `.corrupt.bak` is written but nobody is told. Prefer failing loudly (500 + log) over serving defaults.
 - **F-15 Timeline cannot be edited** — `saveTimeline` exists in `CmsContext` but no component calls it; the public timeline is frozen at seed content.
 - **F-16 Fields can't be cleared** — hero/site/book routes use `clip(x) || current.x`, so sending `''` keeps the old value (e.g. removing the hero image is impossible except by deleting the photo).
 - **F-17 DB path not anchored** — `DATABASE_URI` default `file:./data/arkivi.db` is cwd-relative, while backup uses absolute `DATA_DIR/arkivi.db`; running from another cwd makes Payload and backup use different files.

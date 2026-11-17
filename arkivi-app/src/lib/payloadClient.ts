@@ -101,27 +101,33 @@ export async function getCmsState(): Promise<CmsState> {
     return DEFAULT_CMS_STATE;
   }
 
+  // A non-empty file that is unreadable or malformed is NEVER overwritten with defaults:
+  // that would silently destroy the author's content. Fail loudly and keep the file for recovery.
+  let parsed: Partial<CmsState>;
   try {
-    const parsed = JSON.parse(raw) as Partial<CmsState>;
-    if (parsed.locale !== 'sq' || !parsed.site?.navMenu) {
-      // Create backup of incomplete state before repairing
-      try {
-        const backupPath = `${DATA_FILE}.${Date.now()}.corrupt.bak`;
-        await fs.writeFile(backupPath, raw, 'utf-8');
-      } catch {}
-      await atomicWriteFile(DATA_FILE, JSON.stringify(DEFAULT_CMS_STATE, null, 2));
-      return DEFAULT_CMS_STATE;
-    }
-    return parsed as CmsState;
+    parsed = JSON.parse(raw) as Partial<CmsState>;
   } catch {
-    // Corrupt JSON: create backup before replacing with defaults
-    try {
-      const backupPath = `${DATA_FILE}.${Date.now()}.corrupt.bak`;
-      await fs.writeFile(backupPath, raw, 'utf-8');
-    } catch {}
-    await atomicWriteFile(DATA_FILE, JSON.stringify(DEFAULT_CMS_STATE, null, 2));
-    return DEFAULT_CMS_STATE;
+    throw await corruptStateError(raw, 'JSON i pavlefshëm');
   }
+  if (!parsed || parsed.locale !== 'sq' || !parsed.site?.navMenu) {
+    throw await corruptStateError(raw, 'struktura e papritur (locale ose site.navMenu mungon)');
+  }
+  return parsed as CmsState;
+}
+
+export class CmsStateCorruptError extends Error {
+  constructor(reason: string) {
+    super(`cms-data.json është i dëmtuar: ${reason}. Rikthejeni nga një kopje rezervë.`);
+    this.name = 'CmsStateCorruptError';
+  }
+}
+
+async function corruptStateError(raw: string, reason: string): Promise<CmsStateCorruptError> {
+  try {
+    await fs.writeFile(`${DATA_FILE}.${Date.now()}.corrupt.bak`, raw, 'utf-8');
+  } catch {}
+  console.error(`[CMS] ${DATA_FILE} u refuzua (${reason}); skedari mbeti i paprekur.`);
+  return new CmsStateCorruptError(reason);
 }
 
 let writeMutex = Promise.resolve<any>(undefined);

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { BookBlock, BookBlockType, BookSpread } from '@/src/types/cms';
 
 const BLOCK_TYPES = new Set<BookBlockType>(['prose', 'photo', 'quote', 'handwritten-note']);
@@ -25,7 +25,7 @@ function sanitizeBlock(block: unknown, index: number): BookBlock {
 }
 
 async function putHandler(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Ruajtja e librit kërkon autorizim administratori.' },

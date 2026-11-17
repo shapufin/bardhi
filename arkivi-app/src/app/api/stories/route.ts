@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { Story } from '@/src/types/cms';
 
 const MAX_JSON_BYTES = 512 * 1024;
@@ -22,7 +22,7 @@ function clip(value: unknown, max: number): string {
 }
 
 async function postHandler(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Ruajtja e rrëfimeve kërkon autorizim administratori.' },

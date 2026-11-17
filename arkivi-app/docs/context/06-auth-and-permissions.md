@@ -38,6 +38,8 @@
 
 8. **Dalje dhe shfuqizim sesionesh**: butoni "Dil nga Studio" thërret `POST /api/studio/logout`. Ndryshimi i fjalëkalimit te `studio-settings` shkruan `data/session-epoch` (`bumpSessionEpoch`); sesionet e lëshuara para tij refuzohen. Rrugët e dosjeve jetojnë te `src/lib/dataPaths.ts`. Test: `tests/session-revocation.test.ts`.
 
+9. **Superadmini nga `/admin`**: rrugët e mutacionit përdorin `verifyAdminAuthAsync` (`src/lib/adminAuth.ts`), që përveç tokenit dhe cookie-t `studio_session` pranon edhe sesion Payload (`payload-token`) të një `superuser`. Autori me vetëm `payload-token` NUK autorizohet (cookie-ja e Studios është ajo që e jep/shfuqizon qasjen). Test: `tests/admin-session.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Rruga e Autorit (me fjalëkalim Studio): `src/app/(frontend)/studio/page.tsx` + `src/components/admin/StudioLogin.tsx`
 - Rruga e Superadminit (me pass): `src/app/(payload)/admin/[[...segments]]/page.tsx`

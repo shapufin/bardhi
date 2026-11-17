@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, UPLOADS_DIR, serialized } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { MediaAsset } from '@/src/types/cms';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -20,7 +20,7 @@ export async function GET() {
 }
 
 async function postHandler(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Ngarkimi i fotografive kërkon autorizim administratori.' },

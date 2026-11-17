@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { CmsState, TimelineEntry } from '@/src/types/cms';
 
 const MAX_ENTRIES = 500;
@@ -10,7 +10,7 @@ function clip(value: unknown, max: number): string {
 }
 
 async function putHandler(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Ruajtja e kronologjisë kërkon autorizim administratori.' },

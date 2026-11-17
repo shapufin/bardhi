@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   try {
     const state = await getCmsState();
     // Drafts are private: only the Studio (session cookie / admin token) receives them.
-    const body = verifyAdminAuth(req).authorized
+    const body = (await verifyAdminAuthAsync(req)).authorized
       ? state
       : { ...state, stories: state.stories.filter((s) => s.status === 'published') };
     return NextResponse.json(body, { headers: { 'Cache-Control': 'private, no-store' } });

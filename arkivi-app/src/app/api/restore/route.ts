@@ -9,11 +9,11 @@
  */
 
 import { NextResponse } from 'next/server';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import { restoreFromArchiveBuffer, BackupError, MAX_ARCHIVE_BYTES } from '@/src/lib/backupArchive';
 
 export async function POST(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Rivendosja e të dhënave kërkon autorizim administratori.' },

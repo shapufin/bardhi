@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getPayloadClient } from '@/src/lib/payloadClient';
-import { extractBearerToken, verifyAdminAuth } from '@/src/lib/adminAuth';
+import { extractBearerToken, verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import { isSuperuser } from '@/src/lib/roles';
 
 type UsersAuth = { authorized: boolean; status: number; canManageSuperusers: boolean };
@@ -12,9 +12,9 @@ type UsersAuth = { authorized: boolean; status: number; canManageSuperusers: boo
  * - Any other logged-in Payload user (role author): denied.
  */
 async function verifyUsersAuth(req: Request): Promise<UsersAuth> {
-  const direct = verifyAdminAuth(req);
+  const direct = await verifyAdminAuthAsync(req);
   if (direct.authorized) {
-    return { ...direct, canManageSuperusers: Boolean(extractBearerToken(req)) };
+    return { authorized: true, status: 200, canManageSuperusers: direct.via !== 'studio-cookie' };
   }
 
   const token = extractBearerToken(req);

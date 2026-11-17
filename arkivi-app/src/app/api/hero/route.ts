@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { HeroSettings } from '@/src/types/cms';
 
 const ANIMATION_STYLES = new Set(['gentle-drift', 'soft-fade', 'none']);
@@ -10,7 +10,7 @@ function clip(value: unknown, max: number): string {
 }
 
 async function putHandler(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Ruajtja e seksionit kryesor kërkon autorizim administratori.' },

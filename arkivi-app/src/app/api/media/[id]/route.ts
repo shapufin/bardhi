@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, UPLOADS_DIR, serialized } from '@/src/lib/payloadClient';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { CmsState, MediaAsset } from '@/src/types/cms';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -17,7 +17,7 @@ async function putHandler(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Përditësimi i fotografive kërkon autorizim administratori.' },
@@ -61,7 +61,7 @@ async function deleteHandler(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Fshirja e fotografive kërkon autorizim administratori.' },

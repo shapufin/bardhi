@@ -6,11 +6,11 @@
  */
 
 import { NextResponse } from 'next/server';
-import { verifyAdminAuth } from '@/src/lib/adminAuth';
+import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import { createBackupArchive, BackupError } from '@/src/lib/backupArchive';
 
 export async function GET(req: Request) {
-  const auth = verifyAdminAuth(req);
+  const auth = await verifyAdminAuthAsync(req);
   if (!auth.authorized) {
     return NextResponse.json(
       { error: 'I paautorizuar: Shkarkimi i kopjes rezervë kërkon autorizim administratori.' },

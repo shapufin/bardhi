@@ -1,4 +1,6 @@
 import { isStudioRequestAuthorized } from './studioAuth';
+import { getPayloadClient } from './payloadClient';
+import { isSuperuser } from './roles';
 
 /**
  * Shared admin-token verification for mutation/admin API routes.
@@ -29,7 +31,9 @@ export function extractBearerToken(req: Request): string | undefined {
   return authHeader;
 }
 
-export function verifyAdminAuth(req: Request): { authorized: boolean; status: number } {
+export type AdminAuthResult = { authorized: boolean; status: number; via?: 'token' | 'studio-cookie' | 'payload-superuser' };
+
+export function verifyAdminAuth(req: Request): AdminAuthResult {
   const validSecrets = getAdminTokens();
   const token = extractBearerToken(req);
 
@@ -37,13 +41,33 @@ export function verifyAdminAuth(req: Request): { authorized: boolean; status: nu
     if (validSecrets.length === 0 || !validSecrets.includes(token)) {
       return { authorized: false, status: 403 };
     }
-    return { authorized: true, status: 200 };
+    return { authorized: true, status: 200, via: 'token' };
   }
 
   // Studio author session cookie (issued by /api/studio/login)
   if (isStudioRequestAuthorized(req)) {
-    return { authorized: true, status: 200 };
+    return { authorized: true, status: 200, via: 'studio-cookie' };
   }
 
   return { authorized: false, status: validSecrets.length === 0 ? 403 : 401 };
+}
+
+/**
+ * Like verifyAdminAuth, but also accepts a Payload session (`payload-token` cookie) belonging to a
+ * `superuser`, so the technical admin logged in only through /admin can use the Studio dashboard.
+ * Plain authors are not accepted here: their Studio cookie is what grants (and can revoke) access.
+ */
+export async function verifyAdminAuthAsync(req: Request): Promise<AdminAuthResult> {
+  const direct = verifyAdminAuth(req);
+  if (direct.authorized || !req.headers.get('cookie')) return direct;
+  try {
+    const payload = await getPayloadClient();
+    const { user } = await payload.auth({ headers: req.headers });
+    if (user && isSuperuser(user as { role?: string })) {
+      return { authorized: true, status: 200, via: 'payload-superuser' };
+    }
+  } catch {
+    // fall through to the sync result
+  }
+  return direct;
 }

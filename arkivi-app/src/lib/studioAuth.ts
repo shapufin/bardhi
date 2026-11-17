@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { DATA_DIR } from './dataPaths';
 import { createHmac, pbkdf2Sync, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 
 /**
@@ -71,6 +74,22 @@ export function verifyStudioPasswordHash(password: string, stored: string): bool
   }
 }
 
+const EPOCH_FILE = () => path.join(DATA_DIR, 'session-epoch');
+
+/** Sessions issued before this timestamp are revoked (bumped when the Studio password changes). */
+function readSessionEpoch(): number {
+  try {
+    return Number(fs.readFileSync(EPOCH_FILE(), 'utf-8').trim()) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function bumpSessionEpoch(now: number = Date.now()): void {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(EPOCH_FILE(), String(now), 'utf-8');
+}
+
 function sessionSecret(): string {
   return (process.env.PAYLOAD_SECRET || process.env.ADMIN_SECRET || '').trim();
 }
@@ -92,6 +111,7 @@ export function verifySessionToken(token: string | undefined | null, now: number
   const sig = token.slice(dot + 1);
   if (!/^\d+$/.test(exp) || !/^[0-9a-f]{64}$/i.test(sig)) return false;
   if (Number(exp) <= now) return false;
+  if (Number(exp) - SESSION_TTL_MS < readSessionEpoch()) return false;
   const expected = sign(exp);
   const a = Buffer.from(sig, 'utf8');
   const b = Buffer.from(expected, 'utf8');

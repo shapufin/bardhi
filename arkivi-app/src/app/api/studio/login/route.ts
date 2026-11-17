@@ -9,27 +9,12 @@ import {
   STUDIO_COOKIE,
 } from '@/src/lib/studioAuth';
 
+import { getClientKey, loginRateLimited } from '@/src/lib/loginRateLimit';
+
 export const dynamic = 'force-dynamic';
 
-// Throttling në memorie: 10 tentime / 10 minuta për IP.
-const MAX_ATTEMPTS = 10;
-const WINDOW_MS = 10 * 60 * 1000;
-const attempts = new Map<string, { count: number; reset: number }>();
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = attempts.get(ip);
-  if (!entry || entry.reset < now) {
-    attempts.set(ip, { count: 1, reset: now + WINDOW_MS });
-    return false;
-  }
-  entry.count += 1;
-  return entry.count > MAX_ATTEMPTS;
-}
-
 export async function POST(req: Request) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local';
-  if (rateLimited(ip)) {
+  if (loginRateLimited(getClientKey(req))) {
     return NextResponse.json(
       { error: 'Shumë tentime. Provo sërish pas 10 minutash.' },
       { status: 429 }

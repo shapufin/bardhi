@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload';
+import { isSuperuser, superuserOnly, superuserOnlyField } from '@/src/lib/roles';
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -8,9 +9,21 @@ export const Users: CollectionConfig = {
     defaultColumns: ['name', 'email', 'role'],
   },
   access: {
-    // Only logged-in users may read accounts (anonymous GET /api/users/:id leaked emails/roles).
-    read: ({ req }) => Boolean(req.user),
+    // Superusers see everyone; authors only themselves; anonymous nothing (F-02, F-04).
+    read: ({ req }) => {
+      if (!req.user) return false;
+      if (isSuperuser(req.user as { role?: string })) return true;
+      return { id: { equals: req.user.id } };
+    },
+    create: superuserOnly,
+    delete: superuserOnly,
+    update: ({ req }) => {
+      if (!req.user) return false;
+      if (isSuperuser(req.user as { role?: string })) return true;
+      return { id: { equals: req.user.id } };
+    },
   },
+
   fields: [
     {
       name: 'name',
@@ -29,6 +42,11 @@ export const Users: CollectionConfig = {
         { label: 'Super Administrator Teknik', value: 'superuser' },
       ],
       required: true,
+      access: {
+        // Only superusers may set or change roles (blocks author -> superuser self-escalation).
+        create: superuserOnlyField,
+        update: superuserOnlyField,
+      },
     },
   ],
 };

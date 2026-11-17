@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload';
-import { hashStudioPassword } from '@/src/lib/studioAuth';
+import { bumpSessionEpoch, hashStudioPassword } from '@/src/lib/studioAuth';
+import { superuserOnly } from '@/src/lib/roles';
 
 /**
  * Studio credentials managed from the technical admin panel (/admin).
@@ -10,8 +11,17 @@ export const StudioSettings: GlobalConfig = {
   slug: 'studio-settings',
   label: 'Studio & Fjalëkalimi',
   access: {
-    read: ({ req }) => Boolean(req.user),
-    update: ({ req }) => Boolean(req.user),
+    read: superuserOnly,
+    update: superuserOnly,
+  },
+  hooks: {
+    // Changing the Studio password signs everyone out.
+    afterChange: [
+      ({ doc, previousDoc }) => {
+        if (doc?.password !== previousDoc?.password) bumpSessionEpoch();
+        return doc;
+      },
+    ],
   },
   fields: [
     {

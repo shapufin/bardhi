@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Eye, FileText, Home, Image as ImageIcon, Users as UsersIcon, ExternalLink, Monitor, Smartphone, HardDrive } from 'lucide-react';
+import { BookOpen, Eye, FileText, Home, Image as ImageIcon, Users as UsersIcon, ExternalLink, Monitor, Smartphone, HardDrive, LogOut } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog';
 import { HomeHeroEditor } from '@/src/components/admin/HomeHeroEditor';
@@ -95,6 +95,19 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
 
             <Button variant="default" size="default" onClick={onExitStudio}>
               Shiko Faqen Publike
+            </Button>
+
+            <Button
+              variant="outline"
+              size="default"
+              className="gap-2"
+              onClick={async () => {
+                await fetch('/api/studio/logout', { method: 'POST' }).catch(() => undefined);
+                window.location.href = '/studio';
+              }}
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Dil nga Studio</span>
             </Button>
           </div>
         </div>

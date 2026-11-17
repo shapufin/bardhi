@@ -24,7 +24,7 @@
      * Validon gjatësinë minimale të fjalëkalimit (të paktën 8 karaktere), përputhjen me `confirmPassword` dhe formatin e saktë të emailit, duke kthyer **HTTP 400 Bad Request** në rast shkeljeje.
 4. **Mbrojtja e Përbashkët e Todos Endpoint-eve të Shkrimit (AUDIT-2026-11-15 + STUDIO-AUTH)**:
    - Të gjitha endpoint-et e mutacionit pranojnë dy kredenciale: `x-admin-token`/`Authorization: Bearer` që përputhet me `STUDIO_TOKEN`, `ADMIN_SECRET` ose `PAYLOAD_SECRET`, OSE cookie e vlefshme `studio_session` e lëshuar nga `/api/studio/login` (helper i përbashkët `src/lib/adminAuth.ts` — `verifyAdminAuth`).
-   - Login-i publik: `POST /api/studio/login` (verifikon hash-in e globalit `studio-settings` ose `STUDIO_PASSWORD`; 5 tentime/10 min për IP) dhe `POST /api/studio/logout`.
+   - Login-i publik: `POST /api/studio/login` (verifikon hash-in e globalit `studio-settings` ose `STUDIO_PASSWORD`; 10 tentime/10 min për klient + kufi global 100/10 min; çelësi është `cf-connecting-ip`, përndryshe hop-i i FUNDIT i `x-forwarded-for` (`src/lib/loginRateLimit.ts`)) dhe `POST /api/studio/logout`.
    - Të mbrojtura: `POST/DELETE /api/stories`, `POST /api/media`, `PUT/DELETE /api/media/[id]`, `PUT /api/timeline`, `PUT /api/hero`, `PUT /api/site`, `PUT /api/layout`, `PUT /api/book/spreads`, `GET /api/backup`, `POST /api/restore`.
    - Të hapura për publikun (vetëm lexim): `GET /api/cms`, `GET /api/media`.
    - Kërkesat pa kredenciale kthejnë **HTTP 401**; kredenciale të pasakta **HTTP 403**.
@@ -33,6 +33,10 @@
 5. **Lexim i llogarive**: koleksioni `users` lejon `read` vetëm për përdorues të kyçur (`src/collections/Users.ts`); `GET /api/users/:id` pa kredenciale kthen 403. Test: `tests/users-access.test.ts`.
 
 6. **Drafte private**: `GET /api/cms` pa kredenciale kthen vetëm rrëfimet `published`; Studio (cookie `studio_session` ose token admin) merr gjendjen e plotë me drafte; përgjigjja ka `Cache-Control: private, no-store`. Test: `tests/cms-drafts.test.ts`.
+
+7. **Rolet zbatohen** (`src/lib/roles.ts`): `users` — krijim/fshirje vetëm `superuser`; autori lexon/ndryshon vetëm veten; fusha `role` ndryshohet vetëm nga `superuser`; global `studio-settings` vetëm `superuser`. `/api/users`: token admin ose sesion Payload `superuser` mund të krijojë superuser; cookie `studio_session` (e pa-lidhur me përdorues) krijon vetëm `author`; autor i kyçur në Payload merr 403. Test: `tests/roles.test.ts`.
+
+8. **Dalje dhe shfuqizim sesionesh**: butoni "Dil nga Studio" thërret `POST /api/studio/logout`. Ndryshimi i fjalëkalimit te `studio-settings` shkruan `data/session-epoch` (`bumpSessionEpoch`); sesionet e lëshuara para tij refuzohen. Rrugët e dosjeve jetojnë te `src/lib/dataPaths.ts`. Test: `tests/session-revocation.test.ts`.
 
 ## Ku Ndodhet Kodi
 - Rruga e Autorit (me fjalëkalim Studio): `src/app/(frontend)/studio/page.tsx` + `src/components/admin/StudioLogin.tsx`

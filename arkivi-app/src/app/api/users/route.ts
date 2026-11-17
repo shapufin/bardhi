@@ -1,38 +1,41 @@
 import { NextResponse } from 'next/server';
 import { getPayloadClient } from '@/src/lib/payloadClient';
 import { extractBearerToken, verifyAdminAuth } from '@/src/lib/adminAuth';
+import { isSuperuser } from '@/src/lib/roles';
 
-async function verifyUsersAuth(req: Request): Promise<{ authorized: boolean; status: number }> {
-  // 1. Direct Secret / Bearer Token Check
+type UsersAuth = { authorized: boolean; status: number; canManageSuperusers: boolean };
+
+/**
+ * - Admin token header or Payload superuser session: full rights (may create superusers).
+ * - Studio author cookie: may list users and create `author` accounts only
+ *   (the cookie is not bound to a user, so it must never grant superuser creation).
+ * - Any other logged-in Payload user (role author): denied.
+ */
+async function verifyUsersAuth(req: Request): Promise<UsersAuth> {
   const direct = verifyAdminAuth(req);
   if (direct.authorized) {
-    return direct;
+    return { ...direct, canManageSuperusers: Boolean(extractBearerToken(req)) };
   }
 
   const token = extractBearerToken(req);
 
-  // 2. Authenticated Payload Session Check (via payload.auth if available)
   try {
     const payload = await getPayloadClient();
-    const payloadWithAuth = payload as unknown as {
-      auth?: (opts: { headers: Headers }) => Promise<{ user?: unknown }>;
-    };
-    if (typeof payloadWithAuth.auth === 'function') {
-      const authRes = await payloadWithAuth.auth({ headers: req.headers });
-      if (authRes?.user) {
-        return { authorized: true, status: 200 };
-      }
+    const authRes = await payload.auth({ headers: req.headers });
+    if (authRes?.user) {
+      return isSuperuser(authRes.user as { role?: string })
+        ? { authorized: true, status: 200, canManageSuperusers: true }
+        : { authorized: false, status: 403, canManageSuperusers: false };
     }
   } catch {
     // If payload auth throws, fall through
   }
 
-  // Return 401 if no credentials were provided (or token is empty) and no cookie, 403 if invalid
   if ((!token || token.trim().length === 0) && !req.headers.get('cookie')) {
-    return { authorized: false, status: 401 };
+    return { authorized: false, status: 401, canManageSuperusers: false };
   }
 
-  return { authorized: false, status: 403 };
+  return { authorized: false, status: 403, canManageSuperusers: false };
 }
 
 export async function GET(req: Request) {
@@ -131,6 +134,13 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: 'Roli i vendosur nuk është i vlefshëm.' },
         { status: 400 }
+      );
+    }
+
+    if (role === 'superuser' && !auth.canManageSuperusers) {
+      return NextResponse.json(
+        { error: 'Vetëm administratori teknik mund të krijojë administratorë.' },
+        { status: 403 }
       );
     }
 

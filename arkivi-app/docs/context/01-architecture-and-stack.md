@@ -17,6 +17,8 @@
    - Krijon arkiva portabël ZIP që bashkojnë bazën SQLite, dokumentin JSON, dhe dosjen e mediave me manifest SHA-256 (`manifest.json`).
    - Rivendosja verifikon integritetin kriptografik SHA-256 para çdo ndërhyrjeje dhe ruan një snapshot rollback automatik.
 
+6. **Faqja publike renderohet në server (F-19)**: `src/app/(frontend)/page.tsx` është server component (`force-dynamic`): lexon `getCmsState()`, heq draftet dhe ia kalon `PublicHome` (client, `src/components/frontend/PublicHome.tsx`) përmes `CmsProvider initialCms`; titulli/përshkrimi vijnë nga `generateMetadata`. Pa `initialCms` (Studio) provider-i ngarkon nga `/api/cms`. Test: `tests/ssr-home.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Konfigurimi Payload: `src/payload.config.ts`
 - Zgjidhja e Shtigjeve & Lidhësi i të Dhënave: `src/lib/payloadClient.ts`

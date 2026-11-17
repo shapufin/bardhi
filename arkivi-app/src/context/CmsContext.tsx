@@ -46,9 +46,18 @@ interface CmsContextValue {
 
 const CmsContext = createContext<CmsContextValue | null>(null);
 
-export function CmsProvider({ children, studioToken = '' }: { children: React.ReactNode; studioToken?: string }) {
-  const [cms, setCms] = useState<CmsState | null>(null);
-  const [loading, setLoading] = useState(true);
+export function CmsProvider({
+  children,
+  studioToken = '',
+  initialCms = null,
+}: {
+  children: React.ReactNode;
+  studioToken?: string;
+  /** Server-rendered state; when given, no client fetch is needed for the first paint. */
+  initialCms?: CmsState | null;
+}) {
+  const [cms, setCms] = useState<CmsState | null>(initialCms);
+  const [loading, setLoading] = useState(!initialCms);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
@@ -69,8 +78,8 @@ export function CmsProvider({ children, studioToken = '' }: { children: React.Re
   }, []);
 
   useEffect(() => {
-    void refreshCms();
-  }, [refreshCms]);
+    if (!initialCms) void refreshCms();
+  }, [refreshCms, initialCms]);
 
   // Keep browser document.title synced with Site Title edited in Admin GUI
   useEffect(() => {

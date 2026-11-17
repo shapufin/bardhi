@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { BookOpen, Eye, FileText, Home, Image as ImageIcon, Users as UsersIcon, ExternalLink, Monitor, Smartphone, HardDrive, LogOut } from 'lucide-react';
+import { BookOpen, Eye, FileText, Home, Image as ImageIcon, Users as UsersIcon, ExternalLink, Monitor, Smartphone, HardDrive, LogOut, CalendarDays } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/src/components/ui/dialog';
 import { HomeHeroEditor } from '@/src/components/admin/HomeHeroEditor';
 import { StoryManager } from '@/src/components/admin/StoryManager';
 import { BookBuilder } from '@/src/components/admin/BookBuilder';
 import { MediaLibrary } from '@/src/components/admin/MediaLibrary';
+import { TimelineManager } from '@/src/components/admin/TimelineManager';
 import { UserManager } from '@/src/components/admin/UserManager';
 import { BackupManager } from '@/src/components/admin/BackupManager';
 import { PublicSite } from '@/src/components/frontend/PublicSite';
@@ -15,7 +16,7 @@ interface AdminStudioProps {
   onExitStudio: () => void;
 }
 
-type StudioSection = 'home' | 'stories' | 'book' | 'media' | 'users' | 'backup';
+type StudioSection = 'home' | 'stories' | 'book' | 'media' | 'timeline' | 'users' | 'backup';
 
 export function AdminStudio({ onExitStudio }: AdminStudioProps) {
   const { cms, saving, lastSavedAt } = useCms();
@@ -49,6 +50,12 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
       label: `Albumi i Fotove (${cms.media.length})`,
       hint: 'Ngarko dhe menaxho fotot',
       icon: <ImageIcon className="h-5 w-5" />,
+    },
+    {
+      id: 'timeline',
+      label: `Kronologjia (${cms.timeline.length})`,
+      hint: 'Datat e rëndësishme të jetës',
+      icon: <CalendarDays className="h-5 w-5" />,
     },
     {
       id: 'users',
@@ -156,6 +163,7 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
           {activeTab === 'stories' && <StoryManager />}
           {activeTab === 'book' && <BookBuilder />}
           {activeTab === 'media' && <MediaLibrary />}
+          {activeTab === 'timeline' && <TimelineManager />}
           {activeTab === 'users' && <UserManager />}
           {activeTab === 'backup' && <BackupManager />}
         </main>

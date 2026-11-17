@@ -3,11 +3,12 @@
 ## Çfarë Duhet të Jetë e Vërtetë (Invariants)
 1. **Dizajn i Përshtatur për Autorin e Moshuar**: Ndërfaqja është projektuar posaçërisht për një prind të moshuar (një baba që shkruan për djalin e tij të rënë). Nuk kërkon fjalëkalim për hyrje te `/studio` dhe shmang çdo zhargon teknik.
 2. **Tipografi dhe Ndërveprim i Qartë**: Madhësia e tekstit për etiketat dhe butonat është gjithmonë e rehatshme (`16px+`), me kontrast të lartë dhe ikona të mëdha `lucide-react`.
-3. **Struktura me 6 Hapësira Kryesore**:
+3. **Struktura me 7 Hapësira Kryesore** (6 + Kronologjia):
    - **Kryefaqja & Menyja** (`home`): Titulli i faqes, kushtimi, aktivizimi/çaktivizimi i nyjeve të menysë, dhe renditja e seksioneve të kryefaqes me Drag & Drop (`@dnd-kit`).
    - **Rrëfimet** (`stories`): Menaxhimi i kujtimeve me kapak, drop-cap, periudhë kohore dhe status (publikuar/draft).
    - **Ndërtuesi i Librit** (`book`): Ndërtimi i fletëve dyshe me tërheqje të blloqeve majtas/djathtas.
    - **Albumi i Fotove** (`media`): Ngarkimi dhe menaxhimi i fotografive me përcaktim të raportit të pamjes (`3:4`, `4:3`, `16:9`, `1:1`), kontroll paraprak (≤ 5MB), dhe fshirje e plotë me dialog konfirmimi në shqip dhe shkëputje automatike të referencave që asnjë foto të mos mbetet e bllokuar.
+   - **Kronologjia** (`timeline`): shto, ndrysho, ngjit/zbrit dhe fshi data të jetës (viti, titulli, përshkrimi); "Ruaj Kronologjinë" thërret `PUT /api/timeline`; rreshtat pa titull hiqen gjatë ruajtjes. `src/components/admin/TimelineManager.tsx`, helpers te `src/lib/timeline.ts`.
    - **Përdoruesit & Siguria** (`users`): Pasqyra e llogarisë së autorit dhe administratorit teknik, krijimi i përdoruesve të rinj dhe lidhja direkte me panelin teknik PayloadCMS.
    - **Rezervim & Rivendosje** (`backup`): Paneli administrativ me `BackupManager.tsx` (ikona `HardDrive`) që lejon shkarkimin e menjëhershëm të kopjes rezervë ZIP dhe ngarkimin/ekzekutimin e rivendosjes me konfirmim të qartë dhe njoftime progresi.
 4. **Pamje e Drejtpërdrejtë**: Butoni "Pamje e Drejtpërdrejtë" hap dialogun e testimit në ekran të plotë për pamjen desktop dhe celular pa dalë nga studioja.
@@ -19,6 +20,7 @@
 - Menaxhuesi i Rrëfimeve: `src/components/admin/StoryManager.tsx`
 - Ndërtuesi i Librit: `src/components/admin/BookBuilder.tsx`
 - Galeria e Ngarkimit & Kufijtë e Fotografive: `src/components/admin/MediaLibrary.tsx`
+- Menaxhuesi i Kronologjisë: `src/components/admin/TimelineManager.tsx`
 - Menaxhuesi i Përdoruesve: `src/components/admin/UserManager.tsx`
 - Paneli i Rezervimit & Rivendosjes: `src/components/admin/BackupManager.tsx`
 

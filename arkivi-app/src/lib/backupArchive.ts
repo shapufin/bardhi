@@ -13,6 +13,8 @@
  */
 
 import JSZip from 'jszip';
+import os from 'node:os';
+import { createClient } from '@libsql/client';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -76,13 +78,36 @@ function safeEntryPath(p: string): string | null {
   return normalized;
 }
 
+/**
+ * Consistent copy of a SQLite file via VACUUM INTO (includes data still sitting in the WAL,
+ * safe while Payload holds the DB open). Falls back to a raw read if VACUUM is unavailable.
+ */
+export async function snapshotDatabase(dbFile: string): Promise<Buffer> {
+  const tmp = path.join(os.tmpdir(), `arkivi-snapshot-${process.pid}-${Date.now()}.db`);
+  const client = createClient({ url: `file:${dbFile.split(path.sep).join('/')}` });
+  try {
+    await client.execute(`VACUUM INTO '${tmp.split(path.sep).join('/').replace(/'/g, "''")}'`);
+    return await fs.readFile(tmp);
+  } catch {
+    return await fs.readFile(dbFile);
+  } finally {
+    client.close();
+    await fs.rm(tmp, { force: true }).catch(() => {});
+  }
+}
+
+/** Removes stale WAL/SHM sidecar files so a restored DB is never mixed with old journal data. */
+async function removeDbSidecars(dbFile: string): Promise<void> {
+  for (const ext of ['-wal', '-shm', '-journal']) await fs.rm(dbFile + ext, { force: true }).catch(() => {});
+}
+
 export async function createBackupArchive(): Promise<{ buffer: Buffer; filename: string; manifest: BackupManifest }> {
   await ensureStorage();
   if (!existsSync(DATA_FILE) || !existsSync(DB_FILE)) {
     throw new BackupError('Të dhënat e nevojshme nuk u gjetën për të krijuar kopjen rezervë.');
   }
 
-  const dbBuf = await fs.readFile(DB_FILE);
+  const dbBuf = await snapshotDatabase(DB_FILE);
   const cmsBuf = await fs.readFile(DATA_FILE);
 
   let counts = { stories: 0, bookSpreads: 0, media: 0 };
@@ -226,6 +251,7 @@ export async function restoreFromArchiveBuffer(zipBuffer: Buffer): Promise<Backu
     await fs.mkdir(DATA_DIR, { recursive: true });
     await fs.mkdir(UPLOADS_DIR, { recursive: true });
 
+    await removeDbSidecars(DB_FILE);
     await fs.writeFile(DB_FILE, dbBuf);
     await fs.writeFile(DATA_FILE, cmsBuf);
 
@@ -244,6 +270,7 @@ export async function restoreFromArchiveBuffer(zipBuffer: Buffer): Promise<Backu
     try {
       const rbDb = path.join(rollbackDir, 'arkivi.db');
       const rbCms = path.join(rollbackDir, 'cms-data.json');
+      await removeDbSidecars(DB_FILE);
       if (existsSync(rbDb)) await fs.copyFile(rbDb, DB_FILE);
       if (existsSync(rbCms)) await fs.copyFile(rbCms, DATA_FILE);
     } catch {}

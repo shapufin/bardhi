@@ -4,6 +4,7 @@ import { spawnSync, execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fsPromises from 'node:fs/promises';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 const fs = { ...fsPromises, statSync };
@@ -103,6 +104,28 @@ function listZipArchiveEntries(zipPath: string): string[] {
 }
 
 // Helper to extract a single file's text content from a zip archive
+/** Logical DB content: row count per table (snapshots are not byte-identical to the live file). */
+async function dbFingerprint(file: string): Promise<Record<string, number>> {
+  const { createClient } = await import('@libsql/client');
+  // Inspect a copy so no handle is left on the live file (Windows cannot unlink open files).
+  const copy = path.join(os.tmpdir(), `arkivi-fp-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.db`);
+  await fs.copyFile(file, copy);
+  const client = createClient({ url: `file:${copy.split(path.sep).join('/')}` });
+  try {
+    const tables = await client.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name");
+    const out: Record<string, number> = {};
+    for (const r of tables.rows) {
+      const name = String(r.name).replace(/"/g, '""');
+      const c = await client.execute(`SELECT count(*) AS c FROM "${name}"`);
+      out[String(r.name)] = Number(c.rows[0].c);
+    }
+    return out;
+  } finally {
+    client.close();
+    await fs.rm(copy, { force: true }).catch(() => {});
+  }
+}
+
 function readZipFileEntry(zipPath: string, entryName: string): string {
   const psScript = `
     Add-Type -AssemblyName System.IO.Compression.FileSystem;
@@ -261,11 +284,14 @@ describe('Zero-Loss Backup & Restore System (R2)', { concurrency: 1 }, () => {
       /^[a-f0-9]{64}$/,
       'database checksum must strictly match 64-character lowercase hex SHA-256'
     );
-    const actualDbSha = computeSha256(await fs.readFile(DB_FILE));
+    // The archived DB is a consistent VACUUM INTO snapshot, so its bytes differ from the live file;
+    // the manifest must match the SHA-256 of the database entry stored inside the archive.
+    const zipDb = await (await import('jszip')).default.loadAsync(await fs.readFile(latestZip));
+    const archivedDb = await zipDb.file('data/arkivi.db')!.async('nodebuffer');
     assert.strictEqual(
       manifest.checksums.database,
-      actualDbSha,
-      'database checksum in manifest must strictly match the actual SHA-256 hash of data/arkivi.db'
+      computeSha256(archivedDb),
+      'database checksum in manifest must match the SHA-256 of data/arkivi.db inside the archive'
     );
 
     assert.ok(manifest.counts, 'Manifest must include entity counts');
@@ -680,7 +706,7 @@ describe('Zero-Loss Backup & Restore System (R2)', { concurrency: 1 }, () => {
 
     assert.ok(existsSync(DB_FILE), 'SQLite DB file (data/arkivi.db) must exist before backup');
     const originalDbBuffer = await fs.readFile(DB_FILE);
-    const originalDbSha = computeSha256(originalDbBuffer);
+    const originalDbFingerprint = await dbFingerprint(DB_FILE);
 
     await fs.mkdir(UPLOADS_DIR, { recursive: true });
     const disasterMediaFilename = `disaster-recovery-test-${Date.now()}.webp`;
@@ -770,11 +796,10 @@ describe('Zero-Loss Backup & Restore System (R2)', { concurrency: 1 }, () => {
     );
     const restoredDbBuffer = await fs.readFile(DB_FILE);
     assert.ok(restoredDbBuffer.length > 0, 'Restored database file must not be empty');
-    const restoredDbSha = computeSha256(restoredDbBuffer);
-    assert.strictEqual(
-      restoredDbSha,
-      originalDbSha,
-      'Restored SQLite database SHA-256 hash must match pre-disaster hash exactly'
+    assert.deepStrictEqual(
+      await dbFingerprint(DB_FILE),
+      originalDbFingerprint,
+      'Restored SQLite database must contain exactly the same tables and row counts as before the disaster'
     );
 
     // 5c. Media asset recovery and SHA-256 verification

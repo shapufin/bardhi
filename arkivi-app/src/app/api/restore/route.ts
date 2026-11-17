@@ -44,6 +44,10 @@ export async function POST(req: Request) {
     const zipBuffer = Buffer.from(await archiveBlob.arrayBuffer());
     const manifest = await restoreFromArchiveBuffer(zipBuffer);
 
+    // The running Payload/libsql connection still points at the pre-restore file. In production
+    // (Docker `restart: unless-stopped`) exit shortly after responding so it reopens the restored DB.
+    if (process.env.NODE_ENV === 'production') setTimeout(() => process.exit(0), 1500);
+
     return NextResponse.json({
       success: true,
       timestamp: manifest.timestamp,

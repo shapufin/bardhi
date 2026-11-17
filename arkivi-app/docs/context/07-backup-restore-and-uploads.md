@@ -104,6 +104,12 @@ Skeda e 6-të **"Rezervim & Rivendosje"** në Studio e Autorit (`/studio`):
 - Paneli i rezultateve që tregon sasinë e rrëfimeve, faqeve të librit dhe fotove të restauruara.
 - Rindezje/rifreskim automatik i ndërfaqes pas rivendosjes së suksesshme.
 
+### 1.6b Konsistenca e SQLite (F-09)
+
+- Backup merr DB-në me `VACUUM INTO` (`snapshotDatabase` te `src/lib/backupArchive.ts`), pra përfshin ndryshimet në WAL dhe është i sigurt ndërsa Payload e ka hapur; baitet e arkivit NUK janë identike me skedarin live, ndaj `manifest.checksums.database` është SHA-256 e DB-së brenda arkivit.
+- Restore fshin `arkivi.db-wal/-shm/-journal` para dhe pas shkrimit. Në prodhim (`NODE_ENV=production`) `/api/restore` e mbyll procesin 1.5s pas përgjigjes që Docker (`restart: unless-stopped`) ta rihapë me DB-në e rikthyer; UI rifreskohet pas 8s. CLI `npm run restore` duhet ekzekutuar kur serveri është i ndalur.
+- Teste: `tests/db-snapshot.test.ts`.
+
 ### 1.7 Protokolli i Sigurisë — Zero Humbje Të Dhënash
 
 1. **Verifikim SHA-256 bit-për-bit**: Hashes llogariten mbi skedarët fizikë dhe krahasohen me manifestin para se të preket ndonjë skedar në prodhim.

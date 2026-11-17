@@ -95,7 +95,7 @@ export function BackupManager() {
       if (fileInputRef.current) fileInputRef.current.value = '';
 
       // Reload page after 3s to reflect restored data
-      setTimeout(() => window.location.reload(), 3000);
+      setTimeout(() => window.location.reload(), 8000);
     } catch (err) {
       setRestoreError(err instanceof Error ? err.message : 'Rivendosja dështoi.');
       setRestoreStatus('error');

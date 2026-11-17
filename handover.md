@@ -12,7 +12,7 @@
 2. **The site's content does NOT live in Payload.** It lives in one JSON file, `arkivi-app/data/cms-data.json`, read/written by custom routes under `src/app/api/*`. Payload (SQLite `data/arkivi.db`) is only used for **users/login and the Studio password**. The Payload collections `stories`, `book-spreads`, `media`, `timeline-entries` and globals `memorial-profile`, `hero-settings`, `home-layout` are **not read by the site** — editing them in `/admin` changes nothing visible.
 3. **Fixed (commit `fix(uploads)`, merged to `main`):** in production (`next start` / Docker) photos uploaded through the Studio return **404** until the server restarts, because Next only serves `public/` files that existed when the server started. See F-01.
 4. Tests now run in a temp data root (`ARKIVI_DATA_ROOT`) and no longer touch live `data/`. New test files must `import './test-env'` first OR rely on the `npm test` preload; running a file with bare `tsx --test` without the preload and without importing test-env first would hit live data.
-5. Baseline today: `npm test` → **99 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
+5. Baseline today: `npm test` → **101 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
 6. UI copy is **Albanian**, aimed at an elderly, non-technical author. Keep it that way (no technical jargon, large text, clear verbs like "Ruaj", "Fshij", "Rikthe").
 7. Windows dev machine: use PowerShell syntax in docs/commands (`;` not `&&`). Production is Linux Docker.
 
@@ -128,7 +128,7 @@ Run a single test file: `npx tsx --test tests\security.test.ts`
 | `ADMIN_SECRET` | Admin API token (`x-admin-token` / `Authorization: Bearer`) | Used by tests and scripts. |
 | `STUDIO_TOKEN` | Optional extra admin API token | Legacy; UI no longer sends it. |
 | `STUDIO_PASSWORD` | Bootstrap Studio password | Only used while `studio-settings.password` is empty in Payload. |
-| `DATABASE_URI` | Payload SQLite | Default `file:./data/arkivi.db` — **relative to cwd** (F-17). |
+| `DATABASE_URI` | Payload SQLite | Default `file:<DATA_DIR>/arkivi.db`; relative `file:` values resolve against the app root (F-17). |
 | `INITIAL_ADMIN_EMAIL` / `_PASSWORD` / `_NAME` | `runSeed.ts` | If password empty in production, seed generates one and **prints it to container logs**. |
 | `NEXT_PUBLIC_SERVER_URL` | Payload live preview URL | |
 | `PORT` | compose host port mapping | Container always listens on 3001. |
@@ -309,7 +309,7 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 - **F-14 FIXED (`getCmsState` throws `CmsStateCorruptError`, keeps the file, writes a `.corrupt.bak`; empty/missing file still initialises defaults; test `tests/corrupt-state.test.ts`). Operators: if the site shows the init error, restore a backup or delete the bad file. Original:** Silent reset to defaults — `getCmsState` replaces the live file with defaults on any parse error or `locale !== 'sq'` (`payloadClient.ts:164-184`). A `.corrupt.bak` is written but nobody is told. Prefer failing loudly (500 + log) over serving defaults.
 - **F-15 Timeline cannot be edited** — `saveTimeline` exists in `CmsContext` but no component calls it; the public timeline is frozen at seed content.
 - **F-16 Fields can't be cleared** — hero/site/book routes use `clip(x) || current.x`, so sending `''` keeps the old value (e.g. removing the hero image is impossible except by deleting the photo).
-- **F-17 DB path not anchored** — `DATABASE_URI` default `file:./data/arkivi.db` is cwd-relative, while backup uses absolute `DATA_DIR/arkivi.db`; running from another cwd makes Payload and backup use different files.
+- **F-17 FIXED (`resolveDatabaseUrl` in `src/lib/dataPaths.ts`; test `tests/database-url.test.ts`). Caveat: a custom absolute `DATABASE_URI` outside `DATA_DIR` is still not covered by backup. Original:** DB path not anchored — `DATABASE_URI` default `file:./data/arkivi.db` is cwd-relative, while backup uses absolute `DATA_DIR/arkivi.db`; running from another cwd makes Payload and backup use different files.
 - **F-18 Media delete order** — file is unlinked before the state save (`media/[id]/route.ts:103-108`); ids are `media-${Date.now()}` (collision on same-ms uploads).
 - **F-19 Public site is client-rendered** — no SSR/SEO, loading flash, full state (with drafts) shipped to every visitor.
 - **F-20 FIXED (`.dockerignore` now excludes `.env*`, `data/*.db`, `cms-data.json`, uploads, backups; test `tests/dockerignore.test.ts`; not verified with a real `docker build`). Original:** Docker build context leaks local data — `.dockerignore` misses `data/`, `public/uploads/`, `.env`; runner `COPY --from=builder /app/data`.

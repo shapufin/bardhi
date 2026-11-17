@@ -24,6 +24,8 @@
 
 6. **Shkrime të njëkohshme**: çdo rrugë mutacioni që lexon-ndryshon-shkruan gjendjen CMS eksportohet përmes `serialized(handler)` (`src/lib/payloadClient.ts`), që i vë në radhë kërkesat që të mos humbasë asnjë ndryshim. Rrugë të reja mutacioni duhet të përdorin të njëjtin mbështjellës. Vlen për një proces të vetëm. Test: `tests/concurrent-writes.test.ts`.
 
+7. **Rruga e DB-së**: `payload.config.ts` përdor `resolveDatabaseUrl(process.env.DATABASE_URI)` (`src/lib/dataPaths.ts`): pa vlerë → `file:<DATA_DIR>/arkivi.db`; `file:./relative` zgjidhet kundrejt `APP_ROOT` (jo `process.cwd()`); URL absolute/të largëta kalojnë të pandryshuara. Backup lexon gjithmonë `DATA_DIR/arkivi.db`, ndaj `DATABASE_URI` absolute jashtë `DATA_DIR` nuk mbulohet nga backup. Test: `tests/database-url.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Konfigurimi Kryesor: `src/payload.config.ts`
 - Koleksionet: `src/collections/` (`Users.ts`, `Stories.ts`, `BookSpreads.ts`, `Media.ts`, `TimelineEntries.ts`)

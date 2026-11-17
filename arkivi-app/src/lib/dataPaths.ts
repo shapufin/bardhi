@@ -65,3 +65,24 @@ export const DATA_DIR = path.resolve(DATA_ROOT, 'data');
 export const DATA_FILE = path.join(DATA_DIR, 'cms-data.json');
 export const UPLOADS_DIR = path.join(DATA_ROOT, 'public', 'uploads');
 
+
+/**
+ * Resolves the Payload DB URL to an absolute, cwd-independent location.
+ * - unset            -> file:<DATA_DIR>/arkivi.db
+ * - file:./relative  -> resolved against APP_ROOT (not process.cwd())
+ * - anything else (absolute file:, libsql://, ...) is returned unchanged.
+ */
+export function resolveDatabaseUrl(
+  raw: string | undefined,
+  appRoot: string = APP_ROOT,
+  dataDir: string = DATA_DIR
+): string {
+  const toUrl = (p: string) => `file:${p.split(path.sep).join('/')}`;
+  const value = raw?.trim();
+  if (!value) return toUrl(path.join(dataDir, 'arkivi.db'));
+  if (!value.startsWith('file:')) return value;
+  const filePath = value.slice('file:'.length);
+  if (!filePath || filePath.startsWith('//')) return value;
+  if (path.isAbsolute(filePath) || /^[a-zA-Z]:[\/]/.test(filePath)) return value;
+  return toUrl(path.resolve(appRoot, filePath));
+}

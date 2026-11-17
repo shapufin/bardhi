@@ -15,6 +15,7 @@ import { MemorialProfile } from './globals/MemorialProfile';
 import { HeroSettings } from './globals/HeroSettings';
 import { HomeLayout } from './globals/HomeLayout';
 import { StudioSettings } from './globals/StudioSettings';
+import { resolveDatabaseUrl } from './lib/dataPaths';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -58,7 +59,7 @@ export default buildConfig({
   },
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URI || 'file:./data/arkivi.db',
+      url: resolveDatabaseUrl(process.env.DATABASE_URI),
     },
   }),
 });

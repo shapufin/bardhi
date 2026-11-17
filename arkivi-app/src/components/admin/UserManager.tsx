@@ -6,7 +6,6 @@ import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Label } from '@/src/components/ui/label';
 import { toast } from 'sonner';
-import { useCms } from '@/src/context/CmsContext';
 
 interface SystemUser {
   id: string | number;
@@ -17,8 +16,6 @@ interface SystemUser {
 }
 
 export function UserManager() {
-  const { studioToken } = useCms();
-  const authHeaders = (): Record<string, string> => (studioToken ? { 'x-admin-token': studioToken } : {});
   const [users, setUsers] = useState<SystemUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -31,7 +28,7 @@ export function UserManager() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/users', { headers: authHeaders() });
+      const res = await fetch('/api/users');
       if (!res.ok) throw new Error('Nuk u morën përdoruesit.');
       const data = await res.json();
       setUsers(data.users || []);
@@ -71,7 +68,7 @@ export function UserManager() {
       setSubmitting(true);
       const res = await fetch('/api/users', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: newName,
           email: newEmail,
@@ -215,7 +212,7 @@ export function UserManager() {
                   </span>
                   <p className="text-sm text-muted-foreground">{u.email}</p>
                 </div>
-                <div className="flex items-center gap-1.5 border border-border bg-secondary/50 px-2.5 py-1 text-xs">
+                <div className="flex items-center gap-1.5 border border-border bg-secondary/50 px-2.5 py-1 text-sm">
                   {u.role === 'superuser' ? (
                     <>
                       <ShieldCheck className="h-3.5 w-3.5 text-primary" />
@@ -230,7 +227,7 @@ export function UserManager() {
                 </div>
               </div>
 
-              <div className="border-t border-border/80 pt-3 flex items-center justify-between text-xs text-muted-foreground">
+              <div className="border-t border-border/80 pt-3 flex items-center justify-between text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Key className="h-3.5 w-3.5" />
                   <span>

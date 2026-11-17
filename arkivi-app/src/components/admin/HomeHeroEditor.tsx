@@ -476,7 +476,7 @@ function SortableSectionRow({
 
           <div>
             <p className="font-serif text-xl font-medium text-foreground">{section.label}</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {section.enabled ? 'Shfaqet në faqen kryesore' : 'E fshehur për vizitorët'}
             </p>
           </div>
@@ -519,14 +519,14 @@ function SortableSectionRow({
       {section.type !== 'hero' && section.type !== 'quote-band' && (
         <div className="mt-4 grid grid-cols-1 gap-4 border-t border-border pt-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Titulli i Seksionit</Label>
+            <Label className="text-base text-muted-foreground">Titulli i Seksionit</Label>
             <Input
               value={section.heading}
               onChange={(e) => onChange({ heading: e.target.value })}
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Nëntitulli</Label>
+            <Label className="text-base text-muted-foreground">Nëntitulli</Label>
             <Input
               value={section.subheading}
               onChange={(e) => onChange({ subheading: e.target.value })}
@@ -534,7 +534,7 @@ function SortableSectionRow({
           </div>
           {section.type === 'stories-feed' && (
             <div className="space-y-1.5">
-              <Label className="text-xs text-muted-foreground">Pamja e Rrëfimeve</Label>
+              <Label className="text-base text-muted-foreground">Pamja e Rrëfimeve</Label>
               {/* ds-allow-native-select */}
               <Select
                 value={section.storiesVariant || 'editorial-grid'}

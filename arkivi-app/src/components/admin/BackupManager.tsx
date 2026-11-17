@@ -3,7 +3,6 @@
 import React, { useState, useRef } from 'react';
 import { Download, Upload, RotateCcw, Shield, AlertTriangle, CheckCircle2, Loader2, HardDrive } from 'lucide-react';
 import { Button } from '@/src/components/ui/button';
-import { useCms } from '@/src/context/CmsContext';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -16,7 +15,6 @@ interface RestoreResult {
 }
 
 export function BackupManager() {
-  const { studioToken } = useCms();
   const [backupStatus, setBackupStatus] = useState<Status>('idle');
   const [restoreStatus, setRestoreStatus] = useState<Status>('idle');
   const [restoreResult, setRestoreResult] = useState<RestoreResult | null>(null);
@@ -30,7 +28,6 @@ export function BackupManager() {
     try {
       const res = await fetch('/api/backup', {
         method: 'GET',
-        headers: studioToken ? { 'x-admin-token': studioToken } : undefined,
       });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
@@ -80,7 +77,6 @@ export function BackupManager() {
       const res = await fetch('/api/restore', {
         method: 'POST',
         body: formData,
-        headers: studioToken ? { 'x-admin-token': studioToken } : undefined,
       });
       const json: RestoreResult = await res.json().catch(() => ({ success: false, error: 'Përgjigje e pavlefshme nga serveri.' }));
 
@@ -187,7 +183,7 @@ export function BackupManager() {
               file:bg-secondary file:text-foreground hover:file:bg-secondary/80 file:cursor-pointer"
           />
           {selectedFile && (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Zgjedhur: <strong>{selectedFile.name}</strong> ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
             </p>
           )}
@@ -240,7 +236,7 @@ export function BackupManager() {
                 {restoreResult.counts.bookSpreads} faqe libri
               </p>
             )}
-            <p className="text-xs text-green-600 dark:text-green-500 mt-1">
+            <p className="text-sm text-green-600 dark:text-green-500 mt-1">
               Duke rifreskuar faqen...
             </p>
           </div>
@@ -256,7 +252,7 @@ export function BackupManager() {
       </div>
 
       {/* Info footer */}
-      <div className="flex items-start gap-2 text-xs text-muted-foreground">
+      <div className="flex items-start gap-2 text-sm text-muted-foreground">
         <Shield className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>
           Të gjitha arkivat verifikohen me kontroll SHA-256 para rivendosjes.

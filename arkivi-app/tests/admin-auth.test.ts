@@ -165,4 +165,13 @@ describe('Admin Auth Boundary (AUDIT-2026-11-15)', () => {
     const mediaRes = await mediaRoute.GET();
     assert.strictEqual(mediaRes.status, 200);
   });
+
+  it('DELETE /api/stories/:id returns 404 for an unknown id (F-26)', async () => {
+    const route = await import('../src/app/api/stories/[id]/route');
+    const res = await route.DELETE(
+      new Request('http://localhost', { method: 'DELETE', headers: { 'x-admin-token': ADMIN_TOKEN } }),
+      { params: Promise.resolve({ id: 'does-not-exist-xyz' }) }
+    );
+    assert.strictEqual(res.status, 404);
+  });
 });

@@ -41,18 +41,15 @@ interface CmsContextValue {
   }) => Promise<MediaAsset | null>;
   updateMedia: (id: string, patch: Partial<MediaAsset>) => Promise<void>;
   deleteMedia: (id: string) => Promise<void>;
-  studioToken: string;
 }
 
 const CmsContext = createContext<CmsContextValue | null>(null);
 
 export function CmsProvider({
   children,
-  studioToken = '',
   initialCms = null,
 }: {
   children: React.ReactNode;
-  studioToken?: string;
   /** Server-rendered state; when given, no client fetch is needed for the first paint. */
   initialCms?: CmsState | null;
 }) {
@@ -88,22 +85,13 @@ export function CmsProvider({
     }
   }, [cms?.site.siteTitle]);
 
-  const adminHeaders = useCallback(
-    (extra?: Record<string, string>): Record<string, string> | undefined => {
-      const headers: Record<string, string> = { ...(extra || {}) };
-      if (studioToken) headers['x-admin-token'] = studioToken;
-      return Object.keys(headers).length > 0 ? headers : undefined;
-    },
-    [studioToken]
-  );
-
   const mutate = useCallback(
     async (url: string, method: 'PUT' | 'POST' | 'DELETE', body?: unknown, successMessage?: string) => {
       try {
         setSaving(true);
         const res = await fetch(url, {
           method,
-          headers: adminHeaders(body ? { 'Content-Type': 'application/json' } : undefined),
+          headers: body ? { 'Content-Type': 'application/json' } : undefined,
           body: body ? JSON.stringify(body) : undefined,
         });
         if (!res.ok) {
@@ -122,7 +110,7 @@ export function CmsProvider({
         setSaving(false);
       }
     },
-    [adminHeaders]
+    []
   );
 
   const updateSite = useCallback(
@@ -185,7 +173,7 @@ export function CmsProvider({
         setSaving(true);
         const res = await fetch('/api/media', {
           method: 'POST',
-          headers: adminHeaders({ 'Content-Type': 'application/json' }),
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
         if (!res.ok) {
@@ -204,7 +192,7 @@ export function CmsProvider({
         setSaving(false);
       }
     },
-    [adminHeaders]
+    []
   );
 
   const updateMedia = useCallback(
@@ -246,7 +234,6 @@ export function CmsProvider({
         uploadMedia,
         updateMedia,
         deleteMedia,
-        studioToken,
       }}
     >
       {children}

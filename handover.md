@@ -12,7 +12,7 @@
 2. **The site's content does NOT live in Payload.** It lives in one JSON file, `arkivi-app/data/cms-data.json`, read/written by custom routes under `src/app/api/*`. Payload (SQLite `data/arkivi.db`) is only used for **users/login and the Studio password**. The Payload collections `stories`, `book-spreads`, `media`, `timeline-entries` and globals `memorial-profile`, `hero-settings`, `home-layout` are **not read by the site** — editing them in `/admin` changes nothing visible.
 3. **Fixed (commit `fix(uploads)`, merged to `main`):** in production (`next start` / Docker) photos uploaded through the Studio return **404** until the server restarts, because Next only serves `public/` files that existed when the server started. See F-01.
 4. Tests now run in a temp data root (`ARKIVI_DATA_ROOT`) and no longer touch live `data/`. New test files must `import './test-env'` first OR rely on the `npm test` preload; running a file with bare `tsx --test` without the preload and without importing test-env first would hit live data.
-5. Baseline today: `npm test` → **109 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
+5. Baseline today: `npm test` → **112 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
 6. UI copy is **Albanian**, aimed at an elderly, non-technical author. Keep it that way (no technical jargon, large text, clear verbs like "Ruaj", "Fshij", "Rikthe").
 7. Windows dev machine: use PowerShell syntax in docs/commands (`;` not `&&`). Production is Linux Docker.
 
@@ -40,7 +40,6 @@ Studio has **7 tabs** (6 listed below + Kronologjia) (`src/components/admin/Admi
 BARDHI/                         <- git root
 ├── handover.md                 <- this file
 ├── context.md                  <- Albanian task router (partly stale, see §11)
-├── TEST_READY.md               <- old test certificate (51 tests, stale)
 ├── docker-compose.yml          <- PRODUCTION compose (app + cloudflared tunnel)
 ├── .env.example                <- env template for compose (do not commit real .env)
 ├── docs/context/08-...md       <- duplicate of arkivi-app/docs/context/08 (differs!)
@@ -49,13 +48,13 @@ BARDHI/                         <- git root
     ├── package.json            <- npm scripts (see §4)
     ├── Dockerfile, docker-entrypoint.sh, .dockerignore
     ├── next.config.mjs, postcss.config.mjs, tsconfig.json
-    ├── AGENTS.md, context.md, PROJECT_INDEX.md, TEST_READY.md
+    ├── AGENTS.md, context.md, PROJECT_INDEX.md
     ├── docs/context/00..08-*.md   <- domain docs (Albanian)
     ├── docs/audits/<surface>-<date>/round-1.md  <- 3 prior audit reports
     ├── data/                   <- RUNTIME: arkivi.db, cms-data.json (gitignored), cms-data.example.json
     ├── public/uploads/         <- RUNTIME: uploaded .webp photos (gitignored)
     ├── public/assets/images/   <- 6 seed photos used by default content
-    ├── public/src/assets/images/, media/   <- duplicate copies of the same 6 photos (unused, see F-24)
+    ├── media/              <- Payload Media staticDir (duplicate seed photos, unused by the site)
     ├── backups/                <- RUNTIME: backup ZIPs (gitignored)
     ├── scripts/backup.ts, scripts/restore.ts   <- CLI
     ├── tests/*.test.ts         <- node:test via tsx
@@ -263,7 +262,6 @@ Client side, **all** mutations go through `CmsContext` (`src/context/CmsContext.
 | `.../02-studio-e-autorit.md`, `08-docker-production-deployment.md` | Stale | Say the Studio needs **no password** — it does now. |
 | `.../03-3d-book-physics.md`, `04-design-system-and-tokens.md` | Good | |
 | Root `context.md` | Stale | Points to deleted mockup folder `në-kujtim-të-dritan-berishës/`; font list differs from doc 04; says 51 tests. |
-| `TEST_READY.md` (root and app) | Stale | 51 tests, "100% pass". |
 | `docs/audits/*/round-1.md` | Historical | Useful for what was fixed and why. |
 | Root `docs/context/08-...` vs app copy | Duplicate, differ | Keep one. |
 
@@ -317,13 +315,13 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 
 ### LOW
 
-- **F-22** ~94 hardcoded hex colours (`PhysicalBookReader` 64, `BookPageContent` 22, `BookInlineEditor` 8) and 22 inline `style={{}}` — move to CSS vars.
-- **F-23** 18 `text-xs` uses in Studio components vs the ≥16px rule for the elderly author.
-- **F-24** Same 6 seed images stored three times (`public/assets/images`, `public/src/assets/images`, `media/`); only `/assets/images` is referenced.
-- **F-25** Dead code: `studioToken` plumbing in `CmsContext`, `UserManager`, `BackupManager`; Payload `formatOptions/imageSizes` on an unused `media` collection.
-- **F-26** `DELETE /api/stories/:id` returns 200 for unknown ids; rate-limit Map never pruned; 12 empty `catch {}` blocks (mostly intentional fallbacks).
-- **F-27** Both `framer-motion` and `motion` installed; both `bun.lock` and `package-lock.json`.
-- **F-28** Docs drift listed in §11.
+- **F-22 FIXED (all component hex literals replaced by CSS variables in `globals.css`; computed colours verified identical in a prod build; test `tests/design-tokens.test.ts`). Original:**  ~94 hardcoded hex colours (`PhysicalBookReader` 64, `BookPageContent` 22, `BookInlineEditor` 8) and 22 inline `style={{}}` — move to CSS vars.
+- **F-23 FIXED (Studio `text-xs`/`text-[11px]` -> `text-sm`, field labels -> `text-base`; test `tests/studio-text-size.test.ts`; not visually checked at 280px). Original:**  18 `text-xs` uses in Studio components vs the ≥16px rule for the elderly author.
+- **F-24 FIXED (removed `public/src/assets/images`; `media/` kept because Payload's Media `staticDir` points at it). Original:**  Same 6 seed images stored three times (`public/assets/images`, `public/src/assets/images`, `media/`); only `/assets/images` is referenced.
+- **F-25 FIXED (`studioToken` plumbing removed from CmsContext/UserManager/BackupManager/AdminStudioWrapper). Original:**  Dead code: `studioToken` plumbing in `CmsContext`, `UserManager`, `BackupManager`; Payload `formatOptions/imageSizes` on an unused `media` collection.
+- **F-26 PARTLY FIXED (DELETE unknown story id -> 404; login rate-limit map now pruned in F-07; empty `catch {}` blocks left as intentional fallbacks). Original:**  `DELETE /api/stories/:id` returns 200 for unknown ids; rate-limit Map never pruned; 12 empty `catch {}` blocks (mostly intentional fallbacks).
+- **F-27 FIXED (`framer-motion` dependency dropped, `PhysicalBookReader` now imports `motion/react`; `bun.lock` deleted, Dockerfile and AGENTS.md use npm). Original:**  Both `framer-motion` and `motion` installed; both `bun.lock` and `package-lock.json`.
+- **F-28 FIXED (stale docs corrected, TEST_READY files and duplicate root doc 08 deleted; `docs/context/*` are canonical). Original:**  Docs drift listed in §11.
 
 ### Not verified (state honestly if asked)
 

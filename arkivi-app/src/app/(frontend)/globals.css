@@ -29,6 +29,33 @@
 }
 
 :root {
+  /* Archival book + brass tokens (F-22): values moved verbatim from component hex literals */
+  --book-cover-dark-1: #122b1e;
+  --book-cover-dark-2: #142b1f;
+  --book-cover-dark-3: #10261b;
+  --book-ink-1: #1a1611;
+  --book-ink-2: #24211d;
+  --book-ink-3: #262320;
+  --book-ink-muted: #5c554c;
+  --book-page-edge-1: #efe9da;
+  --book-page-edge-2: #dfd7c5;
+  --book-page-edge-3: #cfc6b2;
+  --book-page-edge-4: #cfc7b4;
+  --book-paper: #faf7ef;
+  --book-paper-cream: #f7f1e3;
+  --book-paper-soft: #faf8f3;
+  --book-paper-warm: #faf5e8;
+  --book-ribbon: #6b241c;
+  --book-rule: #d3ccb8;
+  --book-rule-soft: #d5cebf;
+  --book-shade-1: #f2ede1;
+  --book-shade-2: #ede6d6;
+  --book-shade-3: #ebe6da;
+  --book-shade-4: #eae3d5;
+  --book-shade-5: #e7e1d3;
+  --brass: #c5a56d;
+  --brass-light: #e5cf9f;
+
   --background: #f7f4ec;
   --foreground: #171614;
   --card: #fcfbf7;

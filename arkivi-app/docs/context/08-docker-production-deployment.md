@@ -44,7 +44,7 @@ docker compose logs -f arkivi-app
 ## 3. Qasja në Sistemin e Prodhimit
 
 - **Faqja Publike e Përkujtimit:** `http://IP_OSE_DOMENI:3001/`
-- **Studio e Autorit (e thjeshtë, pa fjalëkalim):** `http://IP_OSE_DOMENI:3001/studio`
+- **Studio e Autorit (me fjalëkalim Studio):** `http://IP_OSE_DOMENI:3001/studio`
 - **Paneli Teknik Administrativ (Payload):** `http://IP_OSE_DOMENI:3001/admin`
   - *Email:* `admin@arkivi.local` (ose ai që keni caktuar te `.env`)
   - *Fjalëkalimi:* ai që keni caktuar te `INITIAL_ADMIN_PASSWORD` në `.env` (nëse mungon, shihni logun e nisjes për fjalëkalimin e gjeneruar automatikisht)

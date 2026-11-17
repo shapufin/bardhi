@@ -14,7 +14,7 @@ Aplikacioni mbështetet në një arkitekturë me **tri shtresa persistence** që
 |---|---|---|
 | **SQLite database** | `data/arkivi.db` | Koleksionet PayloadCMS (përdoruesit, llogaritë, sesionet e siguruara) |
 | **CMS state JSON** | `data/cms-data.json` | Rrëfimet, fletët e librit 3D, kronologjia, media metadata, konfigurimi i kryefaqes dhe profili |
-| **Imazhet e ngarkuara** | `public/uploads/` & `media/` | Skedarët `.webp` të kompresuar dhe asetet e ngarkuara |
+| **Imazhet e ngarkuara** | `public/uploads/` (`media/` NUK përfshihet) | Skedarët `.webp` të kompresuar dhe asetet e ngarkuara |
 
 ### 1.2 Formati i Arkivit ZIP dhe Manifesti SHA-256
 
@@ -188,7 +188,7 @@ Sistemi llogarit automatikisht raportin e përshtatshëm nga dimensionet e nxjer
 
 ## 3. Suita e Testeve Automatikë (R4)
 
-Suita përfshin **67 teste** të shpërndara në 6 skedarë me arkitekturë me 4 nivele (Tier 1–4):
+Suita përfshin teste të shpërndara në disa skedarë (`tests/*.test.ts`) me arkitekturë me 4 nivele (Tier 1–4):
 
 | Skedari i Testit | Teste | Nivelet (Tiers) | Fushat e Mbuluara |
 |---|---|---|---|
@@ -224,5 +224,5 @@ npm test
 | ✅ **Kufiri Server-Side ≤ 5MB** | Implementuar & Testuar | HTTP 413 në `api/media` dhe `beforeValidate` në Payload |
 | ✅ **Kompresimi Sharp WebP** | Implementuar & Testuar | Cilësi 82, max 2560px, reduktim ~85-90% i madhësisë |
 | ✅ **Client Pre-Flight Check** | Implementuar & Testuar | Bllokim në `MediaLibrary.tsx` me Sonner toast në shqip |
-| ✅ **Suita e Testeve Automatikë** | Implementuar & Testuar | 67 teste, 6 suita, 100% kaluese |
+| ✅ **Suita e Testeve Automatikë** | Implementuar & Testuar | suita e plotë kalon (`npm test`) |
 | ✅ **TypeScript Linting** | Verifikuar | `tsc --noEmit` me 0 gabime |

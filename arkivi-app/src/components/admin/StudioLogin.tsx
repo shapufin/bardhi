@@ -50,7 +50,7 @@ export function StudioLogin() {
         </p>
 
         <label htmlFor="studio-identifier" className="mt-6 block text-sm text-foreground">
-          Email ose Emri <span className="text-xs text-muted-foreground">(opsionale)</span>
+          Email ose Emri <span className="text-base text-muted-foreground">(opsionale)</span>
         </label>
         <input
           id="studio-identifier"

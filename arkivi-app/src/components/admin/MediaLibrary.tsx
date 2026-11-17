@@ -105,7 +105,7 @@ export function MediaPickerDialog({
             <ImagePlus className="h-4 w-4" />
             <span>{uploading ? 'Duke ngarkuar...' : 'Ngarko Foto nga Kompjuteri'}</span>
           </Button>
-          <span className="font-mono text-xs text-muted-foreground">
+          <span className="font-mono text-sm text-muted-foreground">
             {cms?.media.length ?? 0} fotografi
           </span>
         </div>
@@ -137,7 +137,7 @@ export function MediaPickerDialog({
                 )}
                 <div className="p-2.5">
                   <p className="truncate font-serif text-base font-medium text-foreground">{item.title}</p>
-                  <p className="font-mono text-xs text-muted-foreground">{item.year}</p>
+                  <p className="font-mono text-sm text-muted-foreground">{item.year}</p>
                 </div>
               </button>
             );
@@ -268,7 +268,7 @@ export function MediaLibrary() {
               <div className="flex flex-1 flex-col pt-4">
                 <div className="flex items-baseline justify-between gap-2">
                   <h4 className="font-serif text-xl font-medium text-foreground">{item.title}</h4>
-                  <span className="font-mono text-xs tabular-nums text-muted-foreground">{item.year}</span>
+                  <span className="font-mono text-sm tabular-nums text-muted-foreground">{item.year}</span>
                 </div>
                 <p className="mt-1.5 flex-1 text-sm text-muted-foreground">
                   {item.caption || 'Pa përshkrim ende.'}

@@ -2,7 +2,7 @@
 
 ## Çfarë Duhet të Jetë e Vërtetë (Invariants)
 1. **Arkitektura e Dyfishtë e të Dhënave (Dual-Persistence)**:
-   - Baza lokale kryesore është SQLite (`data/arkivi.db`) përmes `@payloadcms/db-sqlite`. Në prodhim lidhet lehtësisht me PostgreSQL përmes `DATABASE_URI`.
+   - Baza lokale kryesore është SQLite (`data/arkivi.db`) përmes `@payloadcms/db-sqlite`. PostgreSQL nuk është implementuar. Përmbajtja e faqes lexohet nga `cms-data.json`; koleksionet Payload `stories`, `book-spreads`, `media`, `timeline-entries` dhe globalet `memorial-profile`, `hero-settings`, `home-layout` NUK lexohen nga faqja — përdoren vetëm `users` dhe `studio-settings`.
    - Gjendja aktive e përmbajtjes së CMS-it ruhet në mënyrë atomike te `data/cms-data.json` me transaksione të mbrojtura me retry (`atomicWriteFile`).
 2. **Lokalizimi i Plotë Shqip**: Të gjitha koleksionet, fushat dhe globalet janë të konfiguruara dhe të përkthyera në gjuhën shqipe (`locale: 'sq'`).
 3. **Koleksionet Kryesore**:

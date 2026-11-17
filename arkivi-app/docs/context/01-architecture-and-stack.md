@@ -3,7 +3,7 @@
 ## Çfarë Duhet të Jetë e Vërtetë (Invariants)
 1. **Server i Unifikuar Next.js 15 + React 19 + PayloadCMS v3**: Aplikacioni ekzekutohet si një Next.js App Router i unifikuar. PayloadCMS v3 (`^3.93.0`) konfigurohet te `src/payload.config.ts` dhe ekzekutohet natively brenda të njëjtit proces Next.js (pa pasur nevojë për proces të dytë serveri në sfond).
 2. **Arkitekturë e Dyfishtë e të Dhënave (Dual-Persistence)**:
-   - **SQLite Database** (`data/arkivi.db` përmes `@payloadcms/db-sqlite`): Përdoret për menaxhimin e përdoruesve, fjalëkalimeve të hash-uara, dhe sesioneve të Payload Super Admin. Në prodhim kalon në Docker PostgreSQL (`@payloadcms/db-postgres`) pa ndryshuar logjikën e aplikacionit.
+   - **SQLite Database** (`data/arkivi.db` përmes `@payloadcms/db-sqlite`): Përdoret për menaxhimin e përdoruesve, fjalëkalimeve të hash-uara, dhe sesioneve të Payload Super Admin. PostgreSQL NUK është implementuar (`@payloadcms/db-postgres` nuk është i instaluar).
    - **Gjendja Atomike JSON** (`data/cms-data.json`): Përdoret për përmbajtjen aktive të CMS-it (rrëfimet, fletët e librit, kronologjia, media metadata, konfigurimi i kryefaqes dhe profili i memorialit). Shkrimet ekzekutohen përmes `atomicWriteFile` me skedarë të përkohshëm dhe ripërtëritje transaksionale për të parandaluar dëmtimin e të dhënave.
    - **Shtresa e Skedarëve të Medias**: `public/uploads/` mban të gjitha imazhet e kompresuara WebP të ngarkuara nga Studio e Autorit, ndërsa `media/` shërben si dosje statike për ngarkimet direkte nga paneli teknik Payload.
 3. **Zgjidhja Absolute dhe e Qëndrueshme e Shtigjeve (SYS-01)**:
@@ -43,7 +43,7 @@
 # Verifikimi i tipizimit Typescript (0 gabime)
 npm run lint
 
-# Verifikimi i të gjithë testeve të arkitekturës dhe sigurisë (67 teste)
+# Verifikimi i të gjithë testeve të arkitekturës dhe sigurisë (suita e plotë)
 npm test
 
 # Verifikimi i kompilimit Next.js + Payload prodhues

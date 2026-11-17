@@ -33,7 +33,6 @@
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
-    "framer-motion": "^12.4.7",
     "graphql": "^16.10.0",
     "jszip": "^3.10.1",
     "lucide-react": "^0.475.0",

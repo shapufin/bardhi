@@ -428,7 +428,7 @@ function SortableSpreadTile({
       </button>
 
       <button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left cursor-pointer">
-        <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+        <p className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
           {spread.chapterLabel} · f. {spread.leftPageNumber} - {spread.rightPageNumber}
         </p>
         <p className="truncate font-serif text-lg font-medium text-foreground">
@@ -485,7 +485,7 @@ function PageColumnEditor({
     <div className="flex flex-col border border-border bg-card p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-4">
         <h4 className="font-serif text-2xl font-medium text-foreground">{title}</h4>
-        <span className="font-mono text-xs text-muted-foreground">{blocks.length} blloqe</span>
+        <span className="font-mono text-sm text-muted-foreground">{blocks.length} blloqe</span>
       </div>
 
       <div className="mt-5 flex-1 space-y-4">
@@ -599,7 +599,7 @@ function SortableBlockCard({
           >
             <GripVertical className="h-4 w-4" />
           </button>
-          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          <span className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
             {typeLabel}
           </span>
         </div>
@@ -684,7 +684,7 @@ function SortableBlockCard({
 
         {block.type === 'prose' && (
           <div className="flex items-center justify-between pt-1">
-            <span className="text-xs text-muted-foreground">Shkronjë e madhe fillestare (Drop Cap)</span>
+            <span className="text-base text-muted-foreground">Shkronjë e madhe fillestare (Drop Cap)</span>
             <Switch
               checked={Boolean(block.dropCap)}
               onCheckedChange={(checked) => onChange({ dropCap: checked })}

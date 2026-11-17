@@ -179,7 +179,7 @@ export function StoryManager() {
                   <Label htmlFor="story-featured" className="text-sm font-medium">
                     Veço në Kryefaqe
                   </Label>
-                  <p className="text-xs text-muted-foreground">Shfaqe si kujtim kryesor</p>
+                  <p className="text-sm text-muted-foreground">Shfaqe si kujtim kryesor</p>
                 </div>
                 <Switch
                   id="story-featured"
@@ -292,7 +292,7 @@ export function StoryManager() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-sm text-muted-foreground">
                       <span
                         className={`font-medium ${
                           story.status === 'published' ? 'text-primary' : 'text-amber-800'

@@ -18,6 +18,10 @@
 - [x] Ndarje me vija të holla `1px` dhe hapësirë të bollshme arkivore.
 - [x] Pa tekst bosh ("Lorem Ipsum") apo të dhëna të fabrikuara; çdo rrëfim ka peshë emocionale dhe vërtetësi.
 
+### Rregulla të zbatuara me test
+- **Pa hex në komponentë (F-22)**: ngjyrat vijnë nga variablat CSS te `globals.css` (`--primary`, `--border`, `--brass`, `--book-*`); në klasa Tailwind përdoret `bg-[color:var(--book-paper)]` (me `color:` për `text-`/`border-`/`bg-`). Test: `tests/design-tokens.test.ts`.
+- **Tekst i Studios ≥ 14px (F-23)**: asnjë `text-xs`/`text-[11px]` te `components/admin`; etiketat e fushave janë `text-base` (16px). Test: `tests/studio-text-size.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Variablat dhe Shenjat CSS: `src/app/(frontend)/globals.css` dhe `src/app/(payload)/custom.css`
 - Komponentët Bazë UI: `src/components/ui/` (`button.tsx`, `card.tsx`, `dialog.tsx`, `switch.tsx`, `tabs.tsx`)

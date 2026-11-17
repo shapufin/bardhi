@@ -80,7 +80,7 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
             <h1 className="font-serif text-2xl font-medium text-foreground">
               Studio e Autorit
             </h1>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-sm text-muted-foreground">
               {saving
                 ? 'Duke ruajtur ndryshimet...'
                 : lastSavedAt
@@ -144,7 +144,7 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
                       {item.label}
                     </span>
                     <span
-                      className={`mt-0.5 hidden text-xs lg:block ${
+                      className={`mt-0.5 hidden text-sm lg:block ${
                         active ? 'text-primary-foreground/80' : 'text-muted-foreground'
                       }`}
                     >
@@ -175,7 +175,7 @@ export function AdminStudio({ onExitStudio }: AdminStudioProps) {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-card px-6 py-3.5 pr-16">
             <DialogHeader className="p-0">
               <DialogTitle className="text-lg">Pamje e Drejtpërdrejtë e Faqes</DialogTitle>
-              <DialogDescription className="text-xs">
+              <DialogDescription className="text-sm">
                 Kontrolloni si duket faqja dhe libri për vizitorët në kompjuter dhe celular.
               </DialogDescription>
             </DialogHeader>

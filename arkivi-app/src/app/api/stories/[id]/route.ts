@@ -17,6 +17,9 @@ async function deleteHandler(
   try {
     const { id } = await params;
     const current = await getCmsState();
+    if (!current.stories.some((s) => s.id === id)) {
+      return NextResponse.json({ error: 'Rrëfimi nuk u gjet.' }, { status: 404 });
+    }
     const nextStories = current.stories.filter((s) => s.id !== id);
     const nextHero =
       current.hero.featuredStoryId === id

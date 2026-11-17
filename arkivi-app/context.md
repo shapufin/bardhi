@@ -14,7 +14,7 @@
   - **SQLite Database** (`data/arkivi.db`) përmes `@payloadcms/db-sqlite` për koleksionet e Payload, përdoruesit dhe sesionet administrative (gati për PostgreSQL në Docker prodhues).
   - **Dokument Atomik JSON** (`data/cms-data.json`) me shkrim atomik transaksional (`atomicWriteFile`) për gjendjen aktive të CMS-it (rrëfimet, fletët e librit, kronologjia, media metadata, profili i memorialit).
   - **Dosjet e Medias**: `public/uploads/` (imazhet e kompresuara WebP të ngarkuara nga Studio) dhe `media/` (direktoria statike e ngarkimit të Payload).
-- **Studio Administrative**: Ndërfaqe e dedikuar në shqip **"Studio e Autorit"** (`/studio`) me **6 tab-e** kryesore, pa fjalëkalim për autorin e moshuar. Tab-i 6 përmban panelin e rezervimit/rivendosjes (`BackupManager.tsx`). Paneli teknik **Payload Super Admin** (`/admin`) kërkon kredenciale dhe mbetet vetëm për mirëmbajtje teknike nga superuser-i.
+- **Studio Administrative**: Ndërfaqe e dedikuar në shqip **"Studio e Autorit"** (`/studio`) me **7 tab-e** kryesore, me fjalëkalim për autorin e moshuar. Tab-i 6 përmban panelin e rezervimit/rivendosjes (`BackupManager.tsx`). Paneli teknik **Payload Super Admin** (`/admin`) kërkon kredenciale dhe mbetet vetëm për mirëmbajtje teknike nga superuser-i.
 - **Optimizimi i Imazheve**: Pipeline i avancuar me Sharp 0.33.5 me kufi të rreptë server-side ≤ 5MB (refuzim HTTP 413), orientim automatik EXIF, shkallëzim maksimal deri në 2560px, dhe kompresim në WebP me cilësi 82 (~85-90% reduktim madhësie).
 - **Sistemi i Rezervimit me Zero Humbje**: Mjete CLI (`npm run backup`, `npm run restore`) dhe API (`/api/backup`, `/api/restore`) me arkiva portabël ZIP, manifest SHA-256 dhe rollback atomik.
 
@@ -57,7 +57,7 @@ Kur merrni një detyrë, gjeni fjalën kyçe këtu dhe lexoni **vetëm skedarin 
 ## 4. Komandat Kryesore
 
 ```powershell
-# Suita e testeve automatike (67 teste me ekzekutim sekuencial të sigurt)
+# Suita e testeve automatike (suita e plotë me ekzekutim sekuencial të sigurt)
 npm test
 
 # Krijimi i kopjes rezervë CLI (ZIP në backups/ me manifest SHA-256)

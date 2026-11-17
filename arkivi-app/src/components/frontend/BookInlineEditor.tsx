@@ -177,7 +177,7 @@ export function BookInlineEditor({
   return (
     <div className="mx-auto w-full max-w-6xl space-y-6 pb-8">
       {/* Shiriti i sipërm i Modalitetit Edit */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border border-primary/40 bg-[#faf7ef] p-4 shadow-sm sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-4 border border-primary/40 bg-[color:var(--book-paper)] p-4 shadow-sm sm:p-5">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-primary">
             Modaliteti Edit Direkt në Libër
@@ -216,7 +216,7 @@ export function BookInlineEditor({
       </div>
 
       {/* Të dhënat kryesore të Fletës dhe Librit */}
-      <div className="grid grid-cols-1 gap-4 border border-border bg-[#fcfbf7] p-5 md:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 border border-border bg-[color:var(--card)] p-5 md:grid-cols-5">
         <div className="space-y-1.5">
           <Label className="text-xs text-muted-foreground">Titulli i Librit</Label>
           <Input value={bookTitle} onChange={(e) => onChangeBookTitle(e.target.value)} />
@@ -254,7 +254,7 @@ export function BookInlineEditor({
       </div>
 
       {/* Dy faqet e hapura të Librit për Redaktim Direkt */}
-      <div className="grid grid-cols-1 border-2 border-[#1b3b2b]/40 bg-[#faf7ef] shadow-lg lg:grid-cols-2">
+      <div className="grid grid-cols-1 border-2 border-[color:var(--primary)]/40 bg-[color:var(--book-paper)] shadow-lg lg:grid-cols-2">
         {(
           [
             { side: 'left' as const, label: 'Faqja e Majtë', num: activeSpread.leftPageNumber, blocks: activeSpread.leftBlocks },
@@ -264,11 +264,11 @@ export function BookInlineEditor({
           <div
             key={col.side}
             className={`flex flex-col justify-between p-6 sm:p-8 ${
-              colIdx === 0 ? 'border-b border-[#dcd6c8] lg:border-b-0 lg:border-r' : ''
+              colIdx === 0 ? 'border-b border-[color:var(--border)] lg:border-b-0 lg:border-r' : ''
             }`}
           >
             <div>
-              <div className="flex items-center justify-between border-b border-[#dcd6c8] pb-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              <div className="flex items-center justify-between border-b border-[color:var(--border)] pb-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
                 <span>{col.label}</span>
                 <span>Faqja {String(col.num).padStart(2, '0')}</span>
               </div>
@@ -277,7 +277,7 @@ export function BookInlineEditor({
                 {col.blocks.map((block, bIdx) => {
                   const media = block.imageId ? getMedia(block.imageId) : undefined;
                   return (
-                    <div key={block.id} className="border border-border bg-[#fcfbf7] p-4 shadow-xs">
+                    <div key={block.id} className="border border-border bg-[color:var(--card)] p-4 shadow-xs">
                       <div className="flex items-center justify-between gap-2 border-b border-border/70 pb-2.5">
                         <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
                           {block.type === 'prose'
@@ -410,7 +410,7 @@ export function BookInlineEditor({
             </div>
 
             {/* Shto bllok të ri drejtpërdrejt në këtë faqe */}
-            <div className="mt-6 flex flex-wrap gap-2 border-t border-[#dcd6c8] pt-4">
+            <div className="mt-6 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
               <Button type="button" variant="outline" size="sm" onClick={() => addBlock(col.side, 'prose')} className="gap-1.5">
                 <PenLine className="h-3.5 w-3.5" />
                 <span>+ Paragraf</span>

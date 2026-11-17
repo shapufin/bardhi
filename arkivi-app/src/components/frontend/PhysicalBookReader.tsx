@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { animated, to, useSpring } from '@react-spring/web';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowLeft,
   BookOpen,
@@ -623,10 +623,10 @@ export function PhysicalBookReader({
     turning?.dir === 1 ? flatPages[turning.fromIdx] || mobCurrent : flatPages[turning?.toIdx ?? activeIdx] || mobCurrent;
 
   return (
-    <section className="relative flex min-h-[calc(100vh-73px)] w-full flex-col justify-between overflow-x-hidden bg-[#eae3d5] px-3 pb-28 pt-4 sm:px-6 sm:pt-6">
+    <section className="relative flex min-h-[calc(100vh-73px)] w-full flex-col justify-between overflow-x-hidden bg-[color:var(--book-shade-4)] px-3 pb-28 pt-4 sm:px-6 sm:pt-6">
       {/* Shiriti i sipërm minimal */}
       <div className="relative z-20 mx-auto flex w-full max-w-6xl flex-wrap items-start justify-between gap-3">
-        <div className="border border-border bg-[#faf8f3]/95 px-4 py-2.5">
+        <div className="border border-border bg-[color:var(--book-paper-soft)]/95 px-4 py-2.5">
           <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
             {coverClosed && !isMobile && !editMode
               ? 'Kopertina e Librit'
@@ -651,18 +651,18 @@ export function PhysicalBookReader({
                 setCleanMode(false);
                 setEditMode((v) => !v);
               }}
-              className={`gap-1.5 ${editMode ? '' : 'bg-[#faf8f3]'}`}
+              className={`gap-1.5 ${editMode ? '' : 'bg-[color:var(--book-paper-soft)]'}`}
             >
               <Pencil className="h-3.5 w-3.5" />
               <span>{editMode ? 'Dil nga Editimi' : 'Redakto Librin'}</span>
             </Button>
           )}
           {!editMode && (
-            <Button variant="outline" size="sm" onClick={() => setCleanMode(true)} className="bg-[#faf8f3]">
+            <Button variant="outline" size="sm" onClick={() => setCleanMode(true)} className="bg-[color:var(--book-paper-soft)]">
               Lexim i Pastër
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={onExitBook} className="gap-1.5 bg-[#faf8f3]">
+          <Button variant="outline" size="sm" onClick={onExitBook} className="gap-1.5 bg-[color:var(--book-paper-soft)]">
             <ArrowLeft className="h-4 w-4" />
             <span className="hidden sm:inline">Kryefaqja</span>
           </Button>
@@ -698,7 +698,7 @@ export function PhysicalBookReader({
           {/* Hije kontakti mbi tavolinë */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-10 bottom-3 mx-auto h-12 max-w-4xl rounded-[100%] bg-[#1a1611]/20 blur-xl"
+            className="pointer-events-none absolute inset-x-10 bottom-3 mx-auto h-12 max-w-4xl rounded-[100%] bg-[color:var(--book-ink-1)]/20 blur-xl"
           />
 
           {isMobile ? (
@@ -711,11 +711,11 @@ export function PhysicalBookReader({
               className="relative mx-auto aspect-[5/7] w-full max-w-[430px] touch-none select-none"
               style={{ perspective: '1800px' }}
             >
-              <div className="absolute -inset-2 rounded-sm border border-[#142b1f] bg-[#1b3b2b] shadow-2xl">
-                <div className="h-full w-full border border-[#c5a56d]/40" />
+              <div className="absolute -inset-2 rounded-sm border border-[color:var(--book-cover-dark-2)] bg-[color:var(--primary)] shadow-2xl">
+                <div className="h-full w-full border border-[color:var(--brass)]/40" />
               </div>
 
-              <div className="relative h-full w-full overflow-hidden border border-[#d5cebf] bg-[#faf7ef] shadow-inner">
+              <div className="relative h-full w-full overflow-hidden border border-[color:var(--book-rule-soft)] bg-[color:var(--book-paper)] shadow-inner">
                 <BookPageContent
                   side={mobUnder.side}
                   blocks={mobUnder.blocks}
@@ -741,7 +741,7 @@ export function PhysicalBookReader({
                       return p > 0.72 ? Math.max(0, 1 - (p - 0.72) / 0.28) : 1;
                     }),
                   }}
-                  className="pointer-events-none absolute inset-0 z-20 border border-[#cfc7b4] bg-[#faf7ef] shadow-2xl"
+                  className="pointer-events-none absolute inset-0 z-20 border border-[color:var(--book-page-edge-4)] bg-[color:var(--book-paper)] shadow-2xl"
                 >
                   <BookPageContent
                     side={mobTurning.side}
@@ -798,17 +798,17 @@ export function PhysicalBookReader({
               >
                 {/* Trupi i Kapakut të Pasëm */}
                 <div
-                  className="absolute -inset-3 rounded-sm border border-[#10261b] bg-[#1b3b2b] shadow-[0_28px_60px_-15px_rgba(20,18,14,0.55)]"
+                  className="absolute -inset-3 rounded-sm border border-[color:var(--book-cover-dark-3)] bg-[color:var(--primary)] shadow-[0_28px_60px_-15px_rgba(20,18,14,0.55)]"
                   style={{ transform: 'translateZ(-16px)' }}
                 >
-                  <div className="pointer-events-none absolute inset-1.5 border border-[#c5a56d]/35" />
-                  <div className="pointer-events-none absolute left-0 top-0 h-5 w-5 border-l-4 border-t-4 border-[#c5a56d]" />
-                  <div className="pointer-events-none absolute right-0 top-0 h-5 w-5 border-r-4 border-t-4 border-[#c5a56d]" />
-                  <div className="pointer-events-none absolute bottom-0 left-0 h-5 w-5 border-b-4 border-l-4 border-[#c5a56d]" />
-                  <div className="pointer-events-none absolute bottom-0 right-0 h-5 w-5 border-b-4 border-r-4 border-[#c5a56d]" />
+                  <div className="pointer-events-none absolute inset-1.5 border border-[color:var(--brass)]/35" />
+                  <div className="pointer-events-none absolute left-0 top-0 h-5 w-5 border-l-4 border-t-4 border-[color:var(--brass)]" />
+                  <div className="pointer-events-none absolute right-0 top-0 h-5 w-5 border-r-4 border-t-4 border-[color:var(--brass)]" />
+                  <div className="pointer-events-none absolute bottom-0 left-0 h-5 w-5 border-b-4 border-l-4 border-[color:var(--brass)]" />
+                  <div className="pointer-events-none absolute bottom-0 right-0 h-5 w-5 border-b-4 border-r-4 border-[color:var(--brass)]" />
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute -bottom-7 left-1/2 h-9 w-4 -translate-x-1/2 rotate-[6deg] bg-[#6b241c] shadow-md"
+                    className="pointer-events-none absolute -bottom-7 left-1/2 h-9 w-4 -translate-x-1/2 rotate-[6deg] bg-[color:var(--book-ribbon)] shadow-md"
                     style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%)' }}
                   />
                 </div>
@@ -817,28 +817,28 @@ export function PhysicalBookReader({
                 <div
                   aria-hidden="true"
                   style={{ width: `${leftStackWidth}px`, transform: 'translateZ(-8px)' }}
-                  className="pointer-events-none absolute inset-y-1 -left-2 border-y border-l border-[#cfc6b2] bg-gradient-to-r from-[#dfd7c5] via-[#efe9da] to-[#faf7ef]"
+                  className="pointer-events-none absolute inset-y-1 -left-2 border-y border-l border-[color:var(--book-page-edge-3)] bg-gradient-to-r from-[color:var(--book-page-edge-2)] via-[color:var(--book-page-edge-1)] to-[color:var(--book-paper)]"
                 />
                 <div
                   aria-hidden="true"
                   style={{ width: `${rightStackWidth}px`, transform: 'translateZ(-8px)' }}
-                  className="pointer-events-none absolute inset-y-1 -right-2 border-y border-r border-[#cfc6b2] bg-gradient-to-l from-[#dfd7c5] via-[#efe9da] to-[#faf7ef]"
+                  className="pointer-events-none absolute inset-y-1 -right-2 border-y border-r border-[color:var(--book-page-edge-3)] bg-gradient-to-l from-[color:var(--book-page-edge-2)] via-[color:var(--book-page-edge-1)] to-[color:var(--book-paper)]"
                 />
 
                 {/* Fletët Statike të Hapura */}
                 <div
-                  className="relative grid h-full w-full grid-cols-2 border border-[#cfc6b2] bg-[#faf7ef]"
+                  className="relative grid h-full w-full grid-cols-2 border border-[color:var(--book-page-edge-3)] bg-[color:var(--book-paper)]"
                   style={{ transformStyle: 'preserve-3d' }}
                 >
                   {/* Kurrizi qendror */}
                   <div
                     aria-hidden="true"
                     style={{ transform: 'translateZ(1px)' }}
-                    className="pointer-events-none absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#171614]/[0.16] to-transparent"
+                    className="pointer-events-none absolute inset-y-0 left-1/2 w-8 -translate-x-1/2 bg-gradient-to-r from-transparent via-[color:var(--foreground)]/[0.16] to-transparent"
                   />
 
                   {/* Faqja e Majtë Statike */}
-                  <div className="relative h-full border-r border-[#dcd6c8]">
+                  <div className="relative h-full border-r border-[color:var(--border)]">
                     <BookPageContent
                       side="left"
                       blocks={stationaryLeftSp.leftBlocks}
@@ -851,7 +851,7 @@ export function PhysicalBookReader({
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="pointer-events-none absolute bottom-4 left-4 border border-[#c5a56d] bg-[#faf7ef]/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[#1b3b2b]"
+                        className="pointer-events-none absolute bottom-4 left-4 border border-[color:var(--brass)] bg-[color:var(--book-paper)]/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[color:var(--primary)]"
                       >
                         ← Kthehu prapa
                       </motion.div>
@@ -872,7 +872,7 @@ export function PhysicalBookReader({
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="pointer-events-none absolute bottom-4 right-4 border border-[#c5a56d] bg-[#faf7ef]/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[#1b3b2b]"
+                        className="pointer-events-none absolute bottom-4 right-4 border border-[color:var(--brass)] bg-[color:var(--book-paper)]/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[color:var(--primary)]"
                       >
                         Faqja tjetër →
                       </motion.div>
@@ -918,7 +918,7 @@ export function PhysicalBookReader({
                           WebkitBackfaceVisibility: 'hidden',
                           transform: 'rotateY(0deg) translateZ(1px)',
                         }}
-                        className="absolute inset-0 border border-[#d3ccb8] bg-[#faf7ef] shadow-xl"
+                        className="absolute inset-0 border border-[color:var(--book-rule)] bg-[color:var(--book-paper)] shadow-xl"
                       >
                         <BookPageContent
                           side="right"
@@ -946,7 +946,7 @@ export function PhysicalBookReader({
                           WebkitBackfaceVisibility: 'hidden',
                           transform: 'rotateY(180deg) translateZ(1px)',
                         }}
-                        className="absolute inset-0 border border-[#d3ccb8] bg-[#faf7ef] shadow-xl"
+                        className="absolute inset-0 border border-[color:var(--book-rule)] bg-[color:var(--book-paper)] shadow-xl"
                       >
                         <BookPageContent
                           side="left"
@@ -992,21 +992,21 @@ export function PhysicalBookReader({
                         WebkitBackfaceVisibility: 'hidden',
                         transform: 'rotateY(0deg)',
                       }}
-                      className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-r-sm border-2 border-[#122b1e] bg-[#1b3b2b] p-7 text-center text-[#f7f1e3] shadow-2xl"
+                      className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-r-sm border-2 border-[color:var(--book-cover-dark-1)] bg-[color:var(--primary)] p-7 text-center text-[color:var(--book-paper-cream)] shadow-2xl"
                     >
-                      <div className="pointer-events-none absolute inset-3 border border-[#c5a56d]/70" />
-                      <div className="pointer-events-none absolute inset-4 border border-[#c5a56d]/30" />
+                      <div className="pointer-events-none absolute inset-3 border border-[color:var(--brass)]/70" />
+                      <div className="pointer-events-none absolute inset-4 border border-[color:var(--brass)]/30" />
 
                       <div className="relative z-10 mt-2 space-y-2">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#e5cf9f]">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[color:var(--brass-light)]">
                           Botim Arkivor Përkujtimor
                         </p>
-                        <h2 className="font-serif text-3xl font-semibold leading-tight text-[#faf5e8] lg:text-4xl">
+                        <h2 className="font-serif text-3xl font-semibold leading-tight text-[color:var(--book-paper-warm)] lg:text-4xl">
                           {activeTitle}
                         </h2>
                       </div>
 
-                      <div className="relative z-10 my-3 aspect-[3/4] w-44 overflow-hidden border-2 border-[#c5a56d] bg-[#122b1e] p-1 shadow-lg lg:w-52">
+                      <div className="relative z-10 my-3 aspect-[3/4] w-44 overflow-hidden border-2 border-[color:var(--brass)] bg-[color:var(--book-cover-dark-1)] p-1 shadow-lg lg:w-52">
                         <ArchivalImage
                           src={coverAsset?.url}
                           alt={coverAsset?.alt || activeTitle}
@@ -1015,9 +1015,9 @@ export function PhysicalBookReader({
                       </div>
 
                       <div className="relative z-10 mb-2 space-y-2">
-                        <p className="font-serif text-base italic text-[#e5cf9f]">{activeSubtitle}</p>
-                        <div className="mx-auto h-px w-24 bg-[#c5a56d]/60" />
-                        <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[#faf5e8]">
+                        <p className="font-serif text-base italic text-[color:var(--brass-light)]">{activeSubtitle}</p>
+                        <div className="mx-auto h-px w-24 bg-[color:var(--brass)]/60" />
+                        <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--book-paper-warm)]">
                           {authorName}
                         </p>
                       </div>
@@ -1029,13 +1029,13 @@ export function PhysicalBookReader({
                         WebkitBackfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
                       }}
-                      className="absolute inset-0 flex items-center justify-center border border-[#c5a56d]/40 bg-[#ede6d6] p-8"
+                      className="absolute inset-0 flex items-center justify-center border border-[color:var(--brass)]/40 bg-[color:var(--book-shade-2)] p-8"
                     >
-                      <div className="border border-[#d3ccb8] bg-[#faf7ef] p-6 text-center">
-                        <p className="font-mono text-[10px] uppercase tracking-widest text-[#635d55]">
+                      <div className="border border-[color:var(--book-rule)] bg-[color:var(--book-paper)] p-6 text-center">
+                        <p className="font-mono text-[10px] uppercase tracking-widest text-[color:var(--muted-foreground)]">
                           Ex Libris
                         </p>
-                        <p className="mt-2 font-serif text-xl italic text-[#171614]">{activeTitle}</p>
+                        <p className="mt-2 font-serif text-xl italic text-[color:var(--foreground)]">{activeTitle}</p>
                       </div>
                     </div>
                   </animated.div>
@@ -1054,7 +1054,7 @@ export function PhysicalBookReader({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 14 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-28 left-1/2 z-30 w-[92vw] max-w-2xl -translate-x-1/2 border border-border bg-[#faf8f3] p-5 shadow-xl"
+            className="fixed bottom-28 left-1/2 z-30 w-[92vw] max-w-2xl -translate-x-1/2 border border-border bg-[color:var(--book-paper-soft)] p-5 shadow-xl"
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h2 className="font-serif text-lg font-medium text-foreground">Përmbajtja e Librit</h2>
@@ -1102,7 +1102,7 @@ export function PhysicalBookReader({
         <button
           type="button"
           onClick={() => setDockOpen((v) => !v)}
-          className="pointer-events-auto mb-1.5 inline-flex items-center gap-1.5 border border-border bg-[#faf8f3] px-3 py-1 text-xs font-medium text-foreground shadow-xs cursor-pointer"
+          className="pointer-events-auto mb-1.5 inline-flex items-center gap-1.5 border border-border bg-[color:var(--book-paper-soft)] px-3 py-1 text-xs font-medium text-foreground shadow-xs cursor-pointer"
         >
           {dockOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
           <span>{dockOpen ? 'Fshih Kontrollet' : 'Shfaq Kontrollet'}</span>
@@ -1115,7 +1115,7 @@ export function PhysicalBookReader({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
               transition={{ duration: 0.2 }}
-              className="pointer-events-auto flex w-full flex-wrap items-center justify-between gap-2.5 border border-border bg-[#faf8f3] px-4 py-3 shadow-md"
+              className="pointer-events-auto flex w-full flex-wrap items-center justify-between gap-2.5 border border-border bg-[color:var(--book-paper-soft)] px-4 py-3 shadow-md"
             >
               <div className="flex items-center gap-2">
                 <Button

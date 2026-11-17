@@ -1,7 +1,7 @@
 # 02 — Studio e Autorit (Ndërfaqja Administrative e Thjeshtuar)
 
 ## Çfarë Duhet të Jetë e Vërtetë (Invariants)
-1. **Dizajn i Përshtatur për Autorin e Moshuar**: Ndërfaqja është projektuar posaçërisht për një prind të moshuar (një baba që shkruan për djalin e tij të rënë). Nuk kërkon fjalëkalim për hyrje te `/studio` dhe shmang çdo zhargon teknik.
+1. **Dizajn i Përshtatur për Autorin e Moshuar**: Ndërfaqja është projektuar posaçërisht për një prind të moshuar (një baba që shkruan për djalin e tij të rënë). Hyrja te `/studio` kërkon një fjalëkalim të vetëm (shih doc 06) dhe shmang çdo zhargon teknik.
 2. **Tipografi dhe Ndërveprim i Qartë**: Madhësia e tekstit për etiketat dhe butonat është gjithmonë e rehatshme (`16px+`), me kontrast të lartë dhe ikona të mëdha `lucide-react`.
 3. **Struktura me 7 Hapësira Kryesore** (6 + Kronologjia):
    - **Kryefaqja & Menyja** (`home`): Titulli i faqes, kushtimi, aktivizimi/çaktivizimi i nyjeve të menysë, dhe renditja e seksioneve të kryefaqes me Drag & Drop (`@dnd-kit`).
@@ -31,6 +31,6 @@
 
 ## Verifikimi
 - Hapni në shfletues: `http://localhost:3001/studio`
-- Provoni kalimin midis **të 6 tabeve** (përfshirë "Rezervim & Rivendosje").
+- Provoni kalimin midis **të 7 tabeve** (përfshirë "Kronologjia" dhe "Rezervim & Rivendosje").
 - Provoni klikimin e butonit "Shkarko Kopjen Rezervë" për të parë shkarkimin e ZIP-it.
 - Provoni zgjedhjen e një imazhi > 5MB në tab-in "Albumi i Fotove" për të verifikuar shfaqjen e njoftimit toast bllokues.

@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Kopjo skedarët e varësive
-COPY package.json package-lock.json* bun.lock* ./
+COPY package.json package-lock.json* ./
 
 # Instalo të gjitha varësitë për ndërtim me cache të npm
 RUN --mount=type=cache,target=/root/.npm \

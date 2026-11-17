@@ -83,7 +83,7 @@ Ky dokument shërben si harta e shpejtë e navigimit dhe katalogimi i plotë i t
 | Rruga | Qëllimi |
 |---|---|
 | `src/app/(frontend)/page.tsx` | Faqja kryesore publike (`http://localhost:3001/`) |
-| `src/app/(frontend)/studio/page.tsx` | Studio e Autorit pa fjalëkalim (`http://localhost:3001/studio`) |
+| `src/app/(frontend)/studio/page.tsx` | Studio e Autorit (me fjalëkalim) (`http://localhost:3001/studio`) |
 | `src/app/(payload)/admin/[[...segments]]/page.tsx` | Paneli Payload Super Admin me autentifikim (`http://localhost:3001/admin`) |
 | `src/app/api/backup/route.ts` | GET: Shkarkon arkivin e plotë ZIP me headers të shkarkimit |
 | `src/app/api/restore/route.ts` | POST: Pranon skedarin ZIP, verifikon SHA-256 dhe ekzekuton rivendosjen atomike me rollback |

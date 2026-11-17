@@ -249,7 +249,7 @@ Client side, **all** mutations go through `CmsContext` (`src/context/CmsContext.
 - Root `docker-compose.yml`: service `arkivi-app` (build `./arkivi-app`, port `${PORT:-3001}:3001`, `env_file: .env`, volumes `./arkivi-app/data`, `./arkivi-app/public/uploads`, `./arkivi-app/backups`, healthcheck `curl /api/cms`) + `cloudflared` tunnel (`TUNNEL_TOKEN`). Port 3001 is also published on the host.
 - `Dockerfile`: 2 stages on `node:20-bookworm-slim`; `npm install --legacy-peer-deps` (not `npm ci`); `next build` with BuildKit cache mounts; runner copies `node_modules`, `.next`, `public`, `src`, `scripts`, `data`; runs as **root**; entrypoint runs `runSeed.ts` via tsx then `npm start`.
 - `next.config.mjs`: `typescript.ignoreBuildErrors: true` and `webpackMemoryOptimizations` (6GB ARM host). Always run `npm run lint` before deploying. `images.remotePatterns` allows `https://**`.
-- `.dockerignore` does **not** exclude `data/`, `public/uploads/` or `.env` → building from a dev checkout bakes the local DB (password hashes) into the image (F-20).
+- `.dockerignore` excludes runtime data, uploads, backups and `.env*` (F-20). The root `docker-compose.yml` mounts `data`, `public/uploads` and `backups` from the host.
 
 ---
 
@@ -312,7 +312,7 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 - **F-17 DB path not anchored** — `DATABASE_URI` default `file:./data/arkivi.db` is cwd-relative, while backup uses absolute `DATA_DIR/arkivi.db`; running from another cwd makes Payload and backup use different files.
 - **F-18 Media delete order** — file is unlinked before the state save (`media/[id]/route.ts:103-108`); ids are `media-${Date.now()}` (collision on same-ms uploads).
 - **F-19 Public site is client-rendered** — no SSR/SEO, loading flash, full state (with drafts) shipped to every visitor.
-- **F-20 Docker build context leaks local data** — `.dockerignore` misses `data/`, `public/uploads/`, `.env`; runner `COPY --from=builder /app/data`.
+- **F-20 FIXED (`.dockerignore` now excludes `.env*`, `data/*.db`, `cms-data.json`, uploads, backups; test `tests/dockerignore.test.ts`; not verified with a real `docker build`). Original:** Docker build context leaks local data — `.dockerignore` misses `data/`, `public/uploads/`, `.env`; runner `COPY --from=builder /app/data`.
 - **F-21 Secret reuse / open image proxy** — `PAYLOAD_SECRET` is both session key and API token; `images.remotePatterns` `https://**` lets anyone use the image optimizer as a proxy; container runs as root; `ignoreBuildErrors: true`.
 
 ### LOW

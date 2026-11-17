@@ -16,3 +16,21 @@ backups/.restore*
 .env.production.local
 tests
 docs/audits
+
+# Runtime state and secrets must never be baked into the image (F-20)
+.env
+.env.*
+!.env.example
+data/*.db
+data/*.db-*
+data/cms-data.json
+data/*.bak
+data/session-epoch
+data/.rollback-*
+public/uploads/*
+!public/uploads/.gitkeep
+backups
+.claude
+.trace-mcp
+.playwright-mcp
+graphify-out

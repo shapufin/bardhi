@@ -12,7 +12,7 @@ Ky dokument përmban udhëzimet hap pas hapi për ngritjen dhe menaxhimin e apli
 | `docker-compose.yml` | Root & `arkivi-app/` | Konfigurimi i shërbimit, portës `3001`, vëllimeve të persistencës dhe healthcheck |
 | `docker-entrypoint.sh` | `arkivi-app/docker-entrypoint.sh` | Skript hyrës që inicializon dosjet, kryen seeding automatik dhe krijon superadminin nëse mungon |
 | `.env.example` | Root & `arkivi-app/` | Shembull me të gjithë variablat e mjedisit dhe kredencialet fillestare |
-| `.dockerignore` | `arkivi-app/.dockerignore` | Përjashton skedarët e panevojshëm nga konteksti i ndërtimit |
+| `.dockerignore` | `arkivi-app/.dockerignore` | Përjashton skedarët e panevojshëm dhe gjithçka runtime/sekrete (`.env*`, `data/*.db`, `cms-data.json`, `public/uploads/*`, `backups`) nga imazhi; test: `tests/dockerignore.test.ts` |
 
 ---
 

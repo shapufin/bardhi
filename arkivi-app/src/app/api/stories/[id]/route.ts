@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getCmsState, saveCmsState } from '@/src/lib/payloadClient';
+import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
 import { verifyAdminAuth } from '@/src/lib/adminAuth';
 
-export async function DELETE(
+async function deleteHandler(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -37,3 +37,5 @@ export async function DELETE(
     return NextResponse.json({ error: 'Nuk u fshi rrefimi.' }, { status: 500 });
   }
 }
+
+export const DELETE = serialized(deleteHandler);

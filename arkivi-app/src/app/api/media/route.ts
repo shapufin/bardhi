@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCmsState, saveCmsState, UPLOADS_DIR } from '@/src/lib/payloadClient';
+import { getCmsState, saveCmsState, UPLOADS_DIR, serialized } from '@/src/lib/payloadClient';
 import { verifyAdminAuth } from '@/src/lib/adminAuth';
 import type { MediaAsset } from '@/src/types/cms';
 import fs from 'node:fs/promises';
@@ -19,7 +19,7 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+async function postHandler(req: Request) {
   const auth = verifyAdminAuth(req);
   if (!auth.authorized) {
     return NextResponse.json(
@@ -152,3 +152,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Nuk u arrit të ruhej fotografia.' }, { status: 500 });
   }
 }
+
+export const POST = serialized(postHandler);

@@ -12,7 +12,7 @@
 2. **The site's content does NOT live in Payload.** It lives in one JSON file, `arkivi-app/data/cms-data.json`, read/written by custom routes under `src/app/api/*`. Payload (SQLite `data/arkivi.db`) is only used for **users/login and the Studio password**. The Payload collections `stories`, `book-spreads`, `media`, `timeline-entries` and globals `memorial-profile`, `hero-settings`, `home-layout` are **not read by the site** — editing them in `/admin` changes nothing visible.
 3. **Fixed (commit `fix(uploads)`, merged to `main`):** in production (`next start` / Docker) photos uploaded through the Studio return **404** until the server restarts, because Next only serves `public/` files that existed when the server started. See F-01.
 4. Tests now run in a temp data root (`ARKIVI_DATA_ROOT`) and no longer touch live `data/`. New test files must `import './test-env'` first OR rely on the `npm test` preload; running a file with bare `tsx --test` without the preload and without importing test-env first would hit live data.
-5. Baseline today: `npm test` → **96 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
+5. Baseline today: `npm test` → **97 pass / 0 fail**, `npm run lint` (`tsc --noEmit`) → **0 errors**. Docs claiming "79/79" or "67/67" are stale.
 6. UI copy is **Albanian**, aimed at an elderly, non-technical author. Keep it that way (no technical jargon, large text, clear verbs like "Ruaj", "Fshij", "Rikthe").
 7. Windows dev machine: use PowerShell syntax in docs/commands (`;` not `&&`). Production is Linux Docker.
 
@@ -305,7 +305,7 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 
 - **F-11 FIXED (logout button in `AdminStudio`; `data/session-epoch` revokes sessions on Studio password change; paths moved to `src/lib/dataPaths.ts`; test `tests/session-revocation.test.ts`). Original:** No logout in the UI — `/api/studio/logout` is never called; sessions last 30 days and can't be revoked (stateless HMAC; password change doesn't invalidate). Add a "Dil" button; add a session version stored in `studio-settings` to invalidate.
 - **F-12 `/admin` dashboard is the Studio, but its saves need the Studio cookie** — `verifyAdminAuth` ignores `payload-token`, so a superadmin logged in only via `/admin` likely gets 401 on every Studio save — PLAUSIBLE.
-- **F-13 Lost updates** — read-modify-write outside the save mutex in every mutation route (§5.3).
+- **F-13 FIXED (`serialized()` wrapper on all read-modify-write mutation handlers; test `tests/concurrent-writes.test.ts`; single-process only). New mutation routes MUST use it. Original:** Lost updates — read-modify-write outside the save mutex in every mutation route (§5.3).
 - **F-14 FIXED (`getCmsState` throws `CmsStateCorruptError`, keeps the file, writes a `.corrupt.bak`; empty/missing file still initialises defaults; test `tests/corrupt-state.test.ts`). Operators: if the site shows the init error, restore a backup or delete the bad file. Original:** Silent reset to defaults — `getCmsState` replaces the live file with defaults on any parse error or `locale !== 'sq'` (`payloadClient.ts:164-184`). A `.corrupt.bak` is written but nobody is told. Prefer failing loudly (500 + log) over serving defaults.
 - **F-15 Timeline cannot be edited** — `saveTimeline` exists in `CmsContext` but no component calls it; the public timeline is frozen at seed content.
 - **F-16 Fields can't be cleared** — hero/site/book routes use `clip(x) || current.x`, so sending `''` keeps the old value (e.g. removing the hero image is impossible except by deleting the photo).
@@ -350,7 +350,7 @@ Fix: serve uploads through a route handler (e.g. `src/app/uploads/[file]/route.t
 
 - Before editing, read the relevant `arkivi-app/docs/context/0X-*.md`, but trust **code over docs** (§11).
 - Content shape change → update `src/types/cms.ts`, `src/lib/defaultData.ts`, the sanitizer in the matching `api/*/route.ts`, `CmsContext`, the Studio editor, the public component, and existing `data/cms-data.json` files (no migration system exists — `getCmsState` will **reset to defaults** if required keys are missing).
-- New mutation route → call `verifyAdminAuth(req)` first, sanitize with `clip()`-style limits, go through `getCmsState`/`saveCmsState`, return the full new state (the client expects it), Albanian error messages, add 401/403 cases to `tests/admin-auth.test.ts`.
+- New mutation route → wrap the handler in `serialized(...)` (F-13), call `verifyAdminAuth(req)` first, sanitize with `clip()`-style limits, go through `getCmsState`/`saveCmsState`, return the full new state (the client expects it), Albanian error messages, add 401/403 cases to `tests/admin-auth.test.ts`.
 - New file paths → import from `src/lib/payloadClient.ts`; never `process.cwd()`.
 - Never run `npm test` against data you care about (F-08). Back up `data/` and `public/uploads/` first.
 - After any change: `npm run lint` (0 errors), relevant tests, and a browser check of `/`, `/studio` (6 tabs) and the 3D book. For upload changes, test with `npm run build; npm start`, not only `npm run dev` (F-01 only shows in prod mode).

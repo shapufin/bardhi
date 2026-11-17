@@ -148,3 +148,17 @@ export async function saveCmsState(next: CmsState): Promise<CmsState> {
   writeMutex = task.catch(() => {});
   return task;
 }
+
+let mutationChain: Promise<unknown> = Promise.resolve();
+
+/**
+ * Serializes whole read-modify-write handlers so concurrent saves cannot overwrite each other
+ * (each route reads the state, edits it, then writes it back). Single-process only.
+ */
+export function serialized<A extends unknown[], R>(handler: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
+  return (...args: A) => {
+    const run = mutationChain.then(() => handler(...args));
+    mutationChain = run.catch(() => undefined);
+    return run;
+  };
+}

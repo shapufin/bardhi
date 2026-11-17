@@ -22,6 +22,8 @@
 
 5. **Skedar i dëmtuar**: nëse `data/cms-data.json` nuk është JSON i vlefshëm ose i mungon `locale:'sq'`/`site.navMenu`, `getCmsState` hedh `CmsStateCorruptError` (rrugët kthejnë 500), shkruan `cms-data.json.<ts>.corrupt.bak` dhe e lë skedarin të paprekur — nuk zëvendësohet më me përmbajtjen e paracaktuar. Vetëm skedari bosh/mungues inicializohet me default. Rikthimi: kopje rezervë ose fshirja manuale e skedarit. Test: `tests/corrupt-state.test.ts`.
 
+6. **Shkrime të njëkohshme**: çdo rrugë mutacioni që lexon-ndryshon-shkruan gjendjen CMS eksportohet përmes `serialized(handler)` (`src/lib/payloadClient.ts`), që i vë në radhë kërkesat që të mos humbasë asnjë ndryshim. Rrugë të reja mutacioni duhet të përdorin të njëjtin mbështjellës. Vlen për një proces të vetëm. Test: `tests/concurrent-writes.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Konfigurimi Kryesor: `src/payload.config.ts`
 - Koleksionet: `src/collections/` (`Users.ts`, `Stories.ts`, `BookSpreads.ts`, `Media.ts`, `TimelineEntries.ts`)

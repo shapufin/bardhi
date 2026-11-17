@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { saveCmsState } from '@/src/lib/payloadClient';
+import { saveCmsState, serialized } from '@/src/lib/payloadClient';
 import { DEFAULT_CMS_STATE } from '@/src/lib/defaultData';
 import { extractBearerToken, getAdminTokens } from '@/src/lib/adminAuth';
 
@@ -38,7 +38,7 @@ function verifyResetAuth(req: Request): { authorized: boolean; status: number } 
   return { authorized: true, status: 200 };
 }
 
-export async function POST(req: Request) {
+async function postHandler(req: Request) {
   const auth = verifyResetAuth(req);
   if (!auth.authorized) {
     return NextResponse.json(
@@ -55,3 +55,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Nuk u rivendos arkivi.' }, { status: 500 });
   }
 }
+
+export const POST = serialized(postHandler);

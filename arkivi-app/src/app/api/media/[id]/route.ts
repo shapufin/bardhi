@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCmsState, saveCmsState, UPLOADS_DIR } from '@/src/lib/payloadClient';
+import { getCmsState, saveCmsState, UPLOADS_DIR, serialized } from '@/src/lib/payloadClient';
 import { verifyAdminAuth } from '@/src/lib/adminAuth';
 import type { CmsState, MediaAsset } from '@/src/types/cms';
 import fs from 'node:fs/promises';
@@ -13,7 +13,7 @@ function clip(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
-export async function PUT(
+async function putHandler(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -57,7 +57,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
+async function deleteHandler(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -120,3 +120,7 @@ export async function DELETE(
     return NextResponse.json({ error: 'Nuk u fshi fotografia.' }, { status: 500 });
   }
 }
+
+export const PUT = serialized(putHandler);
+
+export const DELETE = serialized(deleteHandler);

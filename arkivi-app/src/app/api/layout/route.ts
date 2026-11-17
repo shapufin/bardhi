@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCmsState, saveCmsState } from '@/src/lib/payloadClient';
+import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
 import { verifyAdminAuth } from '@/src/lib/adminAuth';
 import type { CmsState, PageSectionConfig, PageSectionType, StoriesLayoutVariant } from '@/src/types/cms';
 
@@ -19,7 +19,7 @@ function clip(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
-export async function PUT(req: Request) {
+async function putHandler(req: Request) {
   const auth = verifyAdminAuth(req);
   if (!auth.authorized) {
     return NextResponse.json(
@@ -78,3 +78,5 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Nuk u ruajt renditja e faqes.' }, { status: 500 });
   }
 }
+
+export const PUT = serialized(putHandler);

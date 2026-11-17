@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCmsState, saveCmsState } from '@/src/lib/payloadClient';
+import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
 import { verifyAdminAuth } from '@/src/lib/adminAuth';
 import type { BookBlock, BookBlockType, BookSpread } from '@/src/types/cms';
 
@@ -24,7 +24,7 @@ function sanitizeBlock(block: unknown, index: number): BookBlock {
   };
 }
 
-export async function PUT(req: Request) {
+async function putHandler(req: Request) {
   const auth = verifyAdminAuth(req);
   if (!auth.authorized) {
     return NextResponse.json(
@@ -82,3 +82,5 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Nuk u ruajtën faqet e librit.' }, { status: 500 });
   }
 }
+
+export const PUT = serialized(putHandler);

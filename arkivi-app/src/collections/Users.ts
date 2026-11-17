@@ -8,7 +8,8 @@ export const Users: CollectionConfig = {
     defaultColumns: ['name', 'email', 'role'],
   },
   access: {
-    read: () => true,
+    // Only logged-in users may read accounts (anonymous GET /api/users/:id leaked emails/roles).
+    read: ({ req }) => Boolean(req.user),
   },
   fields: [
     {

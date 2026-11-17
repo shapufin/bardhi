@@ -30,6 +30,10 @@
    - Kërkesat pa kredenciale kthejnë **HTTP 401**; kredenciale të pasakta **HTTP 403**.
    - Kufizime përmbajtjeje: `PUT /api/media/[id]` pranon vetëm fushat e lejuara (whitelist); `DELETE /api/media/[id]` shkëput automatikisht referencat (zero-lockout cascade) nga rrëfim/hero/libër dhe heq skedarin nga disku; të gjitha payload-et JSON kanë kufinj madhësie dhe gjatësie fushash.
 
+5. **Lexim i llogarive**: koleksioni `users` lejon `read` vetëm për përdorues të kyçur (`src/collections/Users.ts`); `GET /api/users/:id` pa kredenciale kthen 403. Test: `tests/users-access.test.ts`.
+
+6. **Drafte private**: `GET /api/cms` pa kredenciale kthen vetëm rrëfimet `published`; Studio (cookie `studio_session` ose token admin) merr gjendjen e plotë me drafte; përgjigjja ka `Cache-Control: private, no-store`. Test: `tests/cms-drafts.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Rruga e Autorit (me fjalëkalim Studio): `src/app/(frontend)/studio/page.tsx` + `src/components/admin/StudioLogin.tsx`
 - Rruga e Superadminit (me pass): `src/app/(payload)/admin/[[...segments]]/page.tsx`

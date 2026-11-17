@@ -8,7 +8,7 @@
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start -p 3001",
     "lint": "tsc --noEmit",
-    "test": "tsx --test --test-concurrency=1 --test-force-exit tests/**/*.test.ts",
+    "test": "tsx --import ./tests/test-env.ts --test --test-concurrency=1 --test-force-exit tests/**/*.test.ts",
     "seed": "tsx src/seed/runSeed.ts",
     "backup": "tsx scripts/backup.ts",
     "restore": "tsx scripts/restore.ts"

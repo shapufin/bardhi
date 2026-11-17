@@ -191,6 +191,8 @@ Suita përfshin **67 teste** të shpërndara në 6 skedarë me arkitekturë me 4
 | `tests/api.test.ts` | 4 | Unit | Integriteti i gjendjes atomike JSON, `getCmsState`, `saveCmsState`, krijimi/fshirja e rrëfimeve, sekuencialiteti i faqeve të librit |
 | `tests/book.test.ts` | 3 | Unit | Validimi i fletëve dyshe (spreads), dekompozimi i folios për ekranet celularë, kufijtë e navigimit |
 
+**Izolimi:** `npm test` ngarkon `tests/test-env.ts` (`--import`), që krijon dosje të përkohshme dhe vendos `ARKIVI_DATA_ROOT` + `DATABASE_URI`; testet nuk prekin kurrë `data/` ose `public/uploads` reale.
+
 **Ekzekutimi i plotë i testeve:**
 ```powershell
 npm test

@@ -158,7 +158,7 @@ describe('Admin Auth Boundary (AUDIT-2026-11-15)', () => {
 
   it('GET /api/cms and GET /api/media remain public (read-only)', async () => {
     const cmsRoute = await import('../src/app/api/cms/route');
-    const cmsRes = await cmsRoute.GET();
+    const cmsRes = await cmsRoute.GET(new Request('http://localhost/api/cms'));
     assert.strictEqual(cmsRes.status, 200);
 
     const mediaRoute = await import('../src/app/api/media/route');

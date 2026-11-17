@@ -17,7 +17,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { APP_ROOT, DATA_DIR, DATA_FILE, UPLOADS_DIR } from '@/src/lib/payloadClient';
+import { APP_ROOT, DATA_DIR, DATA_FILE, UPLOADS_DIR, ensureStorage } from '@/src/lib/payloadClient';
 
 export const BACKUP_APP_NAME = 'arkivi-app';
 export const BACKUP_VERSION = '1.0.0';
@@ -77,6 +77,7 @@ function safeEntryPath(p: string): string | null {
 }
 
 export async function createBackupArchive(): Promise<{ buffer: Buffer; filename: string; manifest: BackupManifest }> {
+  await ensureStorage();
   if (!existsSync(DATA_FILE) || !existsSync(DB_FILE)) {
     throw new BackupError('Të dhënat e nevojshme nuk u gjetën për të krijuar kopjen rezervë.');
   }

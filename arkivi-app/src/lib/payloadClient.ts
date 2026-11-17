@@ -64,9 +64,11 @@ export function getAppRoot(): string {
 }
 
 export const APP_ROOT = getAppRoot();
-export const DATA_DIR = path.resolve(APP_ROOT, 'data');
+// ARKIVI_DATA_ROOT relocates data/ and public/uploads (used by tests so they never touch live data).
+export const DATA_ROOT = process.env.ARKIVI_DATA_ROOT ? path.resolve(process.env.ARKIVI_DATA_ROOT) : APP_ROOT;
+export const DATA_DIR = path.resolve(DATA_ROOT, 'data');
 export const DATA_FILE = path.join(DATA_DIR, 'cms-data.json');
-export const UPLOADS_DIR = path.join(APP_ROOT, 'public', 'uploads');
+export const UPLOADS_DIR = path.join(DATA_ROOT, 'public', 'uploads');
 
 async function atomicWriteFile(targetPath: string, content: string): Promise<void> {
   const dir = path.dirname(targetPath);

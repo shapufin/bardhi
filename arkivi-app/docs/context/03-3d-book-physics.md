@@ -12,7 +12,7 @@
    - Fleta lëvizëse 3D me dy anë (`backface-visibility: hidden`): `translateZ(5px)` me rrotullim `rotateY(0° ↔ -180°)`
    - Kapaku i përparmë 3D me stampim ari: `rotateY(0° ↔ -180°) translateZ(14px)`
 4. **Modaliteti Edit Direkt brenda Librit (`BookInlineEditor`)**:
-   - Butoni "Redakto Librin" në shiritin e sipërm të librit hap modalitetin e redaktimit drejtpërdrejt mbi dy faqet aktuale, duke lejuar autorin të ndryshojë tekstin, të zgjedhë foto nga arkivi dhe të ruajë në sekondë pa lëvizur nga faqja.
+   - Butoni "Redakto Librin" shfaqet vetëm kur `canEdit` është `true` (parazgjedhja është `false`; faqja publike nuk e kalon; Studio e kalon te pamja paraprake e `BookBuilder`). Test: `tests/book-edit-visibility.test.ts`. Kur shfaqet, ai hap modalitetin e redaktimit drejtpërdrejt mbi dy faqet aktuale, duke lejuar autorin të ndryshojë tekstin, të zgjedhë foto nga arkivi dhe të ruajë në sekondë pa lëvizur nga faqja.
 5. **Përshtatja për Celular (< 768px)**:
    - Kalon automatikisht në modalitet me një faqe të vetme me shfletim me gisht (swipe majtas/djathtas) pa scrollbars horizontale.
 

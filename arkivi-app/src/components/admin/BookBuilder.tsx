@@ -378,6 +378,7 @@ export function BookBuilder() {
             spreads={spreads}
             getMedia={getMedia}
             onExitBook={() => setPreviewOpen(false)}
+            canEdit
           />
         </DialogContent>
       </Dialog>

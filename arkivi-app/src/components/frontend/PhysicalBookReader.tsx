@@ -58,7 +58,7 @@ export function PhysicalBookReader({
   spreads,
   getMedia,
   onExitBook,
-  canEdit = true,
+  canEdit = false,
 }: PhysicalBookReaderProps) {
   const { cms, saving, saveBook } = useCms();
 

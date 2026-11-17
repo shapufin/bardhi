@@ -13,6 +13,10 @@ const nextConfig = {
     // për të kursyer ~1GB RAM gjatë `next build` në server.
     ignoreBuildErrors: true,
   },
+  // Uploads added after server start are not in Next's static file list; serve them via a route.
+  async rewrites() {
+    return [{ source: '/uploads/:file', destination: '/api/uploads/:file' }]
+  },
   images: {
     remotePatterns: [
       {

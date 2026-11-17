@@ -160,6 +160,7 @@ Imazhi Origjinal (JPEG/PNG/WebP deri në 5MB)
          │
          ▼
 4. Ruajtje në public/uploads/ si media-{timestamp}.webp
+   (Shërbehet nga `src/app/api/uploads/[file]/route.ts` përmes rewrite `/uploads/:file` në `next.config.mjs`, sepse `next start` nuk shërben skedarë të shtuar pas nisjes. Test: `tests/uploads-serve.test.ts`.)
 ```
 
 **Performanca**: Fotografitë nga aparate moderne (4-5 MB) kompresohen rregullisht në **nën 500 KB** (reduktim **85-90%** i hapësirës) duke ruajtur cilësi vizuale të shkëlqyer për ekspozim në galeri dhe në faqet e librit 3D.

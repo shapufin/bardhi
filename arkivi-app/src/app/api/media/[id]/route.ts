@@ -99,12 +99,6 @@ async function deleteHandler(
 
     const cleanedBookCover = current.bookCoverImageId === id ? '' : current.bookCoverImageId;
 
-    // Fshi skedarin fizik nga disku nëse ndodhet në /uploads/
-    if (target.url && target.url.startsWith('/uploads/')) {
-      const filePath = path.join(UPLOADS_DIR, path.basename(target.url));
-      await fs.unlink(filePath).catch(() => undefined);
-    }
-
     const updated = await saveCmsState({
       ...current,
       hero: cleanedHero,
@@ -113,6 +107,12 @@ async function deleteHandler(
       bookSpreads: cleanedSpreads,
       media: current.media.filter((m) => m.id !== id),
     });
+
+    // Fshi skedarin fizik vetëm PAS ruajtjes së gjendjes (nëse ruajtja dështon, foto mbetet e lidhur dhe e dukshme).
+    if (target.url && target.url.startsWith('/uploads/')) {
+      const filePath = path.join(UPLOADS_DIR, path.basename(target.url));
+      await fs.unlink(filePath).catch(() => undefined);
+    }
 
     return NextResponse.json(updated);
   } catch (error) {

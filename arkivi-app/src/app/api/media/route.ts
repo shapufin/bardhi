@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, UPLOADS_DIR, serialized } from '@/src/lib/payloadClient';
 import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { MediaAsset } from '@/src/types/cms';
+import { randomBytes } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -90,7 +91,7 @@ async function postHandler(req: Request) {
       );
     }
 
-    const id = `media-${Date.now()}`;
+    const id = `media-${Date.now()}-${randomBytes(4).toString('hex')}`;
     const filename = `${id}.webp`;
 
     // High-compression Sharp pipeline:

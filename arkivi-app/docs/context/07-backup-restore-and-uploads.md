@@ -119,6 +119,8 @@ Skeda e 6-të **"Rezervim & Rivendosje"** në Studio e Autorit (`/studio`):
 
 ---
 
+`DELETE /api/media/[id]` ruan fillimisht gjendjen pa foton dhe fshin skedarin fizik pas ruajtjes (jo përpara). Test: `tests/media-integrity.test.ts`.
+
 ## 2. Kufijtë e Ngarkimit dhe Pipeline i Kompresimit Sharp (R3)
 
 ### 2.1 Kufiri i Fortë Server-Side (5MB)
@@ -165,7 +167,7 @@ Imazhi Origjinal (JPEG/PNG/WebP deri në 5MB)
 3. Kompresim i Avancuar WebP: .webp({ quality: 82, effort: 4 })
          │
          ▼
-4. Ruajtje në public/uploads/ si media-{timestamp}.webp
+4. Ruajtje në public/uploads/ si media-{timestamp}-{8 hex rastësorë}.webp (id unike edhe brenda të njëjtës milisekondë)
    (Shërbehet nga `src/app/api/uploads/[file]/route.ts` përmes rewrite `/uploads/:file` në `next.config.mjs`, sepse `next start` nuk shërben skedarë të shtuar pas nisjes. Test: `tests/uploads-serve.test.ts`.)
 ```
 

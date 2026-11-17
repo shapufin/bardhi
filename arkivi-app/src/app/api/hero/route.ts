@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
+import { mergeText } from '@/src/lib/sanitize';
 import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { HeroSettings } from '@/src/types/cms';
 
@@ -28,13 +29,13 @@ async function putHandler(req: Request) {
     const p = raw as Partial<HeroSettings>;
     const hero: HeroSettings = {
       ...current.hero,
-      kicker: clip(p.kicker, 200) || current.hero.kicker,
-      headline: clip(p.headline, 500) || current.hero.headline,
-      subheadline: clip(p.subheadline, 2000) || current.hero.subheadline,
-      featuredStoryId: clip(p.featuredStoryId, 100) || current.hero.featuredStoryId,
-      heroImageId: clip(p.heroImageId, 100) || current.hero.heroImageId,
-      primaryCtaLabel: clip(p.primaryCtaLabel, 100) || current.hero.primaryCtaLabel,
-      secondaryCtaLabel: clip(p.secondaryCtaLabel, 100) || current.hero.secondaryCtaLabel,
+      kicker: mergeText(p.kicker, 200, current.hero.kicker, true),
+      headline: mergeText(p.headline, 500, current.hero.headline),
+      subheadline: mergeText(p.subheadline, 2000, current.hero.subheadline, true),
+      featuredStoryId: mergeText(p.featuredStoryId, 100, current.hero.featuredStoryId),
+      heroImageId: mergeText(p.heroImageId, 100, current.hero.heroImageId, true),
+      primaryCtaLabel: mergeText(p.primaryCtaLabel, 100, current.hero.primaryCtaLabel),
+      secondaryCtaLabel: mergeText(p.secondaryCtaLabel, 100, current.hero.secondaryCtaLabel, true),
       animationEnabled: typeof p.animationEnabled === 'boolean' ? p.animationEnabled : current.hero.animationEnabled,
       animationStyle:
         typeof p.animationStyle === 'string' && ANIMATION_STYLES.has(p.animationStyle)

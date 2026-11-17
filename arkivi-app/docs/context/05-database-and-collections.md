@@ -26,6 +26,8 @@
 
 7. **Rruga e DB-së**: `payload.config.ts` përdor `resolveDatabaseUrl(process.env.DATABASE_URI)` (`src/lib/dataPaths.ts`): pa vlerë → `file:<DATA_DIR>/arkivi.db`; `file:./relative` zgjidhet kundrejt `APP_ROOT` (jo `process.cwd()`); URL absolute/të largëta kalojnë të pandryshuara. Backup lexon gjithmonë `DATA_DIR/arkivi.db`, ndaj `DATABASE_URI` absolute jashtë `DATA_DIR` nuk mbulohet nga backup. Test: `tests/database-url.test.ts`.
 
+8. **Fusha të pastrueshme**: rrugët `PUT /api/hero`, `/api/site`, `/api/book/spreads` përdorin `mergeText` (`src/lib/sanitize.ts`): çelës mungues = ruhet vlera aktuale; varg bosh pastron vetëm fushat opsionale (kicker, nëntitull, foto hero, kushtim, shënim fundi, nëntitulli/kapaku i librit, etj.); fushat e detyrueshme (titujt, `headline`, emrat, CTA kryesore, `featuredStoryId`) nuk bëhen kurrë bosh. Test: `tests/clearable-fields.test.ts`.
+
 ## Ku Ndodhet Kodi
 - Konfigurimi Kryesor: `src/payload.config.ts`
 - Koleksionet: `src/collections/` (`Users.ts`, `Stories.ts`, `BookSpreads.ts`, `Media.ts`, `TimelineEntries.ts`)

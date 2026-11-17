@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
+import { mergeText } from '@/src/lib/sanitize';
 import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { NavTargetType, SiteConfig } from '@/src/types/cms';
 
@@ -42,13 +43,13 @@ async function putHandler(req: Request) {
 
     const site: SiteConfig = {
       ...current.site,
-      siteTitle: clip(p.siteTitle, 300) || current.site.siteTitle,
-      honoreeName: clip(p.honoreeName, 300) || current.site.honoreeName,
-      yearsLabel: clip(p.yearsLabel, 100) || current.site.yearsLabel,
-      authorName: clip(p.authorName, 300) || current.site.authorName,
-      authorRelation: clip(p.authorRelation, 300) || current.site.authorRelation,
-      dedicationLine: clip(p.dedicationLine, 1000) || current.site.dedicationLine,
-      footerNote: clip(p.footerNote, 1000) || current.site.footerNote,
+      siteTitle: mergeText(p.siteTitle, 300, current.site.siteTitle),
+      honoreeName: mergeText(p.honoreeName, 300, current.site.honoreeName),
+      yearsLabel: mergeText(p.yearsLabel, 100, current.site.yearsLabel, true),
+      authorName: mergeText(p.authorName, 300, current.site.authorName),
+      authorRelation: mergeText(p.authorRelation, 300, current.site.authorRelation, true),
+      dedicationLine: mergeText(p.dedicationLine, 1000, current.site.dedicationLine, true),
+      footerNote: mergeText(p.footerNote, 1000, current.site.footerNote, true),
       navMenu,
     };
 

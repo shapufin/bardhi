@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCmsState, saveCmsState, serialized } from '@/src/lib/payloadClient';
+import { mergeText } from '@/src/lib/sanitize';
 import { verifyAdminAuthAsync } from '@/src/lib/adminAuth';
 import type { BookBlock, BookBlockType, BookSpread } from '@/src/types/cms';
 
@@ -71,9 +72,9 @@ async function putHandler(req: Request) {
 
     const updated = await saveCmsState({
       ...current,
-      bookTitle: clip(body.bookTitle, 300) || current.bookTitle,
-      bookSubtitle: clip(body.bookSubtitle, 1000) || current.bookSubtitle,
-      bookCoverImageId: clip(body.bookCoverImageId, 100) || current.bookCoverImageId,
+      bookTitle: mergeText(body.bookTitle, 300, current.bookTitle),
+      bookSubtitle: mergeText(body.bookSubtitle, 1000, current.bookSubtitle, true),
+      bookCoverImageId: mergeText(body.bookCoverImageId, 100, current.bookCoverImageId, true),
       bookSpreads: normalizedSpreads,
     });
     return NextResponse.json(updated);
